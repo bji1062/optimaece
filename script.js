@@ -342,9 +342,9 @@ function typeWriter(element, text, speed = 50) {
 }
 
 // Easter egg: Log a message to console
-console.log('%c🚀 Optimaece - SQL 튜닝 전문 서비스', 'color: #FF6F00; font-size: 20px; font-weight: bold;');
-console.log('%c24시간 내 결과 제공 | 건당 20만원 | 100% 환불 보장', 'color: #6b7280; font-size: 14px;');
-console.log('%c문의: optimaece@gmail.com', 'color: #10b981; font-size: 12px;');
+console.log('%c🚀 Optimaece - SQL 튜닝 전문 서비스', 'color: #0b3b8c; font-size: 20px; font-weight: bold;');
+console.log('%c24시간 내 결과 제공 | 건당 20만원 | 100% 환불 보장', 'color: #4b5563; font-size: 14px;');
+console.log('%c문의: optimaece@gmail.com', 'color: #0ea5e9; font-size: 12px;');
 
 // Add loading state for external form
 const betaLinks = document.querySelectorAll('a[href*="forms.gle"], a[href*="google.com/forms"]');
@@ -384,7 +384,7 @@ function createScrollProgress() {
         left: 0;
         width: 0%;
         height: 4px;
-        background: linear-gradient(90deg, #FF6F00, #E65100);
+        background: linear-gradient(90deg, #0b3b8c, #c94c00);
         z-index: 9999;
         transition: width 0.1s ease;
     `;
@@ -410,7 +410,7 @@ function createBackToTop() {
         width: 50px;
         height: 50px;
         border-radius: 50%;
-        background: #FF6F00;
+        background: #c94c00;
         color: white;
         border: none;
         font-size: 24px;
