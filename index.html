@@ -2,722 +2,2736 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Optimaece - SQL 튜닝 전문 서비스</title>
-    <meta name="description" content="단 한 건의 SQL 튜닝으로 전체 성능을 바꾸는 전문 서비스. 건당 20만원, 24시간 내 결과 제공, 유지보수 계약 불필요.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pello - AI 캐릭터를 발견하세요</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+        :root {
+            --primary: #6C5CE7;
+            --primary-light: #A29BFE;
+            --primary-dark: #5849BE;
+            --accent: #00CEC9;
+            --pink: #FD79A8;
+            --bg: #0a0a0a;
+            --bg-card: #151515;
+            --bg-elevated: #1a1a1a;
+            --text: #fff;
+            --text-secondary: #888;
+            --text-tertiary: #555;
+            --border: #252525;
+            --gradient: linear-gradient(135deg, #6C5CE7 0%, #A29BFE 50%, #00CEC9 100%);
+        }
 
-    <!-- AOS Animation Library -->
-    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+        body {
+            font-family: 'Noto Sans KR', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            min-height: 100dvh;
+        }
 
-    <!-- Swiper CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+        .app {
+            max-width: 430px;
+            margin: 0 auto;
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg);
+            position: relative;
+        }
 
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="styles.css">
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 16px;
+            background: var(--bg);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 900;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .icon-btn:hover {
+            background: var(--bg-elevated);
+            border-color: var(--primary);
+        }
+
+        .icon-btn svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--text);
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .main {
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 80px;
+        }
+
+        .section {
+            padding: 20px 16px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title .emoji {
+            font-size: 1.3rem;
+        }
+
+        .see-all {
+            font-size: 0.85rem;
+            color: var(--primary-light);
+            cursor: pointer;
+        }
+
+        .character-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .character-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .character-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary);
+            box-shadow: 0 8px 30px rgba(108, 92, 231, 0.2);
+        }
+
+        .character-card.featured {
+            grid-column: span 2;
+            display: flex;
+            flex-direction: row;
+        }
+
+        .character-cover {
+            position: relative;
+            aspect-ratio: 1;
+            overflow: hidden;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+        .character-card.featured .character-cover {
+            width: 45%;
+            aspect-ratio: auto;
+            min-height: 180px;
+        }
+
+        .character-cover .avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .character-badge {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            z-index: 2;
+        }
+
+        .badge-official {
+            background: var(--gradient);
+            color: white;
+        }
+
+        .badge-creator {
+            background: rgba(0, 206, 201, 0.9);
+            color: white;
+        }
+
+        .badge-new {
+            background: var(--pink);
+            color: white;
+        }
+
+        .character-info {
+            padding: 14px;
+        }
+
+        .character-card.featured .character-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 16px;
+        }
+
+        .character-name {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .verified-icon {
+            width: 16px;
+            height: 16px;
+            fill: var(--primary);
+        }
+
+        .character-bio {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .character-stats {
+            display: flex;
+            gap: 12px;
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+        }
+
+        .character-stats span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .rising-scroll {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .rising-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .rising-card {
+            flex: 0 0 140px;
+            scroll-snap-align: start;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .rising-card:hover {
+            border-color: var(--accent);
+            background: var(--bg-elevated);
+        }
+
+        .rising-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            border: 3px solid var(--accent);
+            margin: 0 auto 12px;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+        .rising-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .rising-new-badge {
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            background: var(--pink);
+            color: white;
+            font-size: 0.55rem;
+            padding: 2px 5px;
+            border-radius: 6px;
+            font-weight: 700;
+        }
+
+        .rising-name {
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .rising-genre {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .rising-follow-btn {
+            padding: 6px 14px;
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .rising-follow-btn:hover {
+            background: var(--accent);
+            color: var(--bg);
+        }
+
+        .category-section {
+            padding: 16px;
+        }
+
+        .category-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .category-tag {
+            padding: 10px 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .category-tag:hover {
+            border-color: var(--primary);
+            background: rgba(108, 92, 231, 0.1);
+        }
+
+        .category-tag.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .works-preview {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+        }
+
+        .works-preview::-webkit-scrollbar {
+            display: none;
+        }
+
+        .work-item {
+            flex: 0 0 140px;
+            aspect-ratio: 3/4;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+        .work-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .work-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .work-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 10px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+        }
+
+        .work-creator {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .work-creator .mini-avatar {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .work-creator span {
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 430px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 12px 0;
+            padding-bottom: max(12px, env(safe-area-inset-bottom));
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border);
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            padding: 4px 16px;
+            opacity: 0.5;
+            transition: all 0.2s;
+        }
+
+        .nav-item.active {
+            opacity: 1;
+        }
+
+        .nav-item svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--text);
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .nav-item.active svg {
+            stroke: var(--primary-light);
+        }
+
+        .nav-item span {
+            font-size: 0.65rem;
+            font-weight: 500;
+        }
+
+        .nav-item.active span {
+            color: var(--primary-light);
+        }
+
+        .character-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg);
+            z-index: 2000;
+            overflow-y: auto;
+        }
+
+        .character-modal.active {
+            display: block;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+            position: sticky;
+            top: 0;
+            background: var(--bg);
+            z-index: 10;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .back-btn svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--text);
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .modal-title {
+            flex: 1;
+            text-align: center;
+            font-weight: 700;
+            margin-right: 40px;
+        }
+
+        .profile-hero {
+            padding: 24px 16px;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .profile-avatar-large {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 4px solid var(--primary);
+            margin: 0 auto 16px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+        .profile-avatar-large img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-name-large {
+            font-size: 1.4rem;
+            font-weight: 900;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .profile-handle {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+        }
+
+        .profile-bio-large {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            padding: 0 20px;
+            line-height: 1.6;
+        }
+
+        .profile-stats-large {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.3rem;
+            font-weight: 900;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .btn-follow-large {
+            padding: 12px 48px;
+            background: var(--gradient);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-follow-large:hover {
+            opacity: 0.9;
+            transform: scale(1.02);
+        }
+
+        .btn-follow-large.following {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+        }
+
+        .btn-support {
+            padding: 12px 24px;
+            background: transparent;
+            border: 2px solid var(--pink);
+            border-radius: 25px;
+            color: var(--pink);
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .profile-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 58px;
+            background: var(--bg);
+            z-index: 5;
+        }
+
+        .profile-tab {
+            flex: 1;
+            padding: 14px;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            position: relative;
+            transition: color 0.2s;
+        }
+
+        .profile-tab.active {
+            color: var(--text);
+        }
+
+        .profile-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20%;
+            right: 20%;
+            height: 2px;
+            background: var(--primary);
+        }
+
+        .works-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+            padding: 2px;
+        }
+
+        .works-grid-item {
+            aspect-ratio: 1;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+        .works-grid-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.2s;
+        }
+
+        .works-grid-item:hover img {
+            opacity: 0.8;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--bg-card);
+            border: 1px solid var(--primary);
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            z-index: 3000;
+            opacity: 0;
+            transition: all 0.3s;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .page-content {
+            display: none;
+        }
+
+        .page-content.active {
+            display: block;
+        }
+
+        .following-list {
+            padding: 16px;
+        }
+
+        .following-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+        }
+
+        .following-item:last-child {
+            border-bottom: none;
+        }
+
+        .following-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            overflow: hidden;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+        .following-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .following-info {
+            flex: 1;
+        }
+
+        .following-name {
+            font-weight: 700;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .following-bio {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .following-new-posts {
+            background: var(--primary);
+            color: white;
+            font-size: 0.7rem;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .search-page {
+            padding: 16px;
+        }
+
+        .search-input-wrapper {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 14px 20px 14px 48px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 25px;
+            color: var(--text);
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+        }
+
+        .search-input::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            stroke: var(--text-secondary);
+            fill: none;
+            stroke-width: 2;
+        }
+
+        /* AI 캐릭터 아바타 스타일 */
+        .ai-avatar {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ai-avatar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.3;
+        }
+    </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <h1>Optimaece</h1>
+    <div class="app">
+        <header class="header">
+            <div class="logo">Pello</div>
+            <div class="header-actions">
+                <div class="icon-btn" onclick="showSearch()">
+                    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
                 </div>
-                <nav class="nav">
-                    <a href="#about">서비스 소개</a>
-                    <a href="#process">프로세스</a>
-                    <a href="#cases">개선 사례</a>
-                    <a href="#pricing">가격안내</a>
-                    <a href="#faq">FAQ</a>
-                    <a href="#beta" class="cta-btn">무료 베타 신청</a>
-                </nav>
-                <button class="mobile-menu-btn">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
             </div>
-        </div>
-    </header>
+        </header>
 
-    <!-- Mobile Navigation -->
-    <div class="mobile-nav">
-        <a href="#about">서비스 소개</a>
-        <a href="#process">프로세스</a>
-        <a href="#cases">개선 사례</a>
-        <a href="#pricing">가격안내</a>
-        <a href="#faq">FAQ</a>
-        <a href="#beta" class="cta-btn">무료 베타 신청</a>
+        <main class="main">
+            <div class="page-content active" id="discoverPage">
+                
+                <section class="section">
+                    <div class="section-header">
+                        <h2 class="section-title"><span class="emoji">✨</span> 오늘의 발견</h2>
+                        <span class="see-all">전체보기</span>
+                    </div>
+                    <div class="character-grid" id="characterGrid"></div>
+                </section>
+
+                <section class="section">
+                    <div class="section-header">
+                        <h2 class="section-title"><span class="emoji">🚀</span> 떠오르는 신인</h2>
+                    </div>
+                    <div class="rising-scroll" id="risingScroll"></div>
+                </section>
+
+                <section class="category-section">
+                    <div class="category-tags">
+                        <div class="category-tag active"># 전체</div>
+                        <div class="category-tag"># 사이버펑크</div>
+                        <div class="category-tag"># 판타지</div>
+                        <div class="category-tag"># 패션</div>
+                        <div class="category-tag"># 몽환</div>
+                        <div class="category-tag"># 애니메이션</div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <div class="section-header">
+                        <h2 class="section-title"><span class="emoji">🔥</span> 이번 주 인기</h2>
+                        <span class="see-all">전체보기</span>
+                    </div>
+                    <div class="works-preview" id="worksPreview"></div>
+                </section>
+
+            </div>
+
+            <div class="page-content" id="searchPage">
+                <div class="search-page">
+                    <div class="search-input-wrapper">
+                        <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
+                        <input type="text" class="search-input" placeholder="캐릭터, 태그, 스타일 검색...">
+                    </div>
+                    <div class="section-title" style="margin-bottom: 16px;"><span class="emoji">🔍</span> 추천 검색어</div>
+                    <div class="category-tags">
+                        <div class="category-tag"># 사이버펑크 뮤즈</div>
+                        <div class="category-tag"># 판타지 공주</div>
+                        <div class="category-tag"># AI 패션모델</div>
+                        <div class="category-tag"># 애니메이션</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-content" id="followingPage">
+                <div class="section" style="padding-top: 8px;">
+                    <div class="section-header">
+                        <h2 class="section-title"><span class="emoji">💜</span> 내 캐릭터</h2>
+                    </div>
+                </div>
+                <div class="following-list" id="followingList"></div>
+            </div>
+
+        </main>
+
+        <nav class="bottom-nav">
+            <div class="nav-item active" data-page="discover">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
+                <span>발견</span>
+            </div>
+            <div class="nav-item" data-page="following">
+                <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                <span>팔로잉</span>
+            </div>
+            <div class="nav-item" data-page="activity">
+                <svg viewBox="0 0 24 24"><path d="M22 17H2a3 3 0 0 0 3-3V9a7 7 0 0 1 14 0v5a3 3 0 0 0 3 3zm-8.27 4a2 2 0 0 1-3.46 0"></path></svg>
+                <span>알림</span>
+            </div>
+            <div class="nav-item" data-page="mypage">
+                <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <span>MY</span>
+            </div>
+        </nav>
     </div>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="container">
-            <div class="hero-content" data-aos="fade-up" data-aos-duration="1000">
-                <div class="hero-badge">대한민국 SQL 퍼포먼스 스페셜리스트</div>
-                <h2 class="hero-title">당신이 의뢰한 단 한 건이,<br>전체 성능을 바꿀 수 있습니다.</h2>
-                <p class="hero-subtitle">국내 환경과 데이터 문화를 누구보다 잘 아는 팀이 직접 튜닝합니다.<br>한글 로그, 야간 배치, 클라우드/온프레미스 혼재 상황까지 깔끔하게 정리합니다.</p>
-                <div class="hero-meta">
-                    <div class="meta-item">
-                        <span class="meta-label">평균 대응</span>
-                        <strong>24시간 이내 결과</strong>
-                    </div>
-                    <div class="meta-item">
-                        <span class="meta-label">비용 구조</span>
-                        <strong>건당 20만원, 계약 없음</strong>
-                    </div>
-                    <div class="meta-item">
-                        <span class="meta-label">품질 보증</span>
-                        <strong>30% 미만 개선 시 100% 환불</strong>
-                    </div>
-                </div>
-                <div class="hero-features">
-                    <div class="feature-item" data-aos="fade-up" data-aos-delay="200">
-                        <div class="feature-icon">🇰🇷</div>
-                        <h3>한국 기업 업무 패턴·보안 요건에 맞춘 실전 가이드</h3>
-                    </div>
-                    <div class="feature-item" data-aos="fade-up" data-aos-delay="400">
-                        <div class="feature-icon">🛰️</div>
-                        <h3>온프레미스·클라우드 혼합 환경까지 원격으로 즉시 지원</h3>
-                    </div>
-                    <div class="feature-item" data-aos="fade-up" data-aos-delay="600">
-                        <div class="feature-icon">🧭</div>
-                        <h3>개선 쿼리 + 운영 체크리스트까지 제공하는 완결형 리포트</h3>
-                    </div>
-                </div>
-                <a href="#beta" class="hero-cta" data-aos="fade-up" data-aos-delay="800">무료 베타 신청하기</a>
+    <div class="character-modal" id="characterModal">
+        <div class="modal-header">
+            <div class="back-btn" onclick="closeCharacterModal()">
+                <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"></path></svg>
             </div>
+            <div class="modal-title" id="modalTitle">Luna_AI</div>
         </div>
-        <div class="hero-bg"></div>
-    </section>
-
-    <!-- Problems Section -->
-    <section class="problems" id="about">
-        <div class="container">
-            <div class="section-header" data-aos="fade-up">
-                <span class="section-label">우리 고객들이 겪는 현실</span>
-                <h2>혹시 이런 상황이신가요?</h2>
-            </div>
-            <div class="problems-grid">
-                <div class="problem-card" data-aos="fade-up" data-aos-delay="100">
-                    <div class="problem-icon">☑️</div>
-                    <p>느린 쿼리 때문에 사용자 불만이 계속 들어오는데, 해결 방법을 모르겠다.</p>
-                </div>
-                <div class="problem-card" data-aos="fade-up" data-aos-delay="200">
-                    <div class="problem-icon">☑️</div>
-                    <p>유지보수 계약은 없지만 단 1~2개 쿼리만 급하게 튜닝하고 싶다.</p>
-                </div>
-                <div class="problem-card" data-aos="fade-up" data-aos-delay="300">
-                    <div class="problem-icon">☑️</div>
-                    <p>프리랜서 튜너를 고용하기엔 비용이 부담된다.(최소 한 달)</p>
-                </div>
-                <div class="problem-card" data-aos="fade-up" data-aos-delay="400">
-                    <div class="problem-icon">☑️</div>
-                    <p>내부 DBA는 다른 업무로 바쁘거나, SQL 튜닝 경험이 부족하다.</p>
-                </div>
-                <div class="problem-card" data-aos="fade-up" data-aos-delay="500">
-                    <div class="problem-icon">☑️</div>
-                    <p>엔지니어와 방문일정을 조율하고 기다릴 시간이 없다.</p>
-                </div>
-            </div>
-            <div class="section-text" data-aos="fade-up" data-aos-delay="600">
-                <p><strong>Optimaece는 '단건으로는 지원 받기 어려운' 기존 구조의 문제에서 시작했습니다.</strong></p>
-            </div>
+        <div class="profile-hero" id="profileHero"></div>
+        <div class="profile-tabs">
+            <div class="profile-tab active" data-tab="works">작품</div>
+            <div class="profile-tab" data-tab="about">소개</div>
+            <div class="profile-tab" data-tab="collection">컬렉션</div>
         </div>
-    </section>
+        <div class="works-grid" id="worksGrid"></div>
+    </div>
 
-    <!-- Story Section -->
-    <section class="story">
-        <div class="container">
-            <div class="story-content" data-aos="fade-up">
-                <h2>저도 그 고민, 너무 잘 압니다.</h2>
-                <p>엔지니어로 고객사를 6년간 지원하면서, 수없이 들었던 말들이 있습니다.</p>
-                <blockquote data-aos="fade-up" data-aos-delay="200">
-                    "이 쿼리 하나만 튜닝하면 되는데… 유지보수 계약은 너무 비싸요."
-                </blockquote>
-                <blockquote data-aos="fade-up" data-aos-delay="400">
-                    "프리랜서는 최소 1개월 계약인데 저는 단 몇 건만 해결하고 싶어요."
-                </blockquote>
-                <blockquote data-aos="fade-up" data-aos-delay="600">
-                    "비용 때문에 그냥 참고 쓰고 있어요…"
-                </blockquote>
-                <p data-aos="fade-up" data-aos-delay="800">지금은 DBA로 일하고 있지만 여전히 주변에서 똑같은 얘기가 들려옵니다.</p>
-                <p data-aos="fade-up" data-aos-delay="1000"><strong>이 문제를 겪어본 사람만이 진짜 해결할 수 있습니다.<br>그래서 Optimaece를 만들었습니다.</strong></p>
-            </div>
-        </div>
-    </section>
+    <div class="toast" id="toast"></div>
 
-    <!-- Solution Section -->
-    <section class="solution">
-        <div class="container">
-            <div class="section-header" data-aos="fade-up">
-                <h2>해결책은 이미 준비되어 있습니다. — Optimaece</h2>
-            </div>
-            <div class="solution-content" data-aos="fade-up" data-aos-delay="200">
-                <p>엔지니어로 시작한 <strong>12년 경력의 대기업 출신 DBA</strong>와<br>
-                통계학과 출신의 <strong>DB 컨설턴트</strong>가<br>
-                실전 경험을 기반으로<br>
-                <strong>건당 20만 원</strong>에 정확하고 빠르게 해결합니다.</p>
-            </div>
-            <div class="solution-highlights">
-                <div class="highlight-item" data-aos="zoom-in" data-aos-delay="300">
-                    <div class="highlight-icon">⏰</div>
-                    <h3>24시간 내 결과 제공</h3>
-                </div>
-                <div class="highlight-item" data-aos="zoom-in" data-aos-delay="500">
-                    <div class="highlight-icon">💰</div>
-                    <h3>건당 과금 – 유지보수 계약 불필요</h3>
-                </div>
-                <div class="highlight-item" data-aos="zoom-in" data-aos-delay="700">
-                    <div class="highlight-icon">🎯</div>
-                    <h3>의미 있는 성능 개선이 없으면 100% 환불</h3>
-                </div>
-            </div>
-            <p class="solution-tagline" data-aos="fade-up" data-aos-delay="900">낭비 없는 구조. 필요한 만큼만. 결과는 엔터프라이즈급으로.</p>
-        </div>
-    </section>
+    <script>
+        // SVG 아바타 생성 함수
+        function createAvatarSVG(name, colors, style = 'female') {
+            const [bg1, bg2, skin, hair, accent] = colors;
+            
+            if (style === 'female') {
+                return `
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="bg_${name}" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:${bg1}"/>
+                            <stop offset="100%" style="stop-color:${bg2}"/>
+                        </linearGradient>
+                    </defs>
+                    <rect width="100" height="100" fill="url(#bg_${name})"/>
+                    <!-- Hair back -->
+                    <ellipse cx="50" cy="45" rx="35" ry="40" fill="${hair}"/>
+                    <!-- Face -->
+                    <ellipse cx="50" cy="42" rx="25" ry="28" fill="${skin}"/>
+                    <!-- Hair front -->
+                    <path d="M25 35 Q30 20 50 18 Q70 20 75 35 Q70 28 50 25 Q30 28 25 35" fill="${hair}"/>
+                    <!-- Eyes -->
+                    <ellipse cx="40" cy="40" rx="4" ry="5" fill="#2d2d2d"/>
+                    <ellipse cx="60" cy="40" rx="4" ry="5" fill="#2d2d2d"/>
+                    <circle cx="41" cy="39" r="1.5" fill="white"/>
+                    <circle cx="61" cy="39" r="1.5" fill="white"/>
+                    <!-- Eyebrows -->
+                    <path d="M34 33 Q40 31 46 33" stroke="${hair}" stroke-width="1.5" fill="none"/>
+                    <path d="M54 33 Q60 31 66 33" stroke="${hair}" stroke-width="1.5" fill="none"/>
+                    <!-- Nose -->
+                    <path d="M50 42 L50 50 L47 52" stroke="${skin}" stroke-width="1" fill="none" opacity="0.5"/>
+                    <!-- Lips -->
+                    <path d="M44 58 Q50 62 56 58" stroke="${accent}" stroke-width="2" fill="${accent}" opacity="0.8"/>
+                    <!-- Blush -->
+                    <circle cx="35" cy="50" r="5" fill="#FFB6C1" opacity="0.3"/>
+                    <circle cx="65" cy="50" r="5" fill="#FFB6C1" opacity="0.3"/>
+                    <!-- Neck -->
+                    <rect x="43" y="68" width="14" height="15" fill="${skin}"/>
+                    <!-- Shoulders -->
+                    <ellipse cx="50" cy="90" rx="35" ry="20" fill="${accent}"/>
+                </svg>`;
+            } else {
+                return `
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="bg_${name}" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:${bg1}"/>
+                            <stop offset="100%" style="stop-color:${bg2}"/>
+                        </linearGradient>
+                    </defs>
+                    <rect width="100" height="100" fill="url(#bg_${name})"/>
+                    <!-- Hair -->
+                    <ellipse cx="50" cy="35" rx="28" ry="25" fill="${hair}"/>
+                    <!-- Face -->
+                    <ellipse cx="50" cy="42" rx="23" ry="26" fill="${skin}"/>
+                    <!-- Hair top -->
+                    <path d="M27 38 Q35 18 50 15 Q65 18 73 38 Q65 25 50 22 Q35 25 27 38" fill="${hair}"/>
+                    <!-- Eyes -->
+                    <ellipse cx="40" cy="40" rx="4" ry="4" fill="#2d2d2d"/>
+                    <ellipse cx="60" cy="40" rx="4" ry="4" fill="#2d2d2d"/>
+                    <circle cx="41" cy="39" r="1.5" fill="white"/>
+                    <circle cx="61" cy="39" r="1.5" fill="white"/>
+                    <!-- Eyebrows -->
+                    <path d="M33 32 Q40 30 47 33" stroke="${hair}" stroke-width="2" fill="none"/>
+                    <path d="M53 33 Q60 30 67 32" stroke="${hair}" stroke-width="2" fill="none"/>
+                    <!-- Nose -->
+                    <path d="M50 42 L50 52 L46 54" stroke="${skin}" stroke-width="1.5" fill="none" opacity="0.5"/>
+                    <!-- Lips -->
+                    <path d="M44 60 Q50 63 56 60" stroke="#c9a9a9" stroke-width="1.5" fill="none"/>
+                    <!-- Jaw line -->
+                    <path d="M30 50 Q50 75 70 50" stroke="${skin}" stroke-width="0" fill="none"/>
+                    <!-- Neck -->
+                    <rect x="42" y="66" width="16" height="18" fill="${skin}"/>
+                    <!-- Shoulders -->
+                    <ellipse cx="50" cy="95" rx="40" ry="22" fill="${accent}"/>
+                </svg>`;
+            }
+        }
 
-    <!-- Comparison Section -->
-    <section class="comparison">
-        <div class="container">
-            <div class="section-header" data-aos="fade-up">
-                <h2>기존 방식과의 비교</h2>
-            </div>
-            <div class="comparison-table" data-aos="fade-up" data-aos-delay="200">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>구분</th>
-                            <th>유지보수 계약</th>
-                            <th>프리랜서 DBA</th>
-                            <th class="highlight">Optimaece</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>계약기간</td>
-                            <td>연단위</td>
-                            <td>최소 1개월</td>
-                            <td class="highlight">건당</td>
-                        </tr>
-                        <tr>
-                            <td>비용</td>
-                            <td>3,000만원+</td>
-                            <td>500만원+</td>
-                            <td class="highlight">20만원</td>
-                        </tr>
-                        <tr>
-                            <td>처리속도</td>
-                            <td>상황에 따라 다름</td>
-                            <td>상황에 따라 다름</td>
-                            <td class="highlight">24시간</td>
-                        </tr>
-                        <tr>
-                            <td>계약절차</td>
-                            <td>필수</td>
-                            <td>필수</td>
-                            <td class="highlight">불필요</td>
-                        </tr>
-                        <tr>
-                            <td>방문여부</td>
-                            <td>O</td>
-                            <td>O</td>
-                            <td class="highlight">온라인처리</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <p class="comparison-note" data-aos="fade-up" data-aos-delay="400">단 한 건도 괜찮습니다.<br>Optimaece는 바로 그 부분을 새롭게 정의했습니다.</p>
-        </div>
-    </section>
+        // 작품 이미지 SVG 생성
+        function createArtworkSVG(style, index) {
+            const styles = {
+                cyberpunk: ['#0f0f23', '#1a1a3e', '#ff006e', '#00f5d4', '#9b5de5'],
+                fantasy: ['#1a1a2e', '#16213e', '#e94560', '#f8b500', '#7ee8fa'],
+                fashion: ['#2d2d2d', '#1a1a1a', '#ff6b6b', '#4ecdc4', '#ffe66d'],
+                dream: ['#1e1e3f', '#2d2d5a', '#c9b1ff', '#ffd6e0', '#98d1d0'],
+                anime: ['#1a1a2e', '#252547', '#ff9ff3', '#54a0ff', '#5f27cd']
+            };
+            
+            const colors = styles[style] || styles.cyberpunk;
+            const shapes = [
+                `<circle cx="${30 + index * 10}" cy="${40 + index * 5}" r="${20 + index * 3}" fill="${colors[2]}" opacity="0.6"/>`,
+                `<rect x="${20 + index * 8}" y="${50 + index * 3}" width="${40 - index * 2}" height="${30 + index * 2}" fill="${colors[3]}" opacity="0.5" transform="rotate(${index * 15} 50 50)"/>`,
+                `<polygon points="50,${20 - index * 2} ${70 + index * 3},${60 + index * 2} ${30 - index * 3},${60 + index * 2}" fill="${colors[4]}" opacity="0.4"/>`
+            ];
+            
+            return `
+            <svg viewBox="0 0 100 130" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="art_${style}_${index}" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:${colors[0]}"/>
+                        <stop offset="100%" style="stop-color:${colors[1]}"/>
+                    </linearGradient>
+                </defs>
+                <rect width="100" height="130" fill="url(#art_${style}_${index})"/>
+                ${shapes[index % 3]}
+                ${shapes[(index + 1) % 3]}
+                <circle cx="50" cy="65" r="25" fill="none" stroke="${colors[2]}" stroke-width="0.5" opacity="0.3"/>
+                <circle cx="50" cy="65" r="35" fill="none" stroke="${colors[3]}" stroke-width="0.3" opacity="0.2"/>
+            </svg>`;
+        }
 
-    <!-- Process Section -->
-    <section class="process" id="process">
-        <div class="container">
-            <div class="section-header" data-aos="fade-up">
-                <span class="section-label">K-DBA가 제안하는 절차</span>
-                <h2>서비스 프로세스</h2>
-            </div>
-            <div class="process-steps">
-                <div class="process-step" data-aos="fade-right" data-aos-delay="100">
-                    <div class="step-number">1</div>
-                    <div class="step-content">
-                        <h3>의뢰서 작성 (5분)</h3>
-                        <ul>
-                            <li>느린 SQL</li>
-                            <li>테이블 및 인덱스 구조</li>
-                            <li>실행계획(EXPLAIN)</li>
-                            <li>실행 시간</li>
-                            <li>대략적인 테이블 행 수</li>
-                        </ul>
+        // 캐릭터 데이터
+        const characters = [
+            {
+                id: 1,
+                name: 'Luna_AI',
+                handle: '@luna_ai_official',
+                badge: 'official',
+                bio: '사이버펑크 세계에서 온 디지털 뮤즈 ✨ 네온 불빛 아래 꿈을 그립니다',
+                followers: 12453,
+                works: 234,
+                likes: 89000,
+                colors: ['#1a1a3e', '#2d2d5a', '#f5e6d3', '#6C5CE7', '#ff006e'],
+                style: 'female',
+                artStyle: 'cyberpunk',
+                featured: true
+            },
+            {
+                id: 2,
+                name: 'Nova',
+                handle: '@nova_virtual',
+                badge: 'official',
+                bio: '가상 패션 아이콘 🖤 매일 새로운 OOTD를 선보입니다',
+                followers: 23891,
+                works: 512,
+                likes: 156000,
+                colors: ['#2d2d2d', '#1a1a1a', '#e8d5c4', '#333', '#00CEC9'],
+                style: 'male',
+                artStyle: 'fashion'
+            },
+            {
+                id: 3,
+                name: 'Aira',
+                handle: '@aira_dream',
+                badge: 'creator',
+                bio: 'Midjourney 아티스트 💜 AI가 그리는 환상의 세계',
+                followers: 8921,
+                works: 156,
+                likes: 45000,
+                colors: ['#1e1e3f', '#2d2d5a', '#ffe4c4', '#9b5de5', '#c9b1ff'],
+                style: 'female',
+                artStyle: 'dream'
+            },
+            {
+                id: 4,
+                name: 'Kai',
+                handle: '@kai_cyber',
+                badge: 'creator',
+                bio: '사이버 전사 ⚡ 미래에서 온 이야기를 전합니다',
+                followers: 5672,
+                works: 98,
+                likes: 34000,
+                colors: ['#0f0f23', '#1a1a3e', '#d4b896', '#1a1a1a', '#00f5d4'],
+                style: 'male',
+                artStyle: 'cyberpunk'
+            }
+        ];
+
+        // 떠오르는 신인
+        const risingStars = [
+            { id: 5, name: 'Yuki', genre: '애니메이션', colors: ['#252547', '#1a1a2e', '#fff0f0', '#ff9ff3', '#54a0ff'], style: 'female' },
+            { id: 6, name: 'Neon', genre: '사이버펑크', colors: ['#0f0f23', '#1a1a3e', '#f0e6d3', '#00f5d4', '#ff006e'], style: 'female' },
+            { id: 7, name: 'Velvet', genre: '다크 패션', colors: ['#1a1a1a', '#2d2d2d', '#e8d5c4', '#4a0e0e', '#8b0000'], style: 'female' },
+            { id: 8, name: 'Iris', genre: '판타지', colors: ['#1a1a2e', '#16213e', '#ffe4c4', '#e94560', '#7ee8fa'], style: 'female' },
+            { id: 9, name: 'Echo', genre: 'SF', colors: ['#0a0a1a', '#151530', '#d4c4b0', '#00CEC9', '#6C5CE7'], style: 'male' }
+        ];
+
+        function formatNumber(num) {
+            if (num >= 10000) return (num / 10000).toFixed(1) + '만';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return num.toString();
+        }
+
+        function renderCharacterGrid() {
+            const grid = document.getElementById('characterGrid');
+            grid.innerHTML = characters.map(char => `
+                <div class="character-card ${char.featured ? 'featured' : ''}" onclick="openCharacter(${char.id})">
+                    <div class="character-cover">
+                        ${createAvatarSVG(char.name, char.colors, char.style)}
+                        <span class="character-badge ${char.badge === 'official' ? 'badge-official' : 'badge-creator'}">
+                            ${char.badge === 'official' ? '공식' : '크리에이터'}
+                        </span>
                     </div>
-                </div>
-                <div class="process-step" data-aos="fade-left" data-aos-delay="300">
-                    <div class="step-number">2</div>
-                    <div class="step-content">
-                        <h3>1차 분석 (4시간 이내)</h3>
-                        <ul>
-                            <li>문제 원인 파악</li>
-                            <li>소요 시간 및 비용 확정</li>
-                            <li>해결 불가능한 경우 사전 안내</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="process-step" data-aos="fade-right" data-aos-delay="500">
-                    <div class="step-number">3</div>
-                    <div class="step-content">
-                        <h3>튜닝 작업 (24시간 이내)</h3>
-                        <ul>
-                            <li>최적화된 쿼리 재작성</li>
-                            <li>인덱스 설계/변경</li>
-                            <li>최적화된 힌트 제안</li>
-                            <li>성능 테스트(원격 지원 시)</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="process-step" data-aos="fade-left" data-aos-delay="700">
-                    <div class="step-number">4</div>
-                    <div class="step-content">
-                        <h3>결과 전달</h3>
-                        <ul>
-                            <li>개선 쿼리 및 인덱스 가이드 제공</li>
-                            <li>상세한 개선 설명</li>
-                            <li>Before / After 비교(원격 지원 시)</li>
-                            <li>주의사항 제공</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Cases Section -->
-    <section class="cases" id="cases">
-        <div class="container">
-            <div class="section-header" data-aos="fade-up">
-                <span class="section-label">한국 주요 산업 레퍼런스</span>
-                <h2>실제 개선 사례</h2>
-                <p>대기업부터 중소기업까지, 검증된 성능 개선 결과</p>
-            </div>
-
-            <!-- Swiper Slider -->
-            <div class="swiper casesSwiper" data-aos="fade-up" data-aos-delay="200">
-                <div class="swiper-wrapper">
-                    <!-- Case 1 -->
-                    <div class="swiper-slide">
-                        <div class="case-card">
-                            <h3>국내 최상위 대학교</h3>
-                            <div class="case-items">
-                                <div class="case-item">
-                                    <div class="case-before">66.32초</div>
-                                    <div class="case-arrow">→</div>
-                                    <div class="case-after">0.51초</div>
-                                    <div class="case-improvement">약 130배 향상 (99.23% 개선)</div>
-                                </div>
-                                <div class="case-item">
-                                    <div class="case-before">12,649초</div>
-                                    <div class="case-arrow">→</div>
-                                    <div class="case-after">1.14초</div>
-                                    <div class="case-improvement">약 11,097배 향상 (99.99% 개선)</div>
-                                </div>
-                                <div class="case-item">
-                                    <div class="case-before">3,469초</div>
-                                    <div class="case-arrow">→</div>
-                                    <div class="case-after">2.21초</div>
-                                    <div class="case-improvement">약 1,570배 향상 (99.99% 개선)</div>
-                                </div>
-                            </div>
+                    <div class="character-info">
+                        <div class="character-name">
+                            ${char.name}
+                            ${char.badge === 'official' ? '<svg class="verified-icon" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" fill="currentColor"/><polyline points="22 4 12 14.01 9 11.01" fill="none" stroke="#fff" stroke-width="2"/></svg>' : ''}
                         </div>
-                    </div>
-
-                    <!-- Case 2 -->
-                    <div class="swiper-slide">
-                        <div class="case-card">
-                            <h3>대형서점</h3>
-                            <div class="case-items">
-                                <div class="case-item">
-                                    <div class="case-before">18초</div>
-                                    <div class="case-arrow">→</div>
-                                    <div class="case-after">0.01초</div>
-                                    <div class="case-improvement">1,800배 향상 (99.99% 개선)</div>
-                                </div>
-                                <div class="case-item">
-                                    <div class="case-before">10.37초</div>
-                                    <div class="case-arrow">→</div>
-                                    <div class="case-after">0.01초</div>
-                                    <div class="case-improvement">1,037배 향상 (99.9% 개선)</div>
-                                </div>
-                                <div class="case-item">
-                                    <div class="case-before">4.5초</div>
-                                    <div class="case-arrow">→</div>
-                                    <div class="case-after">0.1초</div>
-                                    <div class="case-improvement">45배 향상 (97.78% 개선)</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Case 3 -->
-                    <div class="swiper-slide">
-                        <div class="case-card">
-                            <h3>대형병원</h3>
-                            <div class="case-items">
-                                <div class="case-item">
-                                    <div class="case-before">142초</div>
-                                    <div class="case-arrow">→</div>
-                                    <div class="case-after">0.97초</div>
-                                    <div class="case-improvement">약 146배 향상 (99.32% 개선)</div>
-                                </div>
-                                <div class="case-item">
-                                    <div class="case-before">16.36초</div>
-                                    <div class="case-arrow">→</div>
-                                    <div class="case-after">0.47초</div>
-                                    <div class="case-improvement">약 35배 향상 (97.13% 개선)</div>
-                                </div>
-                                <div class="case-item">
-                                    <div class="case-before">5.62초</div>
-                                    <div class="case-arrow">→</div>
-                                    <div class="case-after">0.01초</div>
-                                    <div class="case-improvement">562배 향상 (99.82% 개선)</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Case 4 -->
-                    <div class="swiper-slide">
-                        <div class="case-card">
-                            <h3>화장품대기업</h3>
-                            <div class="case-items">
-                                <div class="case-item">
-                                    <div class="case-before">22초</div>
-                                    <div class="case-arrow">→</div>
-                                    <div class="case-after">0.04초</div>
-                                    <div class="case-improvement">550배 향상 (99.82% 개선)</div>
-                                </div>
-                                <div class="case-item">
-                                    <div class="case-before">1,395초</div>
-                                    <div class="case-arrow">→</div>
-                                    <div class="case-after">2.01초</div>
-                                    <div class="case-improvement">약 694배 향상 (99.86% 개선)</div>
-                                </div>
-                                <div class="case-item">
-                                    <div class="case-before">8.39초</div>
-                                    <div class="case-arrow">→</div>
-                                    <div class="case-after">0.06초</div>
-                                    <div class="case-improvement">약 140배 향상 (99.28% 개선)</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Case 5 -->
-                    <div class="swiper-slide">
-                        <div class="case-card">
-                            <h3>이커머스대기업</h3>
-                            <div class="case-items">
-                                <div class="case-item">
-                                    <div class="case-before">0.27초</div>
-                                    <div class="case-arrow">→</div>
-                                    <div class="case-after">0.008초</div>
-                                    <div class="case-improvement">약 34배 향상 (97.04% 개선)</div>
-                                </div>
-                                <div class="case-item">
-                                    <div class="case-before">0.5초</div>
-                                    <div class="case-arrow">→</div>
-                                    <div class="case-after">0.0002초</div>
-                                    <div class="case-improvement">2,500배 향상 (99.96% 개선)</div>
-                                </div>
-                                <div class="case-item">
-                                    <div class="case-before">4,021초</div>
-                                    <div class="case-arrow">→</div>
-                                    <div class="case-after">0.027초</div>
-                                    <div class="case-improvement">약 148,926배 향상 (99.99% 개선)</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Case 6 -->
-                    <div class="swiper-slide">
-                        <div class="case-card">
-                            <h3>자동차대기업</h3>
-                            <div class="case-items">
-                                <div class="case-item">
-                                    <div class="case-before">19.2초</div>
-                                    <div class="case-arrow">→</div>
-                                    <div class="case-after">0.1초</div>
-                                    <div class="case-improvement">192배 향상 (99.48% 개선)</div>
-                                </div>
-                                <div class="case-item">
-                                    <div class="case-before">935초</div>
-                                    <div class="case-arrow">→</div>
-                                    <div class="case-after">0.8초</div>
-                                    <div class="case-improvement">약 1,169배 향상 (99.91% 개선)</div>
-                                </div>
-                                <div class="case-item">
-                                    <div class="case-before">304초</div>
-                                    <div class="case-arrow">→</div>
-                                    <div class="case-after">0.5초</div>
-                                    <div class="case-improvement">608배 개선 (99.84% 개선)</div>
-                                </div>
-                            </div>
+                        <div class="character-bio">${char.bio}</div>
+                        <div class="character-stats">
+                            <span>👥 ${formatNumber(char.followers)}</span>
+                            <span>🎨 ${char.works}</span>
                         </div>
                     </div>
                 </div>
-                <div class="swiper-pagination"></div>
-                <div class="swiper-button-prev"></div>
-                <div class="swiper-button-next"></div>
+            `).join('');
+        }
+
+        function renderRisingStars() {
+            const scroll = document.getElementById('risingScroll');
+            scroll.innerHTML = risingStars.map(star => `
+                <div class="rising-card">
+                    <div class="rising-avatar">
+                        ${createAvatarSVG(star.name, star.colors, star.style)}
+                        <span class="rising-new-badge">NEW</span>
+                    </div>
+                    <div class="rising-name">${star.name}</div>
+                    <div class="rising-genre">${star.genre}</div>
+                    <button class="rising-follow-btn" onclick="event.stopPropagation(); handleFollow(this)">팔로우</button>
+                </div>
+            `).join('');
+        }
+
+        function renderWorksPreview() {
+            const preview = document.getElementById('worksPreview');
+            let items = [];
+            characters.forEach(char => {
+                for (let i = 0; i < 2; i++) {
+                    items.push({ char, index: i });
+                }
+            });
+            
+            preview.innerHTML = items.slice(0, 6).map(item => `
+                <div class="work-item" onclick="openCharacter(${item.char.id})">
+                    ${createArtworkSVG(item.char.artStyle, item.index)}
+                    <div class="work-overlay">
+                        <div class="work-creator">
+                            <div class="mini-avatar" style="width:20px;height:20px;border-radius:50%;overflow:hidden;">
+                                ${createAvatarSVG(item.char.name + '_mini', item.char.colors, item.char.style)}
+                            </div>
+                            <span>${item.char.name}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderFollowingList() {
+            const list = document.getElementById('followingList');
+            const following = characters.slice(0, 3);
+            list.innerHTML = following.map(char => `
+                <div class="following-item" onclick="openCharacter(${char.id})">
+                    <div class="following-avatar">
+                        ${createAvatarSVG(char.name + '_follow', char.colors, char.style)}
+                    </div>
+                    <div class="following-info">
+                        <div class="following-name">
+                            ${char.name}
+                            ${char.badge === 'official' ? '<svg class="verified-icon" viewBox="0 0 24 24" style="width:14px;height:14px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" fill="currentColor"/><polyline points="22 4 12 14.01 9 11.01" fill="none" stroke="#fff" stroke-width="2"/></svg>' : ''}
+                        </div>
+                        <div class="following-bio">${char.bio}</div>
+                    </div>
+                    <span class="following-new-posts">+3 새 작품</span>
+                </div>
+            `).join('');
+        }
+
+        function openCharacter(id) {
+            const char = characters.find(c => c.id === id);
+            if (!char) return;
+
+            document.getElementById('modalTitle').textContent = char.name;
+            
+            document.getElementById('profileHero').innerHTML = `
+                <div class="profile-avatar-large">
+                    ${createAvatarSVG(char.name + '_large', char.colors, char.style)}
+                </div>
+                <div class="profile-name-large">
+                    ${char.name}
+                    ${char.badge === 'official' ? '<svg class="verified-icon" viewBox="0 0 24 24" style="width:20px;height:20px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" fill="var(--primary)"/><polyline points="22 4 12 14.01 9 11.01" fill="none" stroke="#fff" stroke-width="2"/></svg>' : ''}
+                </div>
+                <div class="profile-handle">${char.handle}</div>
+                <div class="profile-bio-large">${char.bio}</div>
+                <div class="profile-stats-large">
+                    <div class="stat-item">
+                        <div class="stat-value">${formatNumber(char.followers)}</div>
+                        <div class="stat-label">팔로워</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${char.works}</div>
+                        <div class="stat-label">작품</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${formatNumber(char.likes)}</div>
+                        <div class="stat-label">좋아요</div>
+                    </div>
+                </div>
+                <div class="profile-actions">
+                    <button class="btn-follow-large" onclick="handleFollowLarge(this)">팔로우</button>
+                    <button class="btn-support">💝 후원</button>
+                </div>
+            `;
+
+            let gridItems = '';
+            for (let i = 0; i < 9; i++) {
+                gridItems += `
+                    <div class="works-grid-item">
+                        ${createArtworkSVG(char.artStyle, i)}
+                    </div>
+                `;
+            }
+            document.getElementById('worksGrid').innerHTML = gridItems;
+
+            document.getElementById('characterModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCharacterModal() {
+            document.getElementById('characterModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function handleFollow(btn) {
+            const isFollowing = btn.textContent === '팔로잉';
+            btn.textContent = isFollowing ? '팔로우' : '팔로잉';
+            btn.style.background = isFollowing ? 'transparent' : 'var(--accent)';
+            btn.style.color = isFollowing ? 'var(--accent)' : 'var(--bg)';
+            showToast(isFollowing ? '팔로우를 취소했습니다' : '팔로우했습니다! ✨');
+        }
+
+        function handleFollowLarge(btn) {
+            const isFollowing = btn.classList.toggle('following');
+            btn.textContent = isFollowing ? '팔로잉' : '팔로우';
+            showToast(isFollowing ? '팔로우했습니다! ✨' : '팔로우를 취소했습니다');
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const page = item.dataset.page;
+                
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+
+                document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
+                
+                if (page === 'discover') {
+                    document.getElementById('discoverPage').classList.add('active');
+                } else if (page === 'following') {
+                    document.getElementById('followingPage').classList.add('active');
+                } else {
+                    showToast('준비 중인 기능입니다');
+                    document.getElementById('discoverPage').classList.add('active');
+                }
+            });
+        });
+
+        function showSearch() {
+            document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
+            document.getElementById('searchPage').classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        }
+
+        document.querySelectorAll('.category-tag').forEach(tag => {
+            tag.addEventListener('click', () => {
+                document.querySelectorAll('.category-tag').forEach(t => t.classList.remove('active'));
+                tag.classList.add('active');
+                showToast(`"${tag.textContent}" 카테고리 선택`);
+            });
+        });
+
+        document.querySelectorAll('.profile-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+            });
+        });
+
+        // 초기화
+        renderCharacterGrid();
+        renderRisingStars();
+        renderWorksPreview();
+        renderFollowingList();
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pello - AI 캐릭터를 발견하세요</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6C5CE7;
+            --primary-light: #A29BFE;
+            --primary-dark: #5849BE;
+            --accent: #00CEC9;
+            --pink: #FD79A8;
+            --bg: #0a0a0a;
+            --bg-card: #151515;
+            --bg-elevated: #1a1a1a;
+            --text: #fff;
+            --text-secondary: #888;
+            --text-tertiary: #555;
+            --border: #252525;
+            --gradient: linear-gradient(135deg, #6C5CE7 0%, #A29BFE 50%, #00CEC9 100%);
+        }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            min-height: 100dvh;
+        }
+
+        .app {
+            max-width: 430px;
+            margin: 0 auto;
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg);
+            position: relative;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 16px;
+            background: var(--bg);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 900;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .icon-btn:hover {
+            background: var(--bg-elevated);
+            border-color: var(--primary);
+        }
+
+        .icon-btn svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--text);
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .main {
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 80px;
+        }
+
+        .section {
+            padding: 20px 16px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title .emoji {
+            font-size: 1.3rem;
+        }
+
+        .see-all {
+            font-size: 0.85rem;
+            color: var(--primary-light);
+            cursor: pointer;
+        }
+
+        .character-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .character-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .character-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary);
+            box-shadow: 0 8px 30px rgba(108, 92, 231, 0.2);
+        }
+
+        .character-card.featured {
+            grid-column: span 2;
+            display: flex;
+            flex-direction: row;
+        }
+
+        .character-cover {
+            position: relative;
+            aspect-ratio: 1;
+            overflow: hidden;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+        .character-card.featured .character-cover {
+            width: 45%;
+            aspect-ratio: auto;
+            min-height: 180px;
+        }
+
+        .character-cover .avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .character-badge {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            z-index: 2;
+        }
+
+        .badge-official {
+            background: var(--gradient);
+            color: white;
+        }
+
+        .badge-creator {
+            background: rgba(0, 206, 201, 0.9);
+            color: white;
+        }
+
+        .badge-new {
+            background: var(--pink);
+            color: white;
+        }
+
+        .character-info {
+            padding: 14px;
+        }
+
+        .character-card.featured .character-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 16px;
+        }
+
+        .character-name {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .verified-icon {
+            width: 16px;
+            height: 16px;
+            fill: var(--primary);
+        }
+
+        .character-bio {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .character-stats {
+            display: flex;
+            gap: 12px;
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+        }
+
+        .character-stats span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .rising-scroll {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .rising-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .rising-card {
+            flex: 0 0 140px;
+            scroll-snap-align: start;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .rising-card:hover {
+            border-color: var(--accent);
+            background: var(--bg-elevated);
+        }
+
+        .rising-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            border: 3px solid var(--accent);
+            margin: 0 auto 12px;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+        .rising-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .rising-new-badge {
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            background: var(--pink);
+            color: white;
+            font-size: 0.55rem;
+            padding: 2px 5px;
+            border-radius: 6px;
+            font-weight: 700;
+        }
+
+        .rising-name {
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .rising-genre {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .rising-follow-btn {
+            padding: 6px 14px;
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .rising-follow-btn:hover {
+            background: var(--accent);
+            color: var(--bg);
+        }
+
+        .category-section {
+            padding: 16px;
+        }
+
+        .category-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .category-tag {
+            padding: 10px 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .category-tag:hover {
+            border-color: var(--primary);
+            background: rgba(108, 92, 231, 0.1);
+        }
+
+        .category-tag.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .works-preview {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+        }
+
+        .works-preview::-webkit-scrollbar {
+            display: none;
+        }
+
+        .work-item {
+            flex: 0 0 140px;
+            aspect-ratio: 3/4;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+        .work-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .work-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .work-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 10px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+        }
+
+        .work-creator {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .work-creator .mini-avatar {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .work-creator span {
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 430px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 12px 0;
+            padding-bottom: max(12px, env(safe-area-inset-bottom));
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border);
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            padding: 4px 16px;
+            opacity: 0.5;
+            transition: all 0.2s;
+        }
+
+        .nav-item.active {
+            opacity: 1;
+        }
+
+        .nav-item svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--text);
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .nav-item.active svg {
+            stroke: var(--primary-light);
+        }
+
+        .nav-item span {
+            font-size: 0.65rem;
+            font-weight: 500;
+        }
+
+        .nav-item.active span {
+            color: var(--primary-light);
+        }
+
+        .character-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg);
+            z-index: 2000;
+            overflow-y: auto;
+        }
+
+        .character-modal.active {
+            display: block;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+            position: sticky;
+            top: 0;
+            background: var(--bg);
+            z-index: 10;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .back-btn svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--text);
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .modal-title {
+            flex: 1;
+            text-align: center;
+            font-weight: 700;
+            margin-right: 40px;
+        }
+
+        .profile-hero {
+            padding: 24px 16px;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .profile-avatar-large {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 4px solid var(--primary);
+            margin: 0 auto 16px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+        .profile-avatar-large img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-name-large {
+            font-size: 1.4rem;
+            font-weight: 900;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .profile-handle {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+        }
+
+        .profile-bio-large {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            padding: 0 20px;
+            line-height: 1.6;
+        }
+
+        .profile-stats-large {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.3rem;
+            font-weight: 900;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .btn-follow-large {
+            padding: 12px 48px;
+            background: var(--gradient);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-follow-large:hover {
+            opacity: 0.9;
+            transform: scale(1.02);
+        }
+
+        .btn-follow-large.following {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+        }
+
+        .btn-support {
+            padding: 12px 24px;
+            background: transparent;
+            border: 2px solid var(--pink);
+            border-radius: 25px;
+            color: var(--pink);
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .profile-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 58px;
+            background: var(--bg);
+            z-index: 5;
+        }
+
+        .profile-tab {
+            flex: 1;
+            padding: 14px;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            position: relative;
+            transition: color 0.2s;
+        }
+
+        .profile-tab.active {
+            color: var(--text);
+        }
+
+        .profile-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20%;
+            right: 20%;
+            height: 2px;
+            background: var(--primary);
+        }
+
+        .works-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+            padding: 2px;
+        }
+
+        .works-grid-item {
+            aspect-ratio: 1;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+        .works-grid-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.2s;
+        }
+
+        .works-grid-item:hover img {
+            opacity: 0.8;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--bg-card);
+            border: 1px solid var(--primary);
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            z-index: 3000;
+            opacity: 0;
+            transition: all 0.3s;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .page-content {
+            display: none;
+        }
+
+        .page-content.active {
+            display: block;
+        }
+
+        .following-list {
+            padding: 16px;
+        }
+
+        .following-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+        }
+
+        .following-item:last-child {
+            border-bottom: none;
+        }
+
+        .following-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            overflow: hidden;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+        .following-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .following-info {
+            flex: 1;
+        }
+
+        .following-name {
+            font-weight: 700;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .following-bio {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .following-new-posts {
+            background: var(--primary);
+            color: white;
+            font-size: 0.7rem;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .search-page {
+            padding: 16px;
+        }
+
+        .search-input-wrapper {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 14px 20px 14px 48px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 25px;
+            color: var(--text);
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+        }
+
+        .search-input::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            stroke: var(--text-secondary);
+            fill: none;
+            stroke-width: 2;
+        }
+
+        /* AI 캐릭터 아바타 스타일 */
+        .ai-avatar {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ai-avatar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.3;
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <header class="header">
+            <div class="logo">Pello</div>
+            <div class="header-actions">
+                <div class="icon-btn" onclick="showSearch()">
+                    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
+                </div>
             </div>
+        </header>
+
+        <main class="main">
+            <div class="page-content active" id="discoverPage">
+                
+                <section class="section">
+                    <div class="section-header">
+                        <h2 class="section-title"><span class="emoji">✨</span> 오늘의 발견</h2>
+                        <span class="see-all">전체보기</span>
+                    </div>
+                    <div class="character-grid" id="characterGrid"></div>
+                </section>
+
+                <section class="section">
+                    <div class="section-header">
+                        <h2 class="section-title"><span class="emoji">🚀</span> 떠오르는 신인</h2>
+                    </div>
+                    <div class="rising-scroll" id="risingScroll"></div>
+                </section>
+
+                <section class="category-section">
+                    <div class="category-tags">
+                        <div class="category-tag active"># 전체</div>
+                        <div class="category-tag"># 사이버펑크</div>
+                        <div class="category-tag"># 판타지</div>
+                        <div class="category-tag"># 패션</div>
+                        <div class="category-tag"># 몽환</div>
+                        <div class="category-tag"># 애니메이션</div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <div class="section-header">
+                        <h2 class="section-title"><span class="emoji">🔥</span> 이번 주 인기</h2>
+                        <span class="see-all">전체보기</span>
+                    </div>
+                    <div class="works-preview" id="worksPreview"></div>
+                </section>
+
+            </div>
+
+            <div class="page-content" id="searchPage">
+                <div class="search-page">
+                    <div class="search-input-wrapper">
+                        <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
+                        <input type="text" class="search-input" placeholder="캐릭터, 태그, 스타일 검색...">
+                    </div>
+                    <div class="section-title" style="margin-bottom: 16px;"><span class="emoji">🔍</span> 추천 검색어</div>
+                    <div class="category-tags">
+                        <div class="category-tag"># 사이버펑크 뮤즈</div>
+                        <div class="category-tag"># 판타지 공주</div>
+                        <div class="category-tag"># AI 패션모델</div>
+                        <div class="category-tag"># 애니메이션</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-content" id="followingPage">
+                <div class="section" style="padding-top: 8px;">
+                    <div class="section-header">
+                        <h2 class="section-title"><span class="emoji">💜</span> 내 캐릭터</h2>
+                    </div>
+                </div>
+                <div class="following-list" id="followingList"></div>
+            </div>
+
+        </main>
+
+        <nav class="bottom-nav">
+            <div class="nav-item active" data-page="discover">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
+                <span>발견</span>
+            </div>
+            <div class="nav-item" data-page="following">
+                <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                <span>팔로잉</span>
+            </div>
+            <div class="nav-item" data-page="activity">
+                <svg viewBox="0 0 24 24"><path d="M22 17H2a3 3 0 0 0 3-3V9a7 7 0 0 1 14 0v5a3 3 0 0 0 3 3zm-8.27 4a2 2 0 0 1-3.46 0"></path></svg>
+                <span>알림</span>
+            </div>
+            <div class="nav-item" data-page="mypage">
+                <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <span>MY</span>
+            </div>
+        </nav>
+    </div>
+
+    <div class="character-modal" id="characterModal">
+        <div class="modal-header">
+            <div class="back-btn" onclick="closeCharacterModal()">
+                <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"></path></svg>
+            </div>
+            <div class="modal-title" id="modalTitle">Luna_AI</div>
         </div>
-    </section>
-
-    <!-- Team Section -->
-    <section class="team">
-        <div class="container">
-            <div class="section-header" data-aos="fade-up">
-                <span class="section-label">현업 출신 튜닝 듀오</span>
-                <h2>전문가 소개</h2>
-            </div>
-            <div class="team-grid">
-                <div class="team-member" data-aos="fade-up" data-aos-delay="200">
-                    <div class="member-icon">👨‍💼</div>
-                    <h3>12년 경력의 대기업 출신 DBA</h3>
-                    <ul>
-                        <li>엔지니어 6년 + DBA 6년</li>
-                        <li>Oracle / MySQL / MariaDB / Aurora MySQL 전문</li>
-                        <li>대용량 및 클라우드 마이그레이션 경험</li>
-                        <li>파티셔닝·인덱스 설계 경험 다수</li>
-                        <li>실시간 서비스 무중단 튜닝 다수</li>
-                        <li>배치 쿼리 튜닝 다수</li>
-                        <li>수십 개 고객사 기술지원 경험</li>
-                    </ul>
-                </div>
-                <div class="team-member" data-aos="fade-up" data-aos-delay="400">
-                    <div class="member-icon">👨‍💼</div>
-                    <h3>통계학과 출신의 DB 컨설턴트</h3>
-                    <ul>
-                        <li>DBA 2년 + 컨설턴트 6년</li>
-                        <li>SQL Server / Azure SQL Database 전문</li>
-                        <li>대용량 마이그레이션 및 백업/복구 경험</li>
-                        <li>클러스터(MSCS, Always On)구축 경험 다수</li>
-                        <li>파티셔닝·인덱스 설계 경험 다수</li>
-                        <li>OLTP 및 배치 튜닝 다수</li>
-                        <li>다수 고객사 DB 유지보수 경험</li>
-                    </ul>
-                </div>
-            </div>
-            <p class="team-quote" data-aos="fade-up" data-aos-delay="600">"여러분이 겪는 다양한 DB 문제를 누구보다 잘 이해하는 사람들입니다."</p>
+        <div class="profile-hero" id="profileHero"></div>
+        <div class="profile-tabs">
+            <div class="profile-tab active" data-tab="works">작품</div>
+            <div class="profile-tab" data-tab="about">소개</div>
+            <div class="profile-tab" data-tab="collection">컬렉션</div>
         </div>
-    </section>
+        <div class="works-grid" id="worksGrid"></div>
+    </div>
 
-    <!-- Beta Section -->
-    <section class="beta" id="beta">
-        <div class="container">
-            <div class="beta-content" data-aos="zoom-in">
-                <h2>무료 베타 테스터 모집 (선착순 10명)</h2>
-                <p>지금 신청하시는 첫 10분께 완전 무료로 SQL 튜닝을 제공합니다.</p>
+    <div class="toast" id="toast"></div>
 
-                <div class="beta-benefits">
-                    <h3>혜택:</h3>
-                    <ul>
-                        <li>무료 단건 튜닝 (정가 20만원)</li>
-                        <li>이후 30% 할인 쿠폰</li>
-                    </ul>
-                </div>
+    <script>
+        // SVG 아바타 생성 함수
+        function createAvatarSVG(name, colors, style = 'female') {
+            const [bg1, bg2, skin, hair, accent] = colors;
+            
+            if (style === 'female') {
+                return `
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="bg_${name}" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:${bg1}"/>
+                            <stop offset="100%" style="stop-color:${bg2}"/>
+                        </linearGradient>
+                    </defs>
+                    <rect width="100" height="100" fill="url(#bg_${name})"/>
+                    <!-- Hair back -->
+                    <ellipse cx="50" cy="45" rx="35" ry="40" fill="${hair}"/>
+                    <!-- Face -->
+                    <ellipse cx="50" cy="42" rx="25" ry="28" fill="${skin}"/>
+                    <!-- Hair front -->
+                    <path d="M25 35 Q30 20 50 18 Q70 20 75 35 Q70 28 50 25 Q30 28 25 35" fill="${hair}"/>
+                    <!-- Eyes -->
+                    <ellipse cx="40" cy="40" rx="4" ry="5" fill="#2d2d2d"/>
+                    <ellipse cx="60" cy="40" rx="4" ry="5" fill="#2d2d2d"/>
+                    <circle cx="41" cy="39" r="1.5" fill="white"/>
+                    <circle cx="61" cy="39" r="1.5" fill="white"/>
+                    <!-- Eyebrows -->
+                    <path d="M34 33 Q40 31 46 33" stroke="${hair}" stroke-width="1.5" fill="none"/>
+                    <path d="M54 33 Q60 31 66 33" stroke="${hair}" stroke-width="1.5" fill="none"/>
+                    <!-- Nose -->
+                    <path d="M50 42 L50 50 L47 52" stroke="${skin}" stroke-width="1" fill="none" opacity="0.5"/>
+                    <!-- Lips -->
+                    <path d="M44 58 Q50 62 56 58" stroke="${accent}" stroke-width="2" fill="${accent}" opacity="0.8"/>
+                    <!-- Blush -->
+                    <circle cx="35" cy="50" r="5" fill="#FFB6C1" opacity="0.3"/>
+                    <circle cx="65" cy="50" r="5" fill="#FFB6C1" opacity="0.3"/>
+                    <!-- Neck -->
+                    <rect x="43" y="68" width="14" height="15" fill="${skin}"/>
+                    <!-- Shoulders -->
+                    <ellipse cx="50" cy="90" rx="35" ry="20" fill="${accent}"/>
+                </svg>`;
+            } else {
+                return `
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="bg_${name}" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:${bg1}"/>
+                            <stop offset="100%" style="stop-color:${bg2}"/>
+                        </linearGradient>
+                    </defs>
+                    <rect width="100" height="100" fill="url(#bg_${name})"/>
+                    <!-- Hair -->
+                    <ellipse cx="50" cy="35" rx="28" ry="25" fill="${hair}"/>
+                    <!-- Face -->
+                    <ellipse cx="50" cy="42" rx="23" ry="26" fill="${skin}"/>
+                    <!-- Hair top -->
+                    <path d="M27 38 Q35 18 50 15 Q65 18 73 38 Q65 25 50 22 Q35 25 27 38" fill="${hair}"/>
+                    <!-- Eyes -->
+                    <ellipse cx="40" cy="40" rx="4" ry="4" fill="#2d2d2d"/>
+                    <ellipse cx="60" cy="40" rx="4" ry="4" fill="#2d2d2d"/>
+                    <circle cx="41" cy="39" r="1.5" fill="white"/>
+                    <circle cx="61" cy="39" r="1.5" fill="white"/>
+                    <!-- Eyebrows -->
+                    <path d="M33 32 Q40 30 47 33" stroke="${hair}" stroke-width="2" fill="none"/>
+                    <path d="M53 33 Q60 30 67 32" stroke="${hair}" stroke-width="2" fill="none"/>
+                    <!-- Nose -->
+                    <path d="M50 42 L50 52 L46 54" stroke="${skin}" stroke-width="1.5" fill="none" opacity="0.5"/>
+                    <!-- Lips -->
+                    <path d="M44 60 Q50 63 56 60" stroke="#c9a9a9" stroke-width="1.5" fill="none"/>
+                    <!-- Jaw line -->
+                    <path d="M30 50 Q50 75 70 50" stroke="${skin}" stroke-width="0" fill="none"/>
+                    <!-- Neck -->
+                    <rect x="42" y="66" width="16" height="18" fill="${skin}"/>
+                    <!-- Shoulders -->
+                    <ellipse cx="50" cy="95" rx="40" ry="22" fill="${accent}"/>
+                </svg>`;
+            }
+        }
 
-                <div class="beta-conditions">
-                    <h3>조건:</h3>
-                    <ul>
-                        <li>튜닝 완료 후 간단한 후기 작성</li>
-                        <li>개선 사례 공개 동의 (쿼리 및 회사명 등 민감정보 비공개)</li>
-                    </ul>
-                </div>
+        // 작품 이미지 SVG 생성
+        function createArtworkSVG(style, index) {
+            const styles = {
+                cyberpunk: ['#0f0f23', '#1a1a3e', '#ff006e', '#00f5d4', '#9b5de5'],
+                fantasy: ['#1a1a2e', '#16213e', '#e94560', '#f8b500', '#7ee8fa'],
+                fashion: ['#2d2d2d', '#1a1a1a', '#ff6b6b', '#4ecdc4', '#ffe66d'],
+                dream: ['#1e1e3f', '#2d2d5a', '#c9b1ff', '#ffd6e0', '#98d1d0'],
+                anime: ['#1a1a2e', '#252547', '#ff9ff3', '#54a0ff', '#5f27cd']
+            };
+            
+            const colors = styles[style] || styles.cyberpunk;
+            const shapes = [
+                `<circle cx="${30 + index * 10}" cy="${40 + index * 5}" r="${20 + index * 3}" fill="${colors[2]}" opacity="0.6"/>`,
+                `<rect x="${20 + index * 8}" y="${50 + index * 3}" width="${40 - index * 2}" height="${30 + index * 2}" fill="${colors[3]}" opacity="0.5" transform="rotate(${index * 15} 50 50)"/>`,
+                `<polygon points="50,${20 - index * 2} ${70 + index * 3},${60 + index * 2} ${30 - index * 3},${60 + index * 2}" fill="${colors[4]}" opacity="0.4"/>`
+            ];
+            
+            return `
+            <svg viewBox="0 0 100 130" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="art_${style}_${index}" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:${colors[0]}"/>
+                        <stop offset="100%" style="stop-color:${colors[1]}"/>
+                    </linearGradient>
+                </defs>
+                <rect width="100" height="130" fill="url(#art_${style}_${index})"/>
+                ${shapes[index % 3]}
+                ${shapes[(index + 1) % 3]}
+                <circle cx="50" cy="65" r="25" fill="none" stroke="${colors[2]}" stroke-width="0.5" opacity="0.3"/>
+                <circle cx="50" cy="65" r="35" fill="none" stroke="${colors[3]}" stroke-width="0.3" opacity="0.2"/>
+            </svg>`;
+        }
 
-                <a href="https://forms.gle/your-google-form-link" target="_blank" class="beta-cta">지금 바로 신청하기</a>
-                <p class="beta-note">4시간 내 1차 분석 결과를 보내드립니다.</p>
-            </div>
-        </div>
-    </section>
+        // 캐릭터 데이터
+        const characters = [
+            {
+                id: 1,
+                name: 'Luna_AI',
+                handle: '@luna_ai_official',
+                badge: 'official',
+                bio: '사이버펑크 세계에서 온 디지털 뮤즈 ✨ 네온 불빛 아래 꿈을 그립니다',
+                followers: 12453,
+                works: 234,
+                likes: 89000,
+                colors: ['#1a1a3e', '#2d2d5a', '#f5e6d3', '#6C5CE7', '#ff006e'],
+                style: 'female',
+                artStyle: 'cyberpunk',
+                featured: true
+            },
+            {
+                id: 2,
+                name: 'Nova',
+                handle: '@nova_virtual',
+                badge: 'official',
+                bio: '가상 패션 아이콘 🖤 매일 새로운 OOTD를 선보입니다',
+                followers: 23891,
+                works: 512,
+                likes: 156000,
+                colors: ['#2d2d2d', '#1a1a1a', '#e8d5c4', '#333', '#00CEC9'],
+                style: 'male',
+                artStyle: 'fashion'
+            },
+            {
+                id: 3,
+                name: 'Aira',
+                handle: '@aira_dream',
+                badge: 'creator',
+                bio: 'Midjourney 아티스트 💜 AI가 그리는 환상의 세계',
+                followers: 8921,
+                works: 156,
+                likes: 45000,
+                colors: ['#1e1e3f', '#2d2d5a', '#ffe4c4', '#9b5de5', '#c9b1ff'],
+                style: 'female',
+                artStyle: 'dream'
+            },
+            {
+                id: 4,
+                name: 'Kai',
+                handle: '@kai_cyber',
+                badge: 'creator',
+                bio: '사이버 전사 ⚡ 미래에서 온 이야기를 전합니다',
+                followers: 5672,
+                works: 98,
+                likes: 34000,
+                colors: ['#0f0f23', '#1a1a3e', '#d4b896', '#1a1a1a', '#00f5d4'],
+                style: 'male',
+                artStyle: 'cyberpunk'
+            }
+        ];
 
-    <!-- Pricing Section -->
-    <section class="pricing" id="pricing">
-        <div class="container">
-            <div class="section-header" data-aos="fade-up">
-                <h2>정식 가격 안내 (베타 종료 후)</h2>
-            </div>
-            <div class="pricing-grid">
-                <div class="pricing-card" data-aos="fade-up" data-aos-delay="100">
-                    <h3>기본 튜닝</h3>
-                    <div class="price">20만원</div>
-                    <ul>
-                        <li>단순~중간 난이도</li>
-                        <li>24시간 이내 완료</li>
-                    </ul>
-                </div>
-                <div class="pricing-card" data-aos="fade-up" data-aos-delay="300">
-                    <h3>고난이도 튜닝</h3>
-                    <div class="price">40만원</div>
-                    <ul>
-                        <li>복잡한 쿼리 또는 배치 쿼리 등</li>
-                        <li>24시간 이내 완료</li>
-                    </ul>
-                </div>
-                <div class="pricing-card" data-aos="fade-up" data-aos-delay="500">
-                    <h3>긴급 튜닝</h3>
-                    <div class="price">50% 할증</div>
-                    <ul>
-                        <li>기본 튜닝 (6시간 이내)</li>
-                        <li>고난이도 튜닝 (12시간 이내)</li>
-                    </ul>
-                </div>
-                <div class="pricing-card featured" data-aos="fade-up" data-aos-delay="700">
-                    <div class="featured-badge">추천</div>
-                    <h3>월간 구독</h3>
-                    <div class="price">75만원</div>
-                    <ul>
-                        <li>기본 튜닝 기준 최대 월 5건</li>
-                        <li>월 1회 DB 헬스체크</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
+        // 떠오르는 신인
+        const risingStars = [
+            { id: 5, name: 'Yuki', genre: '애니메이션', colors: ['#252547', '#1a1a2e', '#fff0f0', '#ff9ff3', '#54a0ff'], style: 'female' },
+            { id: 6, name: 'Neon', genre: '사이버펑크', colors: ['#0f0f23', '#1a1a3e', '#f0e6d3', '#00f5d4', '#ff006e'], style: 'female' },
+            { id: 7, name: 'Velvet', genre: '다크 패션', colors: ['#1a1a1a', '#2d2d2d', '#e8d5c4', '#4a0e0e', '#8b0000'], style: 'female' },
+            { id: 8, name: 'Iris', genre: '판타지', colors: ['#1a1a2e', '#16213e', '#ffe4c4', '#e94560', '#7ee8fa'], style: 'female' },
+            { id: 9, name: 'Echo', genre: 'SF', colors: ['#0a0a1a', '#151530', '#d4c4b0', '#00CEC9', '#6C5CE7'], style: 'male' }
+        ];
 
-    <!-- FAQ Section -->
-    <section class="faq" id="faq">
-        <div class="container">
-            <div class="section-header" data-aos="fade-up">
-                <h2>FAQ</h2>
-            </div>
-            <div class="faq-list">
-                <div class="faq-item" data-aos="fade-up" data-aos-delay="100">
-                    <div class="faq-question">
-                        <h3>Q1. 보안은 어떻게 보장하나요?</h3>
-                        <span class="faq-toggle">+</span>
+        function formatNumber(num) {
+            if (num >= 10000) return (num / 10000).toFixed(1) + '만';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return num.toString();
+        }
+
+        function renderCharacterGrid() {
+            const grid = document.getElementById('characterGrid');
+            grid.innerHTML = characters.map(char => `
+                <div class="character-card ${char.featured ? 'featured' : ''}" onclick="openCharacter(${char.id})">
+                    <div class="character-cover">
+                        ${createAvatarSVG(char.name, char.colors, char.style)}
+                        <span class="character-badge ${char.badge === 'official' ? 'badge-official' : 'badge-creator'}">
+                            ${char.badge === 'official' ? '공식' : '크리에이터'}
+                        </span>
                     </div>
-                    <div class="faq-answer">
-                        <p>요청시 NDA(비밀유지협약서) 체결 가능합니다.</p>
+                    <div class="character-info">
+                        <div class="character-name">
+                            ${char.name}
+                            ${char.badge === 'official' ? '<svg class="verified-icon" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" fill="currentColor"/><polyline points="22 4 12 14.01 9 11.01" fill="none" stroke="#fff" stroke-width="2"/></svg>' : ''}
+                        </div>
+                        <div class="character-bio">${char.bio}</div>
+                        <div class="character-stats">
+                            <span>👥 ${formatNumber(char.followers)}</span>
+                            <span>🎨 ${char.works}</span>
+                        </div>
                     </div>
                 </div>
+            `).join('');
+        }
 
-                <div class="faq-item" data-aos="fade-up" data-aos-delay="200">
-                    <div class="faq-question">
-                        <h3>Q2. 어떤 데이터베이스 지원하나요?</h3>
-                        <span class="faq-toggle">+</span>
+        function renderRisingStars() {
+            const scroll = document.getElementById('risingScroll');
+            scroll.innerHTML = risingStars.map(star => `
+                <div class="rising-card">
+                    <div class="rising-avatar">
+                        ${createAvatarSVG(star.name, star.colors, star.style)}
+                        <span class="rising-new-badge">NEW</span>
                     </div>
-                    <div class="faq-answer">
-                        <p>SQL Server, MySQL, MariaDB, Aurora MySQL, Oracle을 지원합니다.</p>
+                    <div class="rising-name">${star.name}</div>
+                    <div class="rising-genre">${star.genre}</div>
+                    <button class="rising-follow-btn" onclick="event.stopPropagation(); handleFollow(this)">팔로우</button>
+                </div>
+            `).join('');
+        }
+
+        function renderWorksPreview() {
+            const preview = document.getElementById('worksPreview');
+            let items = [];
+            characters.forEach(char => {
+                for (let i = 0; i < 2; i++) {
+                    items.push({ char, index: i });
+                }
+            });
+            
+            preview.innerHTML = items.slice(0, 6).map(item => `
+                <div class="work-item" onclick="openCharacter(${item.char.id})">
+                    ${createArtworkSVG(item.char.artStyle, item.index)}
+                    <div class="work-overlay">
+                        <div class="work-creator">
+                            <div class="mini-avatar" style="width:20px;height:20px;border-radius:50%;overflow:hidden;">
+                                ${createAvatarSVG(item.char.name + '_mini', item.char.colors, item.char.style)}
+                            </div>
+                            <span>${item.char.name}</span>
+                        </div>
                     </div>
                 </div>
+            `).join('');
+        }
 
-                <div class="faq-item" data-aos="fade-up" data-aos-delay="300">
-                    <div class="faq-question">
-                        <h3>Q3. 복잡한 쿼리도 가능한가요?</h3>
-                        <span class="faq-toggle">+</span>
+        function renderFollowingList() {
+            const list = document.getElementById('followingList');
+            const following = characters.slice(0, 3);
+            list.innerHTML = following.map(char => `
+                <div class="following-item" onclick="openCharacter(${char.id})">
+                    <div class="following-avatar">
+                        ${createAvatarSVG(char.name + '_follow', char.colors, char.style)}
                     </div>
-                    <div class="faq-answer">
-                        <p>1차 분석 후 난이도와 소요 시간을 안내드립니다.</p>
+                    <div class="following-info">
+                        <div class="following-name">
+                            ${char.name}
+                            ${char.badge === 'official' ? '<svg class="verified-icon" viewBox="0 0 24 24" style="width:14px;height:14px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" fill="currentColor"/><polyline points="22 4 12 14.01 9 11.01" fill="none" stroke="#fff" stroke-width="2"/></svg>' : ''}
+                        </div>
+                        <div class="following-bio">${char.bio}</div>
+                    </div>
+                    <span class="following-new-posts">+3 새 작품</span>
+                </div>
+            `).join('');
+        }
+
+        function openCharacter(id) {
+            const char = characters.find(c => c.id === id);
+            if (!char) return;
+
+            document.getElementById('modalTitle').textContent = char.name;
+            
+            document.getElementById('profileHero').innerHTML = `
+                <div class="profile-avatar-large">
+                    ${createAvatarSVG(char.name + '_large', char.colors, char.style)}
+                </div>
+                <div class="profile-name-large">
+                    ${char.name}
+                    ${char.badge === 'official' ? '<svg class="verified-icon" viewBox="0 0 24 24" style="width:20px;height:20px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" fill="var(--primary)"/><polyline points="22 4 12 14.01 9 11.01" fill="none" stroke="#fff" stroke-width="2"/></svg>' : ''}
+                </div>
+                <div class="profile-handle">${char.handle}</div>
+                <div class="profile-bio-large">${char.bio}</div>
+                <div class="profile-stats-large">
+                    <div class="stat-item">
+                        <div class="stat-value">${formatNumber(char.followers)}</div>
+                        <div class="stat-label">팔로워</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${char.works}</div>
+                        <div class="stat-label">작품</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${formatNumber(char.likes)}</div>
+                        <div class="stat-label">좋아요</div>
                     </div>
                 </div>
-
-                <div class="faq-item" data-aos="fade-up" data-aos-delay="400">
-                    <div class="faq-question">
-                        <h3>Q4. 쿼리가 아닌 테이블 구조 문제도 해결하나요?</h3>
-                        <span class="faq-toggle">+</span>
-                    </div>
-                    <div class="faq-answer">
-                        <p>1차 분석 후 테이블 구조 변경이 필요한 경우 안내드리며, 원하시는 경우 개선 방향을 제시해드립니다.</p>
-                    </div>
+                <div class="profile-actions">
+                    <button class="btn-follow-large" onclick="handleFollowLarge(this)">팔로우</button>
+                    <button class="btn-support">💝 후원</button>
                 </div>
+            `;
 
-                <div class="faq-item" data-aos="fade-up" data-aos-delay="500">
-                    <div class="faq-question">
-                        <h3>Q5. 환불 정책은 어떻게 되나요?</h3>
-                        <span class="faq-toggle">+</span>
+            let gridItems = '';
+            for (let i = 0; i < 9; i++) {
+                gridItems += `
+                    <div class="works-grid-item">
+                        ${createArtworkSVG(char.artStyle, i)}
                     </div>
-                    <div class="faq-answer">
-                        <p>30% 이상 성능 향상이 없으면 100% 환불해 드립니다.</p>
-                    </div>
-                </div>
+                `;
+            }
+            document.getElementById('worksGrid').innerHTML = gridItems;
 
-                <div class="faq-item" data-aos="fade-up" data-aos-delay="600">
-                    <div class="faq-question">
-                        <h3>Q6. 급한데 24시간도 기다릴 수 없어요!</h3>
-                        <span class="faq-toggle">+</span>
-                    </div>
-                    <div class="faq-answer">
-                        <p>긴급옵션(8시간 내 해결)도 제공 가능합니다. 50% 할증 적용됩니다.</p>
-                    </div>
-                </div>
+            document.getElementById('characterModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
 
-                <div class="faq-item" data-aos="fade-up" data-aos-delay="700">
-                    <div class="faq-question">
-                        <h3>Q7. 적용 후 문제가 생기면요?</h3>
-                        <span class="faq-toggle">+</span>
-                    </div>
-                    <div class="faq-answer">
-                        <p>튜닝 후 일주일간 무료 A/S 제공합니다. 적용 관련 문의사항도 언제든 질문해주세요.</p>
-                    </div>
-                </div>
+        function closeCharacterModal() {
+            document.getElementById('characterModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
 
-                <div class="faq-item" data-aos="fade-up" data-aos-delay="800">
-                    <div class="faq-question">
-                        <h3>Q8. 회사 승인이 필요한데 견적서 발행 가능한가요?</h3>
-                        <span class="faq-toggle">+</span>
-                    </div>
-                    <div class="faq-answer">
-                        <p>네, 가능합니다.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+        function handleFollow(btn) {
+            const isFollowing = btn.textContent === '팔로잉';
+            btn.textContent = isFollowing ? '팔로우' : '팔로잉';
+            btn.style.background = isFollowing ? 'transparent' : 'var(--accent)';
+            btn.style.color = isFollowing ? 'var(--accent)' : 'var(--bg)';
+            showToast(isFollowing ? '팔로우를 취소했습니다' : '팔로우했습니다! ✨');
+        }
 
-    <!-- CTA Section -->
-    <section class="final-cta">
-        <div class="container">
-            <div class="cta-content" data-aos="zoom-in">
-                <h2>단 한 건을 맡기세요.<br>전체 성능이 달라집니다.</h2>
-                <p>느린 쿼리를 방치하는 건, 더 큰 비용을 부르는 일입니다.<br>
-                지금 해결하는 것이 가장 빠르고 가장 저렴한 방법입니다.</p>
-                <a href="#beta" class="final-cta-btn">무료 베타 신청하기</a>
-            </div>
-        </div>
-    </section>
+        function handleFollowLarge(btn) {
+            const isFollowing = btn.classList.toggle('following');
+            btn.textContent = isFollowing ? '팔로잉' : '팔로우';
+            showToast(isFollowing ? '팔로우했습니다! ✨' : '팔로우를 취소했습니다');
+        }
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-logo">
-                    <h3>Optimaece</h3>
-                    <p>SQL 튜닝 전문 서비스</p>
-                </div>
-                <div class="footer-contact">
-                    <h4>문의 및 신청</h4>
-                    <p>이메일: <a href="mailto:optimaece@gmail.com">optimaece@gmail.com</a></p>
-                    <p>도메인: optimaece.com</p>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 Optimaece. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
 
-    <!-- AOS Library -->
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const page = item.dataset.page;
+                
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
 
-    <!-- Swiper JS -->
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+                document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
+                
+                if (page === 'discover') {
+                    document.getElementById('discoverPage').classList.add('active');
+                } else if (page === 'following') {
+                    document.getElementById('followingPage').classList.add('active');
+                } else {
+                    showToast('준비 중인 기능입니다');
+                    document.getElementById('discoverPage').classList.add('active');
+                }
+            });
+        });
 
-    <!-- Custom JS -->
-    <script src="script.js"></script>
+        function showSearch() {
+            document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
+            document.getElementById('searchPage').classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        }
+
+        document.querySelectorAll('.category-tag').forEach(tag => {
+            tag.addEventListener('click', () => {
+                document.querySelectorAll('.category-tag').forEach(t => t.classList.remove('active'));
+                tag.classList.add('active');
+                showToast(`"${tag.textContent}" 카테고리 선택`);
+            });
+        });
+
+        document.querySelectorAll('.profile-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+            });
+        });
+
+        // 초기화
+        renderCharacterGrid();
+        renderRisingStars();
+        renderWorksPreview();
+        renderFollowingList();
+    </script>
 </body>
 </html>
