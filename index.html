@@ -502,6 +502,219 @@ body {
   width: 100%;
   height: 280px;
 }
+
+/* Benefits Calculator */
+.benefits-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+
+.benefits-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 1.5rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.benefits-header:hover { background: var(--bg-card-hover); }
+
+.benefits-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.benefits-header-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.benefits-header-sub {
+  font-size: 0.72rem;
+  color: var(--accent-purple);
+  font-weight: 500;
+}
+
+.benefits-toggle {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  transition: transform 0.3s;
+}
+
+.benefits-toggle.open { transform: rotate(180deg); }
+
+.benefits-body {
+  display: none;
+  padding: 0 1.5rem 1.5rem;
+}
+
+.benefits-body.open { display: block; }
+
+.benefits-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 640px) {
+  .benefits-columns { grid-template-columns: 1fr; }
+}
+
+.benefits-col {
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.benefits-col-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.benefits-col.stay .benefits-col-title { color: var(--accent-stay); }
+.benefits-col.move .benefits-col-title { color: var(--accent-move); }
+
+.benefit-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(42,53,72,0.3);
+}
+
+.benefit-row:last-child { border-bottom: none; }
+
+.benefit-check {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent-purple);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.benefit-name {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  flex: 1;
+  min-width: 0;
+}
+
+.benefit-value {
+  width: 70px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 3px 6px;
+  color: var(--text-primary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.benefit-value:focus {
+  outline: none;
+  border-color: var(--accent-purple);
+}
+
+.benefit-unit {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  width: 20px;
+  flex-shrink: 0;
+}
+
+.benefit-divider {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  padding: 8px 0 4px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.benefits-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 2px solid var(--border);
+}
+
+.benefits-total-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.benefits-total-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.benefits-col.stay .benefits-total-value { color: var(--accent-stay); }
+.benefits-col.move .benefits-total-value { color: var(--accent-move); }
+
+.benefits-apply-btn {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin-top: 1rem;
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-stay));
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.benefits-apply-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(139,92,246,0.3);
+}
+
+.benefits-diff {
+  text-align: center;
+  padding: 12px;
+  margin-top: 1rem;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.benefits-diff-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.benefits-diff-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.benefit-neg {
+  color: var(--accent-danger);
+  font-size: 0.68rem;
+}
+
 </style>
 </head>
 <body>
@@ -540,6 +753,218 @@ body {
     </div>
   </section>
 
+  <!-- 복리후생 실질가치 계산기 -->
+  <section class="benefits-section" id="benefitsSection">
+    <div class="benefits-header" onclick="toggleBenefits()">
+      <div class="benefits-header-left">
+        <span class="benefits-header-title">🏢 복리후생 실질가치 환산</span>
+        <span class="benefits-header-sub">연봉 외 숨겨진 가치를 돈으로 계산합니다</span>
+      </div>
+      <span class="benefits-toggle" id="benefitsToggle">▼</span>
+    </div>
+    <div class="benefits-body" id="benefitsBody">
+      <div class="benefits-columns">
+        <!-- 현직 복리후생 -->
+        <div class="benefits-col stay">
+          <div class="benefits-col-title">📊 현직 복리후생</div>
+          
+          <div class="benefit-divider">💰 직접 금전 혜택</div>
+          <div class="benefit-row">
+            <input type="checkbox" class="benefit-check" checked data-side="stay" data-key="meal" onchange="calcBenefits()">
+            <span class="benefit-name">식대 지원 (비과세)</span>
+            <input type="number" class="benefit-value" id="stay-b-meal" value="180" onchange="calcBenefits()">
+            <span class="benefit-unit">만</span>
+          </div>
+          <div class="benefit-row">
+            <input type="checkbox" class="benefit-check" checked data-side="stay" data-key="transport" onchange="calcBenefits()">
+            <span class="benefit-name">교통비/주차비</span>
+            <input type="number" class="benefit-value" id="stay-b-transport" value="120" onchange="calcBenefits()">
+            <span class="benefit-unit">만</span>
+          </div>
+          <div class="benefit-row">
+            <input type="checkbox" class="benefit-check" checked data-side="stay" data-key="welfare" onchange="calcBenefits()">
+            <span class="benefit-name">복지포인트/선택복지</span>
+            <input type="number" class="benefit-value" id="stay-b-welfare" value="200" onchange="calcBenefits()">
+            <span class="benefit-unit">만</span>
+          </div>
+          <div class="benefit-row">
+            <input type="checkbox" class="benefit-check" data-side="stay" data-key="bonus" onchange="calcBenefits()">
+            <span class="benefit-name">성과급/인센티브 기대값</span>
+            <input type="number" class="benefit-value" id="stay-b-bonus" value="300" onchange="calcBenefits()">
+            <span class="benefit-unit">만</span>
+          </div>
+          <div class="benefit-row">
+            <input type="checkbox" class="benefit-check" data-side="stay" data-key="stock" onchange="calcBenefits()">
+            <span class="benefit-name">스톡옵션/RSU 연 기대값</span>
+            <input type="number" class="benefit-value" id="stay-b-stock" value="0" onchange="calcBenefits()">
+            <span class="benefit-unit">만</span>
+          </div>
+
+          <div class="benefit-divider">🏥 생활비 절감 효과</div>
+          <div class="benefit-row">
+            <input type="checkbox" class="benefit-check" checked data-side="stay" data-key="health" onchange="calcBenefits()">
+            <span class="benefit-name">건강검진 (본인+가족)</span>
+            <input type="number" class="benefit-value" id="stay-b-health" value="100" onchange="calcBenefits()">
+            <span class="benefit-unit">만</span>
+          </div>
+          <div class="benefit-row">
+            <input type="checkbox" class="benefit-check" data-side="stay" data-key="loan" onchange="calcBenefits()">
+            <span class="benefit-name">사내대출 이자절감 (연간)</span>
+            <input type="number" class="benefit-value" id="stay-b-loan" value="200" onchange="calcBenefits()">
+            <span class="benefit-unit">만</span>
+          </div>
+          <div class="benefit-row">
+            <input type="checkbox" class="benefit-check" data-side="stay" data-key="childEdu" onchange="calcBenefits()">
+            <span class="benefit-name">자녀 학자금 지원</span>
+            <input type="number" class="benefit-value" id="stay-b-childEdu" value="0" onchange="calcBenefits()">
+            <span class="benefit-unit">만</span>
+          </div>
+          <div class="benefit-row">
+            <input type="checkbox" class="benefit-check" data-side="stay" data-key="edu" onchange="calcBenefits()">
+            <span class="benefit-name">자기개발비/교육비</span>
+            <input type="number" class="benefit-value" id="stay-b-edu" value="100" onchange="calcBenefits()">
+            <span class="benefit-unit">만</span>
+          </div>
+          <div class="benefit-row">
+            <input type="checkbox" class="benefit-check" data-side="stay" data-key="event" onchange="calcBenefits()">
+            <span class="benefit-name">경조사비/명절선물</span>
+            <input type="number" class="benefit-value" id="stay-b-event" value="50" onchange="calcBenefits()">
+            <span class="benefit-unit">만</span>
+          </div>
+
+          <div class="benefit-divider">📉 차감 요소</div>
+          <div class="benefit-row">
+            <input type="checkbox" class="benefit-check" data-side="stay" data-key="commute" onchange="calcBenefits()">
+            <span class="benefit-name">통근 시간 비용 <span class="benefit-neg">(차감)</span></span>
+            <input type="number" class="benefit-value" id="stay-b-commute" value="0" onchange="calcBenefits()">
+            <span class="benefit-unit">만</span>
+          </div>
+
+          <div class="benefits-total">
+            <span class="benefits-total-label">복리후생 가치 합계</span>
+            <span class="benefits-total-value" id="stay-benefits-total">+600만</span>
+          </div>
+          <div class="benefits-total" style="border-top: 1px dashed var(--border); padding-top: 0.5rem; margin-top: 0.5rem;">
+            <span class="benefits-total-label">실질 연봉</span>
+            <span class="benefits-total-value" id="stay-real-salary">6,600만</span>
+          </div>
+        </div>
+
+        <!-- 이직처 복리후생 -->
+        <div class="benefits-col move">
+          <div class="benefits-col-title">🚀 이직처 복리후생</div>
+          
+          <div class="benefit-divider">💰 직접 금전 혜택</div>
+          <div class="benefit-row">
+            <input type="checkbox" class="benefit-check" checked data-side="move" data-key="meal" onchange="calcBenefits()">
+            <span class="benefit-name">식대 지원 (비과세)</span>
+            <input type="number" class="benefit-value" id="move-b-meal" value="180" onchange="calcBenefits()">
+            <span class="benefit-unit">만</span>
+          </div>
+          <div class="benefit-row">
+            <input type="checkbox" class="benefit-check" data-side="move" data-key="transport" onchange="calcBenefits()">
+            <span class="benefit-name">교통비/주차비</span>
+            <input type="number" class="benefit-value" id="move-b-transport" value="0" onchange="calcBenefits()">
+            <span class="benefit-unit">만</span>
+          </div>
+          <div class="benefit-row">
+            <input type="checkbox" class="benefit-check" data-side="move" data-key="welfare" onchange="calcBenefits()">
+            <span class="benefit-name">복지포인트/선택복지</span>
+            <input type="number" class="benefit-value" id="move-b-welfare" value="0" onchange="calcBenefits()">
+            <span class="benefit-unit">만</span>
+          </div>
+          <div class="benefit-row">
+            <input type="checkbox" class="benefit-check" data-side="move" data-key="bonus" onchange="calcBenefits()">
+            <span class="benefit-name">성과급/인센티브 기대값</span>
+            <input type="number" class="benefit-value" id="move-b-bonus" value="0" onchange="calcBenefits()">
+            <span class="benefit-unit">만</span>
+          </div>
+          <div class="benefit-row">
+            <input type="checkbox" class="benefit-check" data-side="move" data-key="stock" onchange="calcBenefits()">
+            <span class="benefit-name">스톡옵션/RSU 연 기대값</span>
+            <input type="number" class="benefit-value" id="move-b-stock" value="0" onchange="calcBenefits()">
+            <span class="benefit-unit">만</span>
+          </div>
+
+          <div class="benefit-divider">🏥 생활비 절감 효과</div>
+          <div class="benefit-row">
+            <input type="checkbox" class="benefit-check" data-side="move" data-key="health" onchange="calcBenefits()">
+            <span class="benefit-name">건강검진 (본인+가족)</span>
+            <input type="number" class="benefit-value" id="move-b-health" value="30" onchange="calcBenefits()">
+            <span class="benefit-unit">만</span>
+          </div>
+          <div class="benefit-row">
+            <input type="checkbox" class="benefit-check" data-side="move" data-key="loan" onchange="calcBenefits()">
+            <span class="benefit-name">사내대출 이자절감 (연간)</span>
+            <input type="number" class="benefit-value" id="move-b-loan" value="0" onchange="calcBenefits()">
+            <span class="benefit-unit">만</span>
+          </div>
+          <div class="benefit-row">
+            <input type="checkbox" class="benefit-check" data-side="move" data-key="childEdu" onchange="calcBenefits()">
+            <span class="benefit-name">자녀 학자금 지원</span>
+            <input type="number" class="benefit-value" id="move-b-childEdu" value="0" onchange="calcBenefits()">
+            <span class="benefit-unit">만</span>
+          </div>
+          <div class="benefit-row">
+            <input type="checkbox" class="benefit-check" data-side="move" data-key="edu" onchange="calcBenefits()">
+            <span class="benefit-name">자기개발비/교육비</span>
+            <input type="number" class="benefit-value" id="move-b-edu" value="0" onchange="calcBenefits()">
+            <span class="benefit-unit">만</span>
+          </div>
+          <div class="benefit-row">
+            <input type="checkbox" class="benefit-check" data-side="move" data-key="event" onchange="calcBenefits()">
+            <span class="benefit-name">경조사비/명절선물</span>
+            <input type="number" class="benefit-value" id="move-b-event" value="0" onchange="calcBenefits()">
+            <span class="benefit-unit">만</span>
+          </div>
+
+          <div class="benefit-divider">📉 차감 요소</div>
+          <div class="benefit-row">
+            <input type="checkbox" class="benefit-check" data-side="move" data-key="commute" onchange="calcBenefits()">
+            <span class="benefit-name">통근 시간 비용 <span class="benefit-neg">(차감)</span></span>
+            <input type="number" class="benefit-value" id="move-b-commute" value="0" onchange="calcBenefits()">
+            <span class="benefit-unit">만</span>
+          </div>
+          <div class="benefit-row">
+            <input type="checkbox" class="benefit-check" data-side="move" data-key="noRetire" onchange="calcBenefits()">
+            <span class="benefit-name">퇴직금 없음 (프리랜서) <span class="benefit-neg">(차감)</span></span>
+            <input type="number" class="benefit-value" id="move-b-noRetire" value="0" onchange="calcBenefits()">
+            <span class="benefit-unit">만</span>
+          </div>
+          <div class="benefit-row">
+            <input type="checkbox" class="benefit-check" data-side="move" data-key="insurance" onchange="calcBenefits()">
+            <span class="benefit-name">4대보험 본인전액 (프리랜서) <span class="benefit-neg">(차감)</span></span>
+            <input type="number" class="benefit-value" id="move-b-insurance" value="0" onchange="calcBenefits()">
+            <span class="benefit-unit">만</span>
+          </div>
+
+          <div class="benefits-total">
+            <span class="benefits-total-label">복리후생 가치 합계</span>
+            <span class="benefits-total-value" id="move-benefits-total">+180만</span>
+          </div>
+          <div class="benefits-total" style="border-top: 1px dashed var(--border); padding-top: 0.5rem; margin-top: 0.5rem;">
+            <span class="benefits-total-label">실질 연봉</span>
+            <span class="benefits-total-value" id="move-real-salary">7,680만</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="benefits-diff">
+        <div class="benefits-diff-label">복리후생 반영 실질 연봉 차이</div>
+        <div class="benefits-diff-value" id="benefits-diff">—</div>
+      </div>
+
+      <button class="benefits-apply-btn" onclick="applyBenefits()">
+        ✅ 실질 연봉을 시뮬레이션에 반영하기
+      </button>
+
+      <div class="preset-info" style="margin-top: 0.75rem;">
+        💡 <strong style="color:var(--text-secondary)">사용법:</strong> 각 항목을 체크하고 금액을 조정하세요. "반영하기" 버튼을 누르면 위의 연봉 입력값이 <strong>실질 연봉</strong>으로 교체됩니다.
+        복리후생 차이는 <strong>연간 생활비</strong>에도 자동 반영됩니다 (생활비 절감 항목 → 생활비 차감).
+      </div>
+    </div>
+  </section>
+
   <!-- 전략 설정 -->
   <section class="input-section">
     <div class="input-section-title">⚙️ 시뮬레이션 설정</div>
@@ -552,6 +977,7 @@ body {
           <option value="public">공기업/공공기관</option>
           <option value="startup">스타트업</option>
           <option value="foreign">외국계</option>
+          <option value="freelance">프리랜서/계약직</option>
         </select>
       </div>
       <div class="input-group">
@@ -562,14 +988,23 @@ body {
           <option value="public">공기업/공공기관</option>
           <option value="startup" selected>스타트업</option>
           <option value="foreign">외국계</option>
+          <option value="freelance">프리랜서/계약직</option>
         </select>
       </div>
-      <div class="input-group full-width">
+      <div class="input-group">
         <label>나의 리스크 허용도</label>
         <select id="riskTolerance">
           <option value="low">보수적 — 안정이 최우선</option>
           <option value="mid" selected>중립 — 적절한 위험 감수</option>
           <option value="high">공격적 — 높은 성장 추구</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label>소비 성향 (라이프스타일)</label>
+        <select id="lifestyleType">
+          <option value="frugal">절제형 — 소득 올라도 소비 유지</option>
+          <option value="normal" selected>보통 — 소득에 비례해 소비 증가</option>
+          <option value="spender">소비형 — 소득 오르면 소비도 확 늘림</option>
         </select>
       </div>
     </div>
@@ -579,6 +1014,19 @@ body {
       <span class="label-stay">현직</span> 연봉성장률 <span class="value" id="p-stay-growth">4.0%</span> · σ <span class="value" id="p-stay-vol">3.0%</span> · 실직확률 <span class="value" id="p-stay-fail">2%</span>
       &nbsp;|&nbsp;
       <span class="label-move">이직</span> 연봉성장률 <span class="value" id="p-move-growth">7.0%</span> · σ <span class="value" id="p-move-vol">8.0%</span> · 적응실패 <span class="value" id="p-move-fail">12%</span>
+      <br>
+      <span style="color:var(--accent-purple)">소비모델</span> 한계소비성향(MPC) <span class="value" id="p-mpc">0.47</span> · 물가상승 <span class="value">2.5%</span>/년 · 라이프스타일 계수 <span class="value" id="p-lifestyle">1.0x</span>
+    </div>
+    
+    <div class="preset-info" style="margin-top: 0.5rem; border-left: 2px solid var(--accent-purple); padding-left: 12px;">
+      <strong style="color:var(--text-secondary);">📐 소비 증가 공식</strong><br>
+      C(t+1) = C_고정 × (1 + 물가상승률) + MPC(Y) × (Y(t+1) − Y(t)) × λ<br>
+      <span style="font-size:0.72rem;">
+        • C_고정 = 초기소비의 60% (주거·보험·공과금 등 고정비)<br>
+        • MPC(Y) = 0.3 + 0.4 × e<sup>−Y/8000</sup> (소득↑ → 한계소비성향↓, 한국은행·KDI 연구 기반)<br>
+        • λ = 라이프스타일 계수 (절제 0.5 / 보통 1.0 / 소비형 1.5)<br>
+        • 소득 4천만: MPC≈0.54 | 6천만: MPC≈0.49 | 8천만: MPC≈0.45 | 1억: MPC≈0.41 | 1.5억: MPC≈0.35
+      </span>
     </div>
   </section>
 
@@ -632,6 +1080,14 @@ body {
           <span class="stat-label">5년 누적 소득</span>
           <span class="stat-value mono" id="stay-income">—</span>
         </div>
+        <div class="stat-row">
+          <span class="stat-label">5년 누적 소비</span>
+          <span class="stat-value mono" id="stay-expense" style="color:var(--accent-purple)">—</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">5년차 연간 소비</span>
+          <span class="stat-value mono" id="stay-final-expense">—</span>
+        </div>
         <div class="risk-meter">
           <div class="risk-label-row">
             <span>리스크 점수</span>
@@ -666,6 +1122,14 @@ body {
         <div class="stat-row">
           <span class="stat-label">5년 누적 소득</span>
           <span class="stat-value mono" id="move-income">—</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">5년 누적 소비</span>
+          <span class="stat-value mono" id="move-expense" style="color:var(--accent-purple)">—</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">5년차 연간 소비</span>
+          <span class="stat-value mono" id="move-final-expense">—</span>
         </div>
         <div class="risk-meter">
           <div class="risk-label-row">
@@ -712,20 +1176,222 @@ body {
 </main>
 
 <script>
+// ── 복리후생 계산기 ──
+function toggleBenefits() {
+  const body = document.getElementById('benefitsBody');
+  const toggle = document.getElementById('benefitsToggle');
+  body.classList.toggle('open');
+  toggle.classList.toggle('open');
+}
+
+// 차감 항목 키 목록
+const DEDUCT_KEYS = ['commute', 'noRetire', 'insurance'];
+
+// 생활비 절감 항목 (이 항목들은 생활비에서 차감)
+const LIVING_COST_KEYS = ['health', 'loan', 'childEdu', 'edu', 'event'];
+
+function calcBenefits() {
+  const sides = ['stay', 'move'];
+  const results = {};
+
+  sides.forEach(side => {
+    let total = 0;
+    let livingCostSaving = 0;
+    
+    const rows = document.querySelectorAll(`.benefit-check[data-side="${side}"]`);
+    rows.forEach(chk => {
+      if (!chk.checked) return;
+      const key = chk.dataset.key;
+      const valInput = document.getElementById(`${side}-b-${key}`);
+      const val = Number(valInput.value) || 0;
+      
+      if (DEDUCT_KEYS.includes(key)) {
+        total -= val;
+      } else {
+        total += val;
+        if (LIVING_COST_KEYS.includes(key)) {
+          livingCostSaving += val;
+        }
+      }
+    });
+    
+    results[side] = { total, livingCostSaving };
+    
+    // 표시 업데이트
+    const sign = total >= 0 ? '+' : '';
+    document.getElementById(`${side}-benefits-total`).textContent = `${sign}${total.toLocaleString()}만`;
+    
+    const baseSalary = side === 'stay' 
+      ? Number(document.getElementById('currentSalary').value) || 0
+      : Number(document.getElementById('offerSalary').value) || 0;
+    
+    const realSalary = baseSalary + total;
+    document.getElementById(`${side}-real-salary`).textContent = `${realSalary.toLocaleString()}만`;
+  });
+
+  // 차이 표시
+  const stayBase = Number(document.getElementById('currentSalary').value) || 0;
+  const moveBase = Number(document.getElementById('offerSalary').value) || 0;
+  const stayReal = stayBase + results.stay.total;
+  const moveReal = moveBase + results.move.total;
+  const diff = moveReal - stayReal;
+  
+  const diffEl = document.getElementById('benefits-diff');
+  if (diff > 0) {
+    diffEl.textContent = `이직처가 +${diff.toLocaleString()}만원 유리`;
+    diffEl.style.color = 'var(--accent-success)';
+  } else if (diff < 0) {
+    diffEl.textContent = `현직이 +${Math.abs(diff).toLocaleString()}만원 유리`;
+    diffEl.style.color = 'var(--accent-danger)';
+  } else {
+    diffEl.textContent = '동일';
+    diffEl.style.color = 'var(--text-secondary)';
+  }
+  
+  return results;
+}
+
+function applyBenefits() {
+  const results = calcBenefits();
+  
+  const stayBase = Number(document.getElementById('currentSalary').value) || 0;
+  const moveBase = Number(document.getElementById('offerSalary').value) || 0;
+  
+  // 실질 연봉 반영
+  document.getElementById('currentSalary').value = stayBase + results.stay.total;
+  document.getElementById('offerSalary').value = moveBase + results.move.total;
+  
+  // 생활비 절감 반영 — 현직 기준 생활비에서 차감
+  const currentExpense = Number(document.getElementById('annualExpense').value) || 0;
+  const expenseReduction = results.stay.livingCostSaving;
+  if (expenseReduction > 0) {
+    document.getElementById('annualExpense').value = Math.max(1200, currentExpense - expenseReduction);
+  }
+  
+  // 프리셋 표시 업데이트
+  updatePresetDisplay();
+  
+  // 시각적 피드백
+  const btn = document.querySelector('.benefits-apply-btn');
+  btn.textContent = '✅ 반영 완료! 위 입력값이 변경되었습니다';
+  btn.style.background = 'var(--accent-success)';
+  setTimeout(() => {
+    btn.textContent = '✅ 실질 연봉을 시뮬레이션에 반영하기';
+    btn.style.background = '';
+  }, 2500);
+  
+  // 입력값 하이라이트 효과
+  ['currentSalary', 'offerSalary', 'annualExpense'].forEach(id => {
+    const el = document.getElementById(id);
+    el.style.borderColor = 'var(--accent-purple)';
+    el.style.boxShadow = '0 0 8px rgba(139,92,246,0.3)';
+    setTimeout(() => {
+      el.style.borderColor = '';
+      el.style.boxShadow = '';
+    }, 2000);
+  });
+}
+
+// 기본 연봉 변경 시 복리후생도 재계산
+document.getElementById('currentSalary').addEventListener('input', calcBenefits);
+document.getElementById('offerSalary').addEventListener('input', calcBenefits);
+
+// 기업 유형별 복리후생 프리셋
+const BENEFIT_PRESETS = {
+  large:     { meal: [true,180], transport: [true,120], welfare: [true,200], bonus: [true,300], stock: [false,0], health: [true,100], loan: [true,200], childEdu: [false,300], edu: [true,100], event: [true,50], commute: [false,0], noRetire: [false,0], insurance: [false,0] },
+  mid:       { meal: [true,150], transport: [true,60],  welfare: [false,100], bonus: [false,150], stock: [false,0], health: [true,50],  loan: [false,0],   childEdu: [false,0],   edu: [false,50],  event: [true,30],  commute: [false,0], noRetire: [false,0], insurance: [false,0] },
+  public:    { meal: [true,180], transport: [true,120], welfare: [true,250], bonus: [false,100], stock: [false,0], health: [true,80],  loan: [true,250],  childEdu: [true,400],  edu: [true,100], event: [true,50],  commute: [false,0], noRetire: [false,0], insurance: [false,0] },
+  startup:   { meal: [true,180], transport: [false,0],  welfare: [false,0],  bonus: [false,0],   stock: [true,500], health: [false,0],  loan: [false,0],   childEdu: [false,0],   edu: [false,0],  event: [false,0],  commute: [false,0], noRetire: [false,0], insurance: [false,0] },
+  foreign:   { meal: [true,180], transport: [true,100], welfare: [true,150], bonus: [true,500], stock: [true,300], health: [true,150], loan: [false,0],   childEdu: [false,0],   edu: [true,200], event: [false,30], commute: [false,0], noRetire: [false,0], insurance: [false,0] },
+  freelance: { meal: [false,0],  transport: [false,0],  welfare: [false,0],  bonus: [false,0],   stock: [false,0], health: [false,0],  loan: [false,0],   childEdu: [false,0],   edu: [false,0],  event: [false,0],  commute: [false,0], noRetire: [true,0],  insurance: [true,0] },
+};
+
+function applyBenefitPreset(side, companyType) {
+  const preset = BENEFIT_PRESETS[companyType];
+  if (!preset) return;
+  
+  Object.entries(preset).forEach(([key, [checked, value]]) => {
+    const chk = document.querySelector(`.benefit-check[data-side="${side}"][data-key="${key}"]`);
+    const valInput = document.getElementById(`${side}-b-${key}`);
+    if (chk) chk.checked = checked;
+    if (valInput) {
+      // 프리랜서의 퇴직금/보험은 연봉 기반으로 자동 계산
+      if (key === 'noRetire' && companyType === 'freelance') {
+        const salary = Number(document.getElementById(side === 'stay' ? 'currentSalary' : 'offerSalary').value) || 0;
+        valInput.value = Math.round(salary * 0.083); // 연봉의 8.3%
+      } else if (key === 'insurance' && companyType === 'freelance') {
+        const salary = Number(document.getElementById(side === 'stay' ? 'currentSalary' : 'offerSalary').value) || 0;
+        valInput.value = Math.round(salary * 0.09); // 연봉의 ~9%
+      } else {
+        valInput.value = value;
+      }
+    }
+  });
+  
+  calcBenefits();
+}
+
+// 기업유형 변경 시 복리후생 프리셋 자동 적용
+document.getElementById('currentType').addEventListener('change', function() {
+  applyBenefitPreset('stay', this.value);
+});
+document.getElementById('offerType').addEventListener('change', function() {
+  applyBenefitPreset('move', this.value);
+});
+
+// 초기 계산
+setTimeout(calcBenefits, 100);
+
 // ── 기업 유형별 프리셋 파라미터 ──
 const PRESETS = {
-  large:   { growth: 0.04,  vol: 0.025, failRate: 0.02, adaptFail: 0.08,  label: '대기업' },
-  mid:     { growth: 0.045, vol: 0.035, failRate: 0.03, adaptFail: 0.12,  label: '중견기업' },
-  public:  { growth: 0.03,  vol: 0.015, failRate: 0.01, adaptFail: 0.05,  label: '공기업' },
-  startup: { growth: 0.08,  vol: 0.10,  failRate: 0.06, adaptFail: 0.18,  label: '스타트업' },
-  foreign: { growth: 0.055, vol: 0.05,  failRate: 0.04, adaptFail: 0.10,  label: '외국계' },
+  large:     { growth: 0.04,  vol: 0.025, failRate: 0.02, adaptFail: 0.08,  label: '대기업' },
+  mid:       { growth: 0.045, vol: 0.035, failRate: 0.03, adaptFail: 0.12,  label: '중견기업' },
+  public:    { growth: 0.03,  vol: 0.015, failRate: 0.01, adaptFail: 0.05,  label: '공기업' },
+  startup:   { growth: 0.08,  vol: 0.10,  failRate: 0.06, adaptFail: 0.18,  label: '스타트업' },
+  foreign:   { growth: 0.055, vol: 0.05,  failRate: 0.04, adaptFail: 0.10,  label: '외국계' },
+  freelance: { growth: 0.06,  vol: 0.15,  failRate: 0.08, adaptFail: 0.15,  label: '프리랜서' },
 };
 
 const SIM_COUNT = 5000;
 const YEARS = 5;
+const INFLATION = 0.025; // 연 물가상승률 2.5%
 
 let distChartInstance = null;
 let yearChartInstance = null;
+
+// ── 한계소비성향 함수 (한국은행/KDI 연구 기반) ──
+// 소득이 높을수록 MPC 감소 (체감)
+// Y: 연소득 (만원 단위)
+function getMPC(Y) {
+  return 0.3 + 0.4 * Math.exp(-Y / 8000);
+}
+
+// ── 라이프스타일 계수 ──
+const LIFESTYLE = {
+  frugal: 0.5,   // 절제형: 소득 증가분의 절반만 소비 증가
+  normal: 1.0,   // 보통: MPC 그대로 적용
+  spender: 1.5,  // 소비형: MPC의 1.5배 소비 증가
+};
+
+// ── 동적 소비 계산 함수 ──
+// C(t+1) = C_fixed * (1 + inflation) + C_variable + MPC(Y) * deltaY * lambda
+function calcExpense(prevExpense, prevSalary, newSalary, initialExpense, lifestyleLambda) {
+  const fixedRatio = 0.6;
+  const fixedExpense = initialExpense * fixedRatio;
+  const variableExpense = prevExpense - fixedExpense;
+  
+  const deltaSalary = Math.max(0, newSalary - prevSalary);
+  const mpc = getMPC(newSalary);
+  
+  // 고정비: 물가상승만 반영
+  const newFixed = fixedExpense * (1 + INFLATION);
+  // 변동비: 기존 변동비 + 소득증가분 × MPC × 라이프스타일 계수
+  const newVariable = variableExpense * (1 + INFLATION) + deltaSalary * mpc * lifestyleLambda;
+  
+  // 소비가 소득의 95%를 넘지 않도록 캡
+  const totalExpense = newFixed + Math.max(0, newVariable);
+  return Math.min(totalExpense, newSalary * 0.95);
+}
 
 // ── 정규분포 난수 (Box-Muller) ──
 function randn() {
@@ -739,8 +1405,10 @@ function randn() {
 function updatePresetDisplay() {
   const ct = document.getElementById('currentType').value;
   const ot = document.getElementById('offerType').value;
+  const lt = document.getElementById('lifestyleType').value;
   const sp = PRESETS[ct];
   const mp = PRESETS[ot];
+  const salary = Number(document.getElementById('currentSalary').value) || 6000;
 
   document.getElementById('p-stay-growth').textContent = (sp.growth * 100).toFixed(1) + '%';
   document.getElementById('p-stay-vol').textContent = (sp.vol * 100).toFixed(1) + '%';
@@ -748,10 +1416,14 @@ function updatePresetDisplay() {
   document.getElementById('p-move-growth').textContent = (mp.growth * 100).toFixed(1) + '%';
   document.getElementById('p-move-vol').textContent = (mp.vol * 100).toFixed(1) + '%';
   document.getElementById('p-move-fail').textContent = (mp.adaptFail * 100).toFixed(0) + '%';
+  document.getElementById('p-mpc').textContent = getMPC(salary).toFixed(2);
+  document.getElementById('p-lifestyle').textContent = LIFESTYLE[lt] + 'x';
 }
 
 document.getElementById('currentType').addEventListener('change', updatePresetDisplay);
 document.getElementById('offerType').addEventListener('change', updatePresetDisplay);
+document.getElementById('lifestyleType').addEventListener('change', updatePresetDisplay);
+document.getElementById('currentSalary').addEventListener('input', updatePresetDisplay);
 updatePresetDisplay();
 
 // ── 시뮬레이션 메인 ──
@@ -766,6 +1438,7 @@ function runSimulation() {
 
   const stayP = PRESETS[currentType];
   const moveP = PRESETS[offerType];
+  const lifestyleLambda = LIFESTYLE[document.getElementById('lifestyleType').value];
 
   // 리스크 허용도에 따른 투자 수익률 보정
   const investReturn = { low: 0.03, mid: 0.05, high: 0.08 }[riskTol];
@@ -782,29 +1455,40 @@ function runSimulation() {
     const moveYearlyMedians = Array.from({length: YEARS + 1}, () => []);
     const stayIncomes = [];
     const moveIncomes = [];
+    const stayExpenses = [];
+    const moveExpenses = [];
+    const stayFinalExpenses = [];
+    const moveFinalExpenses = [];
 
     for (let i = 0; i < SIM_COUNT; i++) {
       // ── 현직 유지 시뮬레이션 ──
       let asset = currentAsset;
       let salary = currentSalary;
+      let expense = annualExpense;
       let totalIncome = 0;
+      let totalExpense = 0;
       stayYearlyMedians[0].push(asset);
 
       for (let y = 0; y < YEARS; y++) {
+        const prevSalary = salary;
+        
         // 연봉 성장
         const growthRate = stayP.growth + stayP.vol * randn();
         salary = salary * (1 + Math.max(growthRate, -0.1));
 
+        // 소비 동적 계산 (소득 증가에 따른 소비 증가)
+        expense = calcExpense(expense, prevSalary, salary, annualExpense, lifestyleLambda);
+
         // 실직 이벤트
         if (Math.random() < stayP.failRate) {
-          // 3개월 무소득 + 재취업시 90% 연봉
           const income = salary * 0.75;
-          asset += income - annualExpense;
+          asset += income - expense;
           totalIncome += income;
         } else {
-          asset += salary - annualExpense;
+          asset += salary - expense;
           totalIncome += salary;
         }
+        totalExpense += expense;
 
         // 자산 투자 수익
         const assetReturn = investReturn + investVol * randn();
@@ -816,36 +1500,45 @@ function runSimulation() {
       }
       stayResults.push(asset);
       stayIncomes.push(totalIncome);
+      stayExpenses.push(totalExpense);
+      stayFinalExpenses.push(expense);
 
       // ── 이직 시뮬레이션 ──
       asset = currentAsset;
       salary = offerSalary;
+      expense = annualExpense; // 이직 초기에는 기존 소비 수준 유지
       totalIncome = 0;
+      totalExpense = 0;
       moveYearlyMedians[0].push(asset);
-      let adapted = false;
 
       for (let y = 0; y < YEARS; y++) {
+        const prevSalary = salary;
+        
         // 1년차: 적응 실패 리스크
         if (y === 0 && Math.random() < moveP.adaptFail) {
-          // 적응 실패: 6개월 소득 + 연봉 20% 하락으로 재취업
           const income = salary * 0.5;
           salary = salary * 0.8;
-          asset += income - annualExpense;
+          // 적응 실패 시 소비는 줄이지 못함 (고정비 존재)
+          expense = calcExpense(expense, prevSalary, salary, annualExpense, lifestyleLambda * 0.5);
+          asset += income - expense;
           totalIncome += income;
-          adapted = false;
         } else {
           const growthRate = moveP.growth + moveP.vol * randn();
           salary = salary * (1 + Math.max(growthRate, -0.15));
+          
+          // 이직 후 소비 증가 (연봉 점프에 따른 라이프스타일 인플레이션)
+          expense = calcExpense(expense, prevSalary, salary, annualExpense, lifestyleLambda);
 
           if (Math.random() < moveP.failRate && y > 0) {
             const income = salary * 0.75;
-            asset += income - annualExpense;
+            asset += income - expense;
             totalIncome += income;
           } else {
-            asset += salary - annualExpense;
+            asset += salary - expense;
             totalIncome += salary;
           }
         }
+        totalExpense += expense;
 
         const assetReturn = investReturn + investVol * randn();
         if (asset > 0) {
@@ -856,6 +1549,8 @@ function runSimulation() {
       }
       moveResults.push(asset);
       moveIncomes.push(totalIncome);
+      moveExpenses.push(totalExpense);
+      moveFinalExpenses.push(expense);
     }
 
     // ── 통계 계산 ──
@@ -863,6 +1558,10 @@ function runSimulation() {
     moveResults.sort((a, b) => a - b);
     stayIncomes.sort((a, b) => a - b);
     moveIncomes.sort((a, b) => a - b);
+    stayExpenses.sort((a, b) => a - b);
+    moveExpenses.sort((a, b) => a - b);
+    stayFinalExpenses.sort((a, b) => a - b);
+    moveFinalExpenses.sort((a, b) => a - b);
 
     const percentile = (arr, p) => arr[Math.floor(arr.length * p)];
     const median = (arr) => percentile(arr, 0.5);
@@ -874,6 +1573,8 @@ function runSimulation() {
         bot20: percentile(stayResults, 0.2),
         loss: stayResults.filter(v => v < currentAsset).length / SIM_COUNT,
         income: median(stayIncomes),
+        expense: median(stayExpenses),
+        finalExpense: median(stayFinalExpenses),
       },
       move: {
         median: median(moveResults),
@@ -881,6 +1582,8 @@ function runSimulation() {
         bot20: percentile(moveResults, 0.2),
         loss: moveResults.filter(v => v < currentAsset).length / SIM_COUNT,
         income: median(moveIncomes),
+        expense: median(moveExpenses),
+        finalExpense: median(moveFinalExpenses),
       }
     };
 
@@ -919,6 +1622,8 @@ function renderResults(stats, stayArr, moveArr, stayYearMedian, moveYearMedian, 
   document.getElementById('stay-bot20').textContent = fmt(stats.stay.bot20);
   document.getElementById('stay-loss').textContent = (stats.stay.loss * 100).toFixed(1) + '%';
   document.getElementById('stay-income').textContent = fmt(stats.stay.income);
+  document.getElementById('stay-expense').textContent = fmt(stats.stay.expense);
+  document.getElementById('stay-final-expense').textContent = fmt(stats.stay.finalExpense) + '/년';
   document.getElementById('stay-risk-score').textContent = stayRisk + '/100';
   document.getElementById('stay-risk-bar').style.width = stayRisk + '%';
   document.getElementById('stay-risk-bar').style.background =
@@ -929,6 +1634,8 @@ function renderResults(stats, stayArr, moveArr, stayYearMedian, moveYearMedian, 
   document.getElementById('move-bot20').textContent = fmt(stats.move.bot20);
   document.getElementById('move-loss').textContent = (stats.move.loss * 100).toFixed(1) + '%';
   document.getElementById('move-income').textContent = fmt(stats.move.income);
+  document.getElementById('move-expense').textContent = fmt(stats.move.expense);
+  document.getElementById('move-final-expense').textContent = fmt(stats.move.finalExpense) + '/년';
   document.getElementById('move-risk-score').textContent = moveRisk + '/100';
   document.getElementById('move-risk-bar').style.width = moveRisk + '%';
   document.getElementById('move-risk-bar').style.background =
@@ -1135,6 +1842,7 @@ function renderYearChart(stayYM, moveYM) {
 // ── 인사이트 생성 ──
 function renderInsights(stats, stayRisk, moveRisk, diff, initialAsset) {
   const insights = [];
+  const annualExpense = Number(document.getElementById('annualExpense').value);
 
   // 1. 핵심 비교
   if (diff > 0) {
@@ -1149,7 +1857,24 @@ function renderInsights(stats, stayRisk, moveRisk, diff, initialAsset) {
     });
   }
 
-  // 2. 리스크 비교
+  // 2. 소비 증가 경고 (핵심 신규 인사이트)
+  const stayExpenseGrowth = ((stats.stay.finalExpense / annualExpense - 1) * 100).toFixed(0);
+  const moveExpenseGrowth = ((stats.move.finalExpense / annualExpense - 1) * 100).toFixed(0);
+  const expenseDiff = stats.move.expense - stats.stay.expense;
+  
+  if (moveExpenseGrowth > stayExpenseGrowth) {
+    insights.push({
+      icon: '🛒',
+      text: `<strong>라이프스타일 인플레이션 경고:</strong> 이직 시 5년차 소비가 현재 대비 <strong>${moveExpenseGrowth}%</strong> 증가 (연 ${formatWon(stats.move.finalExpense)}). 현직은 ${stayExpenseGrowth}% 증가에 그칩니다. 연봉이 올라도 소비가 따라오면 <strong>실질 저축 효과가 반감</strong>됩니다.`
+    });
+  } else {
+    insights.push({
+      icon: '🛒',
+      text: `5년 후 연간 소비가 현직 기준 <strong>${stayExpenseGrowth}%</strong> 증가합니다 (연 ${formatWon(stats.stay.finalExpense)}). 물가상승과 소득 증가에 따른 자연스러운 소비 확대가 반영되었습니다.`
+    });
+  }
+
+  // 3. 리스크 비교
   const riskDiff = moveRisk - stayRisk;
   if (riskDiff > 20) {
     insights.push({
@@ -1158,7 +1883,7 @@ function renderInsights(stats, stayRisk, moveRisk, diff, initialAsset) {
     });
   }
 
-  // 3. 하위 시나리오 경고
+  // 4. 하위 시나리오 경고
   if (stats.move.bot20 < initialAsset * 0.8) {
     insights.push({
       icon: '🔴',
@@ -1166,21 +1891,17 @@ function renderInsights(stats, stayRisk, moveRisk, diff, initialAsset) {
     });
   }
 
-  // 4. 누적 소득 비교
-  const incomeDiff = stats.move.income - stats.stay.income;
-  if (incomeDiff > 0) {
-    insights.push({
-      icon: '💰',
-      text: `이직 시 5년 누적 소득이 약 <strong>${formatWon(Math.abs(incomeDiff))}</strong> 더 많습니다. 연봉 인상분이 장기적으로 복리 효과를 만듭니다.`
-    });
-  } else {
-    insights.push({
-      icon: '💰',
-      text: `현직 유지 시 5년 누적 소득이 약 <strong>${formatWon(Math.abs(incomeDiff))}</strong> 더 많습니다. 이직 초기의 적응 실패 리스크가 누적 소득을 깎고 있습니다.`
-    });
-  }
+  // 5. 실질 저축력 비교 (소득 - 소비)
+  const stayNetSaving = stats.stay.income - stats.stay.expense;
+  const moveNetSaving = stats.move.income - stats.move.expense;
+  const savingDiff = moveNetSaving - stayNetSaving;
+  
+  insights.push({
+    icon: '💰',
+    text: `<strong>5년 실질 저축력:</strong> 현직 ${formatWon(stayNetSaving)} vs 이직 ${formatWon(moveNetSaving)}. ${savingDiff > 0 ? '이직이 소비 증가를 감안해도 <strong>' + formatWon(Math.abs(savingDiff)) + '</strong> 더 모을 수 있습니다.' : '소비 증가를 감안하면 현직이 <strong>' + formatWon(Math.abs(savingDiff)) + '</strong> 더 모을 수 있습니다. 연봉 인상분 상당수가 소비로 빠집니다.'}`
+  });
 
-  // 5. 상위 시나리오
+  // 6. 상위 시나리오
   if (stats.move.top20 > stats.stay.top20 * 1.3) {
     insights.push({
       icon: '🎯',
