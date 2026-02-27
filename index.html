@@ -1597,7 +1597,7 @@ function runSimulation() {
       return median(arr);
     });
 
-    // 리스크 점수 (0~100) - 변동성 + 손실확률 기반
+    // 리스크 점수 (0~100) - 변동성 + 손실확률 기반1
     const stayRisk = Math.min(100, Math.round(stats.stay.loss * 100 * 1.5 + stayP.vol * 200));
     const moveRisk = Math.min(100, Math.round(stats.move.loss * 100 * 1.5 + moveP.vol * 200));
 
