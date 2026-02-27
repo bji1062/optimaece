@@ -760,9 +760,9 @@ body {
         <span class="benefits-header-title">🏢 복리후생 실질가치 환산</span>
         <span class="benefits-header-sub">연봉 외 숨겨진 가치를 돈으로 계산합니다</span>
       </div>
-      <span class="benefits-toggle" id="benefitsToggle">▼</span>
+      <span class="benefits-toggle open" id="benefitsToggle">▼</span>
     </div>
-    <div class="benefits-body" id="benefitsBody">
+    <div class="benefits-body open" id="benefitsBody">
       <div class="benefits-columns">
         <!-- 현직 복리후생 -->
         <div class="benefits-col stay">
@@ -1597,7 +1597,7 @@ function runSimulation() {
       return median(arr);
     });
 
-    // 리스크 점수 (0~100) - 변동성 + 손실확률 기반1
+    // 리스크 점수 (0~100) - 변동성 + 손실확률 기반
     const stayRisk = Math.min(100, Math.round(stats.stay.loss * 100 * 1.5 + stayP.vol * 200));
     const moveRisk = Math.min(100, Math.round(stats.move.loss * 100 * 1.5 + moveP.vol * 200));
 
