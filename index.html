@@ -3,1923 +3,747 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>5년 커리어 전략 시뮬레이터</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<title>직장 선택 OS</title>
+<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg-primary: #0a0e17;
-  --bg-secondary: #111827;
-  --bg-card: #1a2235;
-  --bg-card-hover: #1f2940;
-  --border: #2a3548;
-  --text-primary: #e8ecf4;
-  --text-secondary: #8899b0;
-  --text-muted: #556680;
-  --accent-stay: #3b82f6;
-  --accent-stay-dim: rgba(59,130,246,0.15);
-  --accent-move: #f59e0b;
-  --accent-move-dim: rgba(245,158,11,0.15);
-  --accent-danger: #ef4444;
-  --accent-success: #10b981;
-  --accent-purple: #8b5cf6;
-}
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
-body {
-  font-family: 'Noto Sans KR', sans-serif;
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  line-height: 1.6;
-  min-height: 100vh;
-}
-
-.mono { font-family: 'JetBrains Mono', monospace; }
-
-/* Header */
-.header {
-  padding: 2rem 1.5rem 1rem;
-  max-width: 960px;
-  margin: 0 auto;
-}
-
-.header-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.7rem;
-  font-weight: 500;
-  color: var(--accent-stay);
-  background: var(--accent-stay-dim);
-  padding: 4px 10px;
-  border-radius: 4px;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  margin-bottom: 1rem;
-}
-
-.header h1 {
-  font-size: 1.75rem;
-  font-weight: 900;
-  letter-spacing: -0.03em;
-  line-height: 1.3;
-  margin-bottom: 0.5rem;
-}
-
-.header h1 .highlight-stay { color: var(--accent-stay); }
-.header h1 .highlight-move { color: var(--accent-move); }
-
-.header p {
-  color: var(--text-secondary);
-  font-size: 0.9rem;
-  font-weight: 300;
-}
-
-/* Main Container */
-.container {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 0 1.5rem 3rem;
-}
-
-/* Input Section */
-.input-section {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.input-section-title {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 1.25rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid var(--border);
-}
-
-.input-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-}
-
-.input-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.input-group.full-width {
-  grid-column: 1 / -1;
-}
-
-.input-group label {
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: var(--text-secondary);
-}
-
-.input-group label .unit {
-  font-size: 0.7rem;
-  color: var(--text-muted);
-  font-weight: 400;
-}
-
-.input-group input, .input-group select {
-  background: var(--bg-primary);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 10px 14px;
-  color: var(--text-primary);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.95rem;
-  transition: border-color 0.2s;
-  width: 100%;
-}
-
-.input-group input:focus, .input-group select:focus {
-  outline: none;
-  border-color: var(--accent-stay);
-}
-
-.input-group select {
-  cursor: pointer;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238899b0' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  padding-right: 32px;
-}
-
-.input-group select option {
-  background: var(--bg-secondary);
-  color: var(--text-primary);
-}
-
-/* Preset Info */
-.preset-info {
-  background: var(--bg-primary);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 12px 14px;
-  margin-top: 0.75rem;
-  font-size: 0.78rem;
-  color: var(--text-muted);
-  line-height: 1.7;
-}
-
-.preset-info .value {
-  color: var(--text-secondary);
-  font-family: 'JetBrains Mono', monospace;
-  font-weight: 600;
-}
-
-.preset-info .label-stay { color: var(--accent-stay); }
-.preset-info .label-move { color: var(--accent-move); }
-
-/* Run Button */
-.run-btn {
-  display: block;
-  width: 100%;
-  padding: 16px;
-  background: linear-gradient(135deg, var(--accent-stay), var(--accent-purple));
-  border: none;
-  border-radius: 12px;
-  color: white;
-  font-family: 'Noto Sans KR', sans-serif;
-  font-size: 1rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.3s;
-  letter-spacing: 0.02em;
-  margin-bottom: 2rem;
-  position: relative;
-  overflow: hidden;
-}
-
-.run-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 30px rgba(59,130,246,0.25);
-}
-
-.run-btn:active { transform: translateY(0); }
-
-.run-btn .sub {
-  display: block;
-  font-size: 0.75rem;
-  font-weight: 400;
-  opacity: 0.8;
-  margin-top: 2px;
-}
-
-/* Results */
-.results { display: none; }
-.results.visible { display: block; animation: fadeIn 0.5s ease; }
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Strategy Cards */
-.strategy-cards {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.strategy-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1.25rem;
-  position: relative;
-  overflow: hidden;
-}
-
-.strategy-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-}
-
-.strategy-card.stay::before { background: var(--accent-stay); }
-.strategy-card.move::before { background: var(--accent-move); }
-
-.strategy-label {
-  font-size: 0.7rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 1rem;
-}
-
-.strategy-card.stay .strategy-label { color: var(--accent-stay); }
-.strategy-card.move .strategy-label { color: var(--accent-move); }
-
-.stat-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  padding: 6px 0;
-}
-
-.stat-row:not(:last-child) {
-  border-bottom: 1px solid rgba(42,53,72,0.5);
-}
-
-.stat-label {
-  font-size: 0.78rem;
-  color: var(--text-muted);
-}
-
-.stat-value {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.95rem;
-  font-weight: 600;
-}
-
-.stat-value.large {
-  font-size: 1.5rem;
-  font-weight: 700;
-}
-
-/* Insight Box */
-.insight-box {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1.25rem;
-  margin-bottom: 1.5rem;
-}
-
-.insight-title {
-  font-size: 0.7rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--accent-purple);
-  margin-bottom: 1rem;
-}
-
-.insight-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 8px 0;
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  line-height: 1.5;
-}
-
-.insight-item:not(:last-child) {
-  border-bottom: 1px solid rgba(42,53,72,0.5);
-}
-
-.insight-icon {
-  font-size: 1rem;
-  flex-shrink: 0;
-  margin-top: 1px;
-}
-
-.insight-item strong {
-  color: var(--text-primary);
-  font-weight: 600;
-}
-
-/* Chart Section */
-.chart-section {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1.25rem;
-  margin-bottom: 1.5rem;
-}
-
-.chart-title {
-  font-size: 0.7rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--text-muted);
-  margin-bottom: 1rem;
-}
-
-.chart-container {
-  position: relative;
-  width: 100%;
-  height: 320px;
-}
-
-/* Disclaimer */
-.disclaimer {
-  text-align: center;
-  font-size: 0.72rem;
-  color: var(--text-muted);
-  padding: 1.5rem;
-  line-height: 1.6;
-  border-top: 1px solid var(--border);
-  margin-top: 2rem;
-}
-
-/* Responsive */
-@media (max-width: 640px) {
-  .header h1 { font-size: 1.35rem; }
-  .input-grid { grid-template-columns: 1fr; }
-  .strategy-cards { grid-template-columns: 1fr; }
-  .chart-container { height: 260px; }
-}
-
-/* Risk meter */
-.risk-meter {
-  margin-top: 0.75rem;
-}
-
-.risk-bar-bg {
-  height: 6px;
-  background: var(--bg-primary);
-  border-radius: 3px;
-  overflow: hidden;
-  margin-top: 4px;
-}
-
-.risk-bar-fill {
-  height: 100%;
-  border-radius: 3px;
-  transition: width 0.8s ease;
-}
-
-.risk-label-row {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.7rem;
-  color: var(--text-muted);
-}
-
-/* Difference banner */
-.diff-banner {
-  background: linear-gradient(135deg, rgba(139,92,246,0.1), rgba(59,130,246,0.1));
-  border: 1px solid rgba(139,92,246,0.25);
-  border-radius: 12px;
-  padding: 1.25rem;
-  text-align: center;
-  margin-bottom: 1.5rem;
-}
-
-.diff-banner .diff-label {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  margin-bottom: 4px;
-}
-
-.diff-banner .diff-value {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 2rem;
-  font-weight: 700;
-}
-
-.diff-banner .diff-sub {
-  font-size: 0.8rem;
-  color: var(--text-secondary);
-  margin-top: 4px;
-}
-
-/* Share */
-.share-section {
-  text-align: center;
-  margin-top: 1.5rem;
-}
-
-.share-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 10px 20px;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  color: var(--text-secondary);
-  font-family: 'Noto Sans KR', sans-serif;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.share-btn:hover {
-  border-color: var(--accent-stay);
-  color: var(--text-primary);
-}
-
-/* Loading animation */
-.loading {
-  display: none;
-  text-align: center;
-  padding: 3rem 0;
-}
-
-.loading.visible { display: block; }
-
-.loading-dots {
-  display: inline-flex;
-  gap: 6px;
-}
-
-.loading-dots span {
-  width: 8px;
-  height: 8px;
-  background: var(--accent-stay);
-  border-radius: 50%;
-  animation: bounce 1.2s infinite;
-}
-
-.loading-dots span:nth-child(2) { animation-delay: 0.2s; }
-.loading-dots span:nth-child(3) { animation-delay: 0.4s; }
-
-@keyframes bounce {
-  0%, 80%, 100% { transform: translateY(0); opacity: 0.3; }
-  40% { transform: translateY(-10px); opacity: 1; }
-}
-
-.loading-text {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  margin-top: 1rem;
-}
-
-/* Year chart */
-.year-chart-container {
-  position: relative;
-  width: 100%;
-  height: 280px;
-}
-
-/* Benefits Calculator */
-.benefits-section {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  margin-bottom: 1.5rem;
-  overflow: hidden;
-}
-
-.benefits-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.25rem 1.5rem;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.benefits-header:hover { background: var(--bg-card-hover); }
-
-.benefits-header-left {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.benefits-header-title {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-}
-
-.benefits-header-sub {
-  font-size: 0.72rem;
-  color: var(--accent-purple);
-  font-weight: 500;
-}
-
-.benefits-toggle {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  transition: transform 0.3s;
-}
-
-.benefits-toggle.open { transform: rotate(180deg); }
-
-.benefits-body {
-  display: none;
-  padding: 0 1.5rem 1.5rem;
-}
-
-.benefits-body.open { display: block; }
-
-.benefits-columns {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-}
-
-@media (max-width: 640px) {
-  .benefits-columns { grid-template-columns: 1fr; }
-}
-
-.benefits-col {
-  background: var(--bg-primary);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 1rem;
-}
-
-.benefits-col-title {
-  font-size: 0.8rem;
-  font-weight: 700;
-  margin-bottom: 0.75rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border);
-}
-
-.benefits-col.stay .benefits-col-title { color: var(--accent-stay); }
-.benefits-col.move .benefits-col-title { color: var(--accent-move); }
-
-.benefit-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 0;
-  border-bottom: 1px solid rgba(42,53,72,0.3);
-}
-
-.benefit-row:last-child { border-bottom: none; }
-
-.benefit-check {
-  width: 16px;
-  height: 16px;
-  accent-color: var(--accent-purple);
-  cursor: pointer;
-  flex-shrink: 0;
-}
-
-.benefit-name {
-  font-size: 0.78rem;
-  color: var(--text-secondary);
-  flex: 1;
-  min-width: 0;
-}
-
-.benefit-value {
-  width: 70px;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
-  border-radius: 5px;
-  padding: 3px 6px;
-  color: var(--text-primary);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.75rem;
-  text-align: right;
-  flex-shrink: 0;
-}
-
-.benefit-value:focus {
-  outline: none;
-  border-color: var(--accent-purple);
-}
-
-.benefit-unit {
-  font-size: 0.65rem;
-  color: var(--text-muted);
-  width: 20px;
-  flex-shrink: 0;
-}
-
-.benefit-divider {
-  font-size: 0.68rem;
-  color: var(--text-muted);
-  padding: 8px 0 4px;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-}
-
-.benefits-total {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 0.75rem;
-  padding-top: 0.75rem;
-  border-top: 2px solid var(--border);
-}
-
-.benefits-total-label {
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-}
-
-.benefits-total-value {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 1.05rem;
-  font-weight: 700;
-}
-
-.benefits-col.stay .benefits-total-value { color: var(--accent-stay); }
-.benefits-col.move .benefits-total-value { color: var(--accent-move); }
-
-.benefits-apply-btn {
-  display: block;
-  width: 100%;
-  padding: 12px;
-  margin-top: 1rem;
-  background: linear-gradient(135deg, var(--accent-purple), var(--accent-stay));
-  border: none;
-  border-radius: 8px;
-  color: white;
-  font-family: 'Noto Sans KR', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.benefits-apply-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 15px rgba(139,92,246,0.3);
-}
-
-.benefits-diff {
-  text-align: center;
-  padding: 12px;
-  margin-top: 1rem;
-  background: var(--bg-primary);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-}
-
-.benefits-diff-label {
-  font-size: 0.72rem;
-  color: var(--text-muted);
-  margin-bottom: 4px;
-}
-
-.benefits-diff-value {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 1.1rem;
-  font-weight: 700;
-}
-
-.benefit-neg {
-  color: var(--accent-danger);
-  font-size: 0.68rem;
-}
-
+@font-face{font-family:'Pretendard';src:url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css')}
+:root{
+  --bg-0:#09090b;--bg-1:#0f1117;--bg-2:#16181f;--bg-3:#1c1f28;--bg-4:#232732;
+  --border:#2a2e3a;--bh:#3a3f4e;
+  --t1:#f0f1f4;--t2:#a0a6b8;--t3:#636b82;--t4:#434a5e;
+  --blue:#4b8df8;--blue-d:rgba(75,141,248,.1);
+  --amber:#f0a030;--amber-d:rgba(240,160,48,.1);
+  --green:#34c77b;--green-d:rgba(52,199,123,.1);
+  --red:#ef5050;--red-d:rgba(239,80,80,.1);
+  --purple:#8b6cf6;--purple-d:rgba(139,108,246,.08);
+  --gold:#E8B931;--gold-d:rgba(232,185,49,.08);
+  --r:10px;--rl:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Pretendard',-apple-system,sans-serif;background:var(--bg-0);color:var(--t1);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.mono{font-family:'JetBrains Mono',monospace}
+
+.screen{display:none;min-height:100vh}.screen.active{display:flex;flex-direction:column}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.fadein{animation:fadeUp .5s ease forwards}
+.slideup{animation:slideUp .6s cubic-bezier(.22,1,.36,1) forwards}
+
+/* ━━ LANDING ━━ */
+.landing{position:relative;overflow:hidden}
+.l-nav{display:flex;justify-content:space-between;align-items:center;padding:1.25rem 2rem;z-index:2;position:relative}
+.logo{font-size:.85rem;font-weight:800;letter-spacing:-.02em;color:var(--t1);display:flex;align-items:center;gap:6px}
+.logo-m{width:22px;height:22px;border-radius:6px;background:linear-gradient(135deg,var(--blue),var(--purple));display:flex;align-items:center;justify-content:center;font-size:.7rem;color:#fff;font-weight:900}
+.l-login{font-size:.78rem;color:var(--t3);background:none;border:1px solid var(--border);padding:6px 16px;border-radius:6px;cursor:pointer;font-family:inherit;transition:all .15s}
+.l-login:hover{border-color:var(--t3);color:var(--t2)}
+.l-center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 1.5rem;z-index:2;position:relative}
+.landing::before{content:'';position:absolute;top:30%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(75,141,248,.06),transparent 70%);pointer-events:none}
+.l-h1{font-size:clamp(2rem,5vw,3.2rem);font-weight:900;letter-spacing:-.04em;line-height:1.25;margin-bottom:.75rem}
+.l-h1 em{font-style:normal;background:linear-gradient(135deg,var(--blue),var(--amber));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.l-sub{font-size:1.05rem;color:var(--t3);max-width:420px;margin:0 auto 2.5rem;line-height:1.6}
+
+.l-btns{display:flex;flex-direction:column;align-items:center;gap:12px}
+.l-cta{padding:16px 48px;background:var(--t1);color:var(--bg-0);border:none;border-radius:50px;font-family:inherit;font-size:1.05rem;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 0 40px rgba(255,255,255,.06)}
+.l-cta:hover{transform:translateY(-2px);box-shadow:0 8px 40px rgba(255,255,255,.1)}
+.l-cta:active{transform:translateY(0)}
+.l-cta2{padding:12px 32px;background:none;border:1px solid var(--border);color:var(--t3);border-radius:50px;font-family:inherit;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .2s}
+.l-cta2:hover{border-color:var(--gold);color:var(--gold)}
+.l-foot{padding:1.5rem;text-align:center;font-size:.7rem;color:var(--t4);z-index:2}
+
+/* ━━ SHARED ━━ */
+.wrap{max-width:640px;margin:0 auto;padding:2rem 1.25rem 4rem;width:100%}
+.back{display:inline-flex;align-items:center;gap:4px;font-size:.78rem;color:var(--t3);background:none;border:none;cursor:pointer;font-family:inherit;margin-bottom:1.25rem;transition:color .15s}
+.back:hover{color:var(--t2)}
+
+/* ━━ PROFILER ━━ */
+.pf-intro{text-align:center;max-width:520px;margin:0 auto}
+.pf-badge{font-size:11px;letter-spacing:4px;color:rgba(232,185,49,.6);text-transform:uppercase;margin-bottom:32px}
+.pf-h{font-size:32px;font-weight:700;line-height:1.3;margin-bottom:20px;color:#f0ede6}
+.pf-h span{color:var(--gold)}
+.pf-p{font-size:15px;line-height:1.8;color:rgba(255,255,255,.4);margin-bottom:16px}
+.pf-dims{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:44px}
+.pf-dim{font-size:12px;padding:5px 14px;border-radius:20px;border:1px solid;background:transparent}
+.pf-start{background:linear-gradient(135deg,#E8B931,#D4A017);color:#0d0d1a;border:none;border-radius:10px;padding:16px 48px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit}
+
+/* Question */
+.pf-q{max-width:580px;margin:0 auto;width:100%}
+.pf-progress{display:flex;gap:3px;margin-bottom:36px}
+.pf-bar{flex:1;height:3px;border-radius:2px;transition:background .3s}
+.pf-prompt{font-size:14px;color:rgba(255,255,255,.4);margin-bottom:24px;text-align:center;line-height:1.6}
+
+.opt-card{cursor:pointer;border:1.5px solid rgba(255,255,255,.06);background:rgba(255,255,255,.015);border-radius:12px;padding:24px 22px;transition:all .3s cubic-bezier(.22,1,.36,1);margin-bottom:14px}
+.opt-card:hover{border-color:rgba(255,255,255,.14);transform:translateY(-2px);background:rgba(255,255,255,.03)}
+.opt-card.sel-a{border-color:#E8B931;background:rgba(232,185,49,.06)}
+.opt-card.sel-b{border-color:#7B68C8;background:rgba(123,104,200,.06)}
+.opt-card.dim{opacity:.25;transform:scale(.97);pointer-events:none}
+.opt-tag{font-size:10px;font-weight:700;padding:3px 10px;border-radius:4px;letter-spacing:1px}
+.opt-title{font-size:17px;font-weight:700;color:#f0ede6}
+.opt-desc{font-size:14px;color:rgba(255,255,255,.38);line-height:1.6;padding-left:36px;margin-top:4px}
+.opt-fx{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px;padding-left:36px}
+.opt-fx-tag{font-size:10px;padding:2px 8px;border-radius:10px;border:1px solid}
+
+/* Profiler Result */
+.pf-result{max-width:580px;margin:0 auto;width:100%}
+.pf-res-box{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:22px;margin-bottom:16px}
+.pf-res-label{font-size:12px;letter-spacing:1px;margin-bottom:10px}
+
+.pf-to-compare{display:block;width:100%;padding:16px;background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;border:none;border-radius:12px;font-family:inherit;font-size:1rem;font-weight:700;cursor:pointer;transition:all .2s;margin-top:1rem}
+.pf-to-compare:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(75,141,248,.25)}
+.pf-to-compare .sub{display:block;font-size:.7rem;font-weight:400;opacity:.7;margin-top:2px}
+
+/* ━━ INPUT ━━ */
+.i-header{margin-bottom:2rem}
+.i-header h2{font-size:1.4rem;font-weight:800;letter-spacing:-.03em;margin-bottom:.25rem}
+.i-header p{font-size:.85rem;color:var(--t3)}
+
+.cc{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--rl);padding:1.5rem;margin-bottom:1rem;position:relative}
+.cc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:var(--rl) var(--rl) 0 0}
+.cc.a::before{background:var(--blue)}.cc.b::before{background:var(--amber)}
+.cc-label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:1rem;display:flex;align-items:center;gap:6px}
+.cc.a .cc-label{color:var(--blue)}.cc.b .cc-label{color:var(--amber)}
+.dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.cc.a .dot{background:var(--blue)}.cc.b .dot{background:var(--amber)}
+
+.fd{margin-bottom:.85rem}.fd:last-child{margin-bottom:0}
+.fl{font-size:.75rem;font-weight:600;color:var(--t3);margin-bottom:4px;display:flex;align-items:center;gap:4px}
+.fl .u{font-size:.65rem;color:var(--t4)}
+.fi,.fs{width:100%;background:var(--bg-1);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--t1);font-family:'Pretendard',sans-serif;font-size:.88rem;transition:border-color .15s}
+.fi:focus,.fs:focus{outline:none;border-color:var(--blue)}
+.fs{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath fill='%23636b82' d='M5 7L1 3h8z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:30px}
+.fs option{background:var(--bg-2);color:var(--t1)}
+
+.sw{position:relative}
+.sr{display:none;position:absolute;top:100%;left:0;right:0;background:var(--bg-2);border:1px solid var(--border);border-radius:8px;margin-top:4px;z-index:20;max-height:220px;overflow-y:auto;box-shadow:0 12px 40px rgba(0,0,0,.4)}
+.sr.open{display:block}
+.si{padding:10px 14px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:background .1s;font-size:.85rem}
+.si:hover{background:var(--bg-3)}
+.si-logo{width:32px;height:32px;border-radius:7px;background:var(--bg-4);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;color:var(--t2);flex-shrink:0}
+.si-info{flex:1}.si-name{font-weight:600;color:var(--t1)}.si-meta{font-size:.72rem;color:var(--t3)}
+.si-badge{font-size:.6rem;padding:2px 6px;border-radius:3px;background:var(--green-d);color:var(--green);font-weight:600}
+.sr-empty{padding:14px;text-align:center;font-size:.8rem;color:var(--t3)}
+.mb{display:none;align-items:center;gap:8px;padding:8px 12px;margin-top:6px;background:var(--green-d);border:1px solid rgba(52,199,123,.2);border-radius:7px;font-size:.78rem;color:var(--green)}
+.mb.show{display:flex}
+.mb .xb{margin-left:auto;background:none;border:none;color:var(--green);cursor:pointer;font-size:.85rem;opacity:.7}
+
+.ba{display:none;margin-top:1rem;border-top:1px solid var(--border);padding-top:1rem}.ba.show{display:block}
+.ba-title{font-size:.7rem;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.6rem}
+.bg{margin-bottom:.85rem}
+.bg-label{font-size:.68rem;font-weight:600;color:var(--t4);margin-bottom:.35rem}
+.bi{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(42,46,58,.5);font-size:.8rem}
+.bi:last-child{border-bottom:none}
+.bi-ck{width:15px;height:15px;accent-color:var(--purple);cursor:pointer;flex-shrink:0}
+.bi-n{flex:1;color:var(--t2)}.bi-n .bi-note{display:block;font-size:.65rem;color:var(--t4);line-height:1.3;margin-top:1px}
+.bi-v{width:64px;background:var(--bg-1);border:1px solid var(--border);border-radius:5px;padding:3px 6px;color:var(--t1);font-family:'JetBrains Mono',monospace;font-size:.75rem;text-align:right}
+.bi-v:focus{outline:none;border-color:var(--purple)}
+.bi-u{font-size:.62rem;color:var(--t4);width:16px;flex-shrink:0}
+.bi-badge{font-size:.55rem;padding:1px 5px;border-radius:3px;font-weight:600;flex-shrink:0}
+.b-auto{background:var(--purple-d);color:var(--purple)}.b-est{background:var(--amber-d);color:var(--amber)}
+
+.tc{display:flex;align-items:center;gap:0;margin-top:1rem;padding:10px 14px;background:var(--bg-1);border:1px solid var(--border);border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:.82rem;flex-wrap:wrap}
+.tc-b{color:var(--t2)}.tc-p{color:var(--t4);padding:0 6px;font-size:.75rem}
+.tc-bn{font-weight:600;font-size:.75rem}
+.cc.a .tc-bn{color:var(--blue)}.cc.b .tc-bn{color:var(--amber)}
+.tc-e{color:var(--t4);padding:0 8px}.tc-t{font-weight:700;font-size:.95rem}
+.cc.a .tc-t{color:var(--blue)}.cc.b .tc-t{color:var(--amber)}
+
+/* Priority */
+.pri{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--rl);padding:1.25rem;margin-bottom:1rem;position:relative;overflow:hidden}
+.pri::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--purple),var(--blue))}
+.pri-l{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:.35rem}
+.pri-d{font-size:.78rem;color:var(--t3);margin-bottom:1rem}
+.pri-g{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+@media(max-width:480px){.pri-g{grid-template-columns:repeat(2,1fr)}}
+.pri-c{padding:10px 8px;text-align:center;background:var(--bg-1);border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:all .15s;font-family:inherit;color:var(--t3)}
+.pri-c:hover{border-color:var(--bh);color:var(--t2)}
+.pri-c.on{background:var(--purple-d);border-color:var(--purple);color:var(--purple)}
+.pri-c-i{font-size:1.2rem;display:block;margin-bottom:4px}
+.pri-c-t{font-size:.72rem;font-weight:600;line-height:1.3}
+
+/* Profiler auto banner */
+.pri-auto{display:none;margin-top:.75rem;padding:10px 12px;background:var(--gold-d);border:1px solid rgba(232,185,49,.2);border-radius:8px;font-size:.78rem;color:var(--gold);line-height:1.5}
+.pri-auto.show{display:block}
+.pri-auto strong{font-weight:700}
+
+.diff{display:flex;align-items:center;justify-content:center;gap:8px;padding:.85rem;background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r);margin-bottom:1rem}
+.diff-l{font-size:.75rem;color:var(--t3)}.diff-v{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:1.05rem}
+
+.cta{display:block;width:100%;padding:16px;background:var(--t1);color:var(--bg-0);border:none;border-radius:50px;font-family:inherit;font-size:1rem;font-weight:700;cursor:pointer;transition:all .2s}
+.cta:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(255,255,255,.08)}
+.cta:active{transform:translateY(0)}
+.cta .sub{display:block;font-size:.7rem;font-weight:400;opacity:.5;margin-top:1px}
+
+/* ━━ REPORT ━━ */
+.report{display:none;margin-top:2rem}.report.visible{display:block;animation:fadeUp .4s ease}
+.rp-div{text-align:center;margin-bottom:1.5rem;position:relative}
+.rp-div::before{content:'';position:absolute;top:50%;left:0;right:0;height:1px;background:var(--border)}
+.rp-div span{position:relative;background:var(--bg-0);padding:0 12px;font-size:.72rem;font-weight:600;color:var(--t4);text-transform:uppercase;letter-spacing:.1em}
+
+.vd{text-align:center;padding:2rem 1.25rem;background:var(--bg-2);border:1px solid var(--border);border-radius:var(--rl);margin-bottom:1rem;position:relative;overflow:hidden}
+.vd::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(139,108,246,.06),transparent 70%);pointer-events:none}
+.vd-icon{font-size:2rem;margin-bottom:.5rem}
+.vd-pri{font-size:.72rem;color:var(--purple);font-weight:600;margin-bottom:.5rem}
+.vd-val{font-family:'JetBrains Mono',monospace;font-size:2rem;font-weight:700;line-height:1.2}
+.vd-sub{font-size:.85rem;color:var(--t2);margin-top:.4rem;line-height:1.5}
+.vd-note{font-size:.72rem;color:var(--t3);margin-top:.75rem;max-width:500px;margin-left:auto;margin-right:auto;line-height:1.5}
+
+.cmp{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--rl);margin-bottom:1rem;overflow:hidden}
+.cmp-head{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--t4);padding:1rem 1.25rem .5rem;display:flex;align-items:center;gap:6px}
+.cmp-body{padding:.5rem 1.25rem 1.25rem}
+.vs-row{display:flex;gap:.75rem;margin-bottom:.5rem}
+@media(max-width:480px){.vs-row{flex-direction:column;gap:.35rem}}
+.vs-card{flex:1;background:var(--bg-1);border:1px solid var(--border);border-radius:var(--r);padding:.85rem;position:relative}
+.vs-card.win{border-color:var(--green);background:rgba(52,199,123,.03)}
+.vs-card.win::after{content:'✓ 유리';position:absolute;top:8px;right:10px;font-size:.58rem;color:var(--green);font-weight:700;background:var(--green-d);padding:1px 6px;border-radius:3px}
+.vs-side{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.5rem}
+.vs-card.a-s .vs-side{color:var(--blue)}.vs-card.b-s .vs-side{color:var(--amber)}
+.vs-big{font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:700;margin-bottom:.25rem}
+.vs-card.a-s .vs-big{color:var(--blue)}.vs-card.b-s .vs-big{color:var(--amber)}
+.vs-detail{font-size:.75rem;color:var(--t3);line-height:1.5}
+.vs-detail strong{color:var(--t2);font-weight:600}
+
+.callout{display:flex;align-items:flex-start;gap:10px;padding:.85rem 1rem;background:var(--bg-1);border:1px solid var(--border);border-radius:var(--r);margin-top:.65rem;font-size:.8rem;color:var(--t2);line-height:1.5}
+.callout.good{border-color:rgba(52,199,123,.25);background:rgba(52,199,123,.03)}
+.callout.warn{border-color:rgba(240,160,48,.25);background:rgba(240,160,48,.03)}
+.callout.info{border-color:rgba(139,108,246,.25);background:rgba(139,108,246,.03)}
+.callout.gold{border-color:rgba(232,185,49,.25);background:rgba(232,185,49,.03)}
+.callout-icon{font-size:1rem;flex-shrink:0;margin-top:1px}
+.callout strong{color:var(--t1);font-weight:600}
+
+.ben-compare{width:100%;border-collapse:collapse;margin-top:.5rem}
+.ben-compare th{font-size:.65rem;font-weight:700;color:var(--t4);text-transform:uppercase;letter-spacing:.08em;padding:6px 0;text-align:left;border-bottom:1px solid var(--border)}
+.ben-compare th:nth-child(2),.ben-compare th:nth-child(3){text-align:right;width:80px}
+.ben-compare td{font-size:.78rem;padding:6px 0;border-bottom:1px solid rgba(42,46,58,.3)}
+.ben-compare td:nth-child(2),.ben-compare td:nth-child(3){text-align:right;font-family:'JetBrains Mono',monospace;font-size:.75rem;font-weight:600}
+.ben-compare .td-a{color:var(--blue)}.ben-compare .td-b{color:var(--amber)}
+.ben-compare .td-name{color:var(--t2)}
+.td-diff{font-size:.65rem;font-weight:600}
+.td-diff.pos{color:var(--green)}.td-diff.neg{color:var(--red)}.td-diff.eq{color:var(--t4)}
+
+.qual-item{display:flex;align-items:flex-start;gap:8px;padding:8px 0;border-bottom:1px solid rgba(42,46,58,.3);font-size:.8rem;color:var(--t2)}
+.qual-item:last-child{border-bottom:none}
+.qual-side{font-size:.6rem;font-weight:700;padding:2px 6px;border-radius:3px;flex-shrink:0;margin-top:2px}
+.qs-a{background:var(--blue-d);color:var(--blue)}.qs-b{background:var(--amber-d);color:var(--amber)}
+
+.bottom-line{text-align:center;padding:1.5rem;background:var(--bg-2);border:1px solid var(--border);border-radius:var(--rl);margin-bottom:1rem}
+.bl-label{font-size:.68rem;color:var(--t4);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem}
+.bl-text{font-size:.95rem;color:var(--t1);font-weight:600;line-height:1.5;max-width:480px;margin:0 auto}
+.bl-text .hl-a{color:var(--blue);font-weight:700}.bl-text .hl-b{color:var(--amber);font-weight:700}
+
+/* Profiler CTA in report */
+.rp-profiler-cta{text-align:center;padding:1.25rem;background:var(--gold-d);border:1px solid rgba(232,185,49,.2);border-radius:var(--rl);margin-bottom:1rem}
+.rp-profiler-cta p{font-size:.82rem;color:var(--gold);margin-bottom:.75rem;line-height:1.5}
+.rp-profiler-btn{background:none;border:1px solid rgba(232,185,49,.4);color:var(--gold);padding:10px 24px;border-radius:8px;font-family:inherit;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .15s}
+.rp-profiler-btn:hover{background:rgba(232,185,49,.08);border-color:var(--gold)}
+
+.disclaimer{text-align:center;font-size:.68rem;color:var(--t4);padding:1.5rem 0;border-top:1px solid var(--border);margin-top:1rem;line-height:1.6}
 </style>
 </head>
 <body>
 
-<header class="header">
-  <div class="header-badge">
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-    Monte Carlo 5,000회 시뮬레이션
-  </div>
-  <h1><span class="highlight-stay">현직 유지</span> vs <span class="highlight-move">이직</span>, <br>5년 뒤 차이를 계산해보세요</h1>
-  <p>감이 아니라 확률로 비교합니다.</p>
-</header>
-
-<main class="container">
-
-  <!-- 기본 정보 -->
-  <section class="input-section">
-    <div class="input-section-title">💼 나의 현재 상황</div>
-    <div class="input-grid">
-      <div class="input-group">
-        <label>현재 연봉 <span class="unit">(만원)</span></label>
-        <input type="number" id="currentSalary" value="6000" min="1000" max="50000" step="100">
-      </div>
-      <div class="input-group">
-        <label>현재 순자산 <span class="unit">(만원)</span></label>
-        <input type="number" id="currentAsset" value="15000" min="0" max="500000" step="1000">
-      </div>
-      <div class="input-group">
-        <label>연간 생활비 <span class="unit">(만원)</span></label>
-        <input type="number" id="annualExpense" value="3600" min="500" max="30000" step="100">
-      </div>
-      <div class="input-group">
-        <label>이직 제안 연봉 <span class="unit">(만원)</span></label>
-        <input type="number" id="offerSalary" value="7500" min="1000" max="50000" step="100">
-      </div>
-    </div>
-  </section>
-
-  <!-- 복리후생 실질가치 계산기 -->
-  <section class="benefits-section" id="benefitsSection">
-    <div class="benefits-header" onclick="toggleBenefits()">
-      <div class="benefits-header-left">
-        <span class="benefits-header-title">🏢 복리후생 실질가치 환산</span>
-        <span class="benefits-header-sub">연봉 외 숨겨진 가치를 돈으로 계산합니다</span>
-      </div>
-      <span class="benefits-toggle open" id="benefitsToggle">▼</span>
-    </div>
-    <div class="benefits-body open" id="benefitsBody">
-      <div class="benefits-columns">
-        <!-- 현직 복리후생 -->
-        <div class="benefits-col stay">
-          <div class="benefits-col-title">📊 현직 복리후생</div>
-          
-          <div class="benefit-divider">💰 직접 금전 혜택</div>
-          <div class="benefit-row">
-            <input type="checkbox" class="benefit-check" checked data-side="stay" data-key="meal" onchange="calcBenefits()">
-            <span class="benefit-name">식대 지원 (비과세)</span>
-            <input type="number" class="benefit-value" id="stay-b-meal" value="180" onchange="calcBenefits()">
-            <span class="benefit-unit">만</span>
-          </div>
-          <div class="benefit-row">
-            <input type="checkbox" class="benefit-check" checked data-side="stay" data-key="transport" onchange="calcBenefits()">
-            <span class="benefit-name">교통비/주차비</span>
-            <input type="number" class="benefit-value" id="stay-b-transport" value="120" onchange="calcBenefits()">
-            <span class="benefit-unit">만</span>
-          </div>
-          <div class="benefit-row">
-            <input type="checkbox" class="benefit-check" checked data-side="stay" data-key="welfare" onchange="calcBenefits()">
-            <span class="benefit-name">복지포인트/선택복지</span>
-            <input type="number" class="benefit-value" id="stay-b-welfare" value="200" onchange="calcBenefits()">
-            <span class="benefit-unit">만</span>
-          </div>
-          <div class="benefit-row">
-            <input type="checkbox" class="benefit-check" data-side="stay" data-key="bonus" onchange="calcBenefits()">
-            <span class="benefit-name">성과급/인센티브 기대값</span>
-            <input type="number" class="benefit-value" id="stay-b-bonus" value="300" onchange="calcBenefits()">
-            <span class="benefit-unit">만</span>
-          </div>
-          <div class="benefit-row">
-            <input type="checkbox" class="benefit-check" data-side="stay" data-key="stock" onchange="calcBenefits()">
-            <span class="benefit-name">스톡옵션/RSU 연 기대값</span>
-            <input type="number" class="benefit-value" id="stay-b-stock" value="0" onchange="calcBenefits()">
-            <span class="benefit-unit">만</span>
-          </div>
-
-          <div class="benefit-divider">🏥 생활비 절감 효과</div>
-          <div class="benefit-row">
-            <input type="checkbox" class="benefit-check" checked data-side="stay" data-key="health" onchange="calcBenefits()">
-            <span class="benefit-name">건강검진 (본인+가족)</span>
-            <input type="number" class="benefit-value" id="stay-b-health" value="100" onchange="calcBenefits()">
-            <span class="benefit-unit">만</span>
-          </div>
-          <div class="benefit-row">
-            <input type="checkbox" class="benefit-check" data-side="stay" data-key="loan" onchange="calcBenefits()">
-            <span class="benefit-name">사내대출 이자절감 (연간)</span>
-            <input type="number" class="benefit-value" id="stay-b-loan" value="200" onchange="calcBenefits()">
-            <span class="benefit-unit">만</span>
-          </div>
-          <div class="benefit-row">
-            <input type="checkbox" class="benefit-check" data-side="stay" data-key="childEdu" onchange="calcBenefits()">
-            <span class="benefit-name">자녀 학자금 지원</span>
-            <input type="number" class="benefit-value" id="stay-b-childEdu" value="0" onchange="calcBenefits()">
-            <span class="benefit-unit">만</span>
-          </div>
-          <div class="benefit-row">
-            <input type="checkbox" class="benefit-check" data-side="stay" data-key="edu" onchange="calcBenefits()">
-            <span class="benefit-name">자기개발비/교육비</span>
-            <input type="number" class="benefit-value" id="stay-b-edu" value="100" onchange="calcBenefits()">
-            <span class="benefit-unit">만</span>
-          </div>
-          <div class="benefit-row">
-            <input type="checkbox" class="benefit-check" data-side="stay" data-key="event" onchange="calcBenefits()">
-            <span class="benefit-name">경조사비/명절선물</span>
-            <input type="number" class="benefit-value" id="stay-b-event" value="50" onchange="calcBenefits()">
-            <span class="benefit-unit">만</span>
-          </div>
-
-          <div class="benefit-divider">📉 차감 요소</div>
-          <div class="benefit-row">
-            <input type="checkbox" class="benefit-check" data-side="stay" data-key="commute" onchange="calcBenefits()">
-            <span class="benefit-name">통근 시간 비용 <span class="benefit-neg">(차감)</span></span>
-            <input type="number" class="benefit-value" id="stay-b-commute" value="0" onchange="calcBenefits()">
-            <span class="benefit-unit">만</span>
-          </div>
-
-          <div class="benefits-total">
-            <span class="benefits-total-label">복리후생 가치 합계</span>
-            <span class="benefits-total-value" id="stay-benefits-total">+600만</span>
-          </div>
-          <div class="benefits-total" style="border-top: 1px dashed var(--border); padding-top: 0.5rem; margin-top: 0.5rem;">
-            <span class="benefits-total-label">실질 연봉</span>
-            <span class="benefits-total-value" id="stay-real-salary">6,600만</span>
-          </div>
-        </div>
-
-        <!-- 이직처 복리후생 -->
-        <div class="benefits-col move">
-          <div class="benefits-col-title">🚀 이직처 복리후생</div>
-          
-          <div class="benefit-divider">💰 직접 금전 혜택</div>
-          <div class="benefit-row">
-            <input type="checkbox" class="benefit-check" checked data-side="move" data-key="meal" onchange="calcBenefits()">
-            <span class="benefit-name">식대 지원 (비과세)</span>
-            <input type="number" class="benefit-value" id="move-b-meal" value="180" onchange="calcBenefits()">
-            <span class="benefit-unit">만</span>
-          </div>
-          <div class="benefit-row">
-            <input type="checkbox" class="benefit-check" data-side="move" data-key="transport" onchange="calcBenefits()">
-            <span class="benefit-name">교통비/주차비</span>
-            <input type="number" class="benefit-value" id="move-b-transport" value="0" onchange="calcBenefits()">
-            <span class="benefit-unit">만</span>
-          </div>
-          <div class="benefit-row">
-            <input type="checkbox" class="benefit-check" data-side="move" data-key="welfare" onchange="calcBenefits()">
-            <span class="benefit-name">복지포인트/선택복지</span>
-            <input type="number" class="benefit-value" id="move-b-welfare" value="0" onchange="calcBenefits()">
-            <span class="benefit-unit">만</span>
-          </div>
-          <div class="benefit-row">
-            <input type="checkbox" class="benefit-check" data-side="move" data-key="bonus" onchange="calcBenefits()">
-            <span class="benefit-name">성과급/인센티브 기대값</span>
-            <input type="number" class="benefit-value" id="move-b-bonus" value="0" onchange="calcBenefits()">
-            <span class="benefit-unit">만</span>
-          </div>
-          <div class="benefit-row">
-            <input type="checkbox" class="benefit-check" data-side="move" data-key="stock" onchange="calcBenefits()">
-            <span class="benefit-name">스톡옵션/RSU 연 기대값</span>
-            <input type="number" class="benefit-value" id="move-b-stock" value="0" onchange="calcBenefits()">
-            <span class="benefit-unit">만</span>
-          </div>
-
-          <div class="benefit-divider">🏥 생활비 절감 효과</div>
-          <div class="benefit-row">
-            <input type="checkbox" class="benefit-check" data-side="move" data-key="health" onchange="calcBenefits()">
-            <span class="benefit-name">건강검진 (본인+가족)</span>
-            <input type="number" class="benefit-value" id="move-b-health" value="30" onchange="calcBenefits()">
-            <span class="benefit-unit">만</span>
-          </div>
-          <div class="benefit-row">
-            <input type="checkbox" class="benefit-check" data-side="move" data-key="loan" onchange="calcBenefits()">
-            <span class="benefit-name">사내대출 이자절감 (연간)</span>
-            <input type="number" class="benefit-value" id="move-b-loan" value="0" onchange="calcBenefits()">
-            <span class="benefit-unit">만</span>
-          </div>
-          <div class="benefit-row">
-            <input type="checkbox" class="benefit-check" data-side="move" data-key="childEdu" onchange="calcBenefits()">
-            <span class="benefit-name">자녀 학자금 지원</span>
-            <input type="number" class="benefit-value" id="move-b-childEdu" value="0" onchange="calcBenefits()">
-            <span class="benefit-unit">만</span>
-          </div>
-          <div class="benefit-row">
-            <input type="checkbox" class="benefit-check" data-side="move" data-key="edu" onchange="calcBenefits()">
-            <span class="benefit-name">자기개발비/교육비</span>
-            <input type="number" class="benefit-value" id="move-b-edu" value="0" onchange="calcBenefits()">
-            <span class="benefit-unit">만</span>
-          </div>
-          <div class="benefit-row">
-            <input type="checkbox" class="benefit-check" data-side="move" data-key="event" onchange="calcBenefits()">
-            <span class="benefit-name">경조사비/명절선물</span>
-            <input type="number" class="benefit-value" id="move-b-event" value="0" onchange="calcBenefits()">
-            <span class="benefit-unit">만</span>
-          </div>
-
-          <div class="benefit-divider">📉 차감 요소</div>
-          <div class="benefit-row">
-            <input type="checkbox" class="benefit-check" data-side="move" data-key="commute" onchange="calcBenefits()">
-            <span class="benefit-name">통근 시간 비용 <span class="benefit-neg">(차감)</span></span>
-            <input type="number" class="benefit-value" id="move-b-commute" value="0" onchange="calcBenefits()">
-            <span class="benefit-unit">만</span>
-          </div>
-          <div class="benefit-row">
-            <input type="checkbox" class="benefit-check" data-side="move" data-key="noRetire" onchange="calcBenefits()">
-            <span class="benefit-name">퇴직금 없음 (프리랜서) <span class="benefit-neg">(차감)</span></span>
-            <input type="number" class="benefit-value" id="move-b-noRetire" value="0" onchange="calcBenefits()">
-            <span class="benefit-unit">만</span>
-          </div>
-          <div class="benefit-row">
-            <input type="checkbox" class="benefit-check" data-side="move" data-key="insurance" onchange="calcBenefits()">
-            <span class="benefit-name">4대보험 본인전액 (프리랜서) <span class="benefit-neg">(차감)</span></span>
-            <input type="number" class="benefit-value" id="move-b-insurance" value="0" onchange="calcBenefits()">
-            <span class="benefit-unit">만</span>
-          </div>
-
-          <div class="benefits-total">
-            <span class="benefits-total-label">복리후생 가치 합계</span>
-            <span class="benefits-total-value" id="move-benefits-total">+180만</span>
-          </div>
-          <div class="benefits-total" style="border-top: 1px dashed var(--border); padding-top: 0.5rem; margin-top: 0.5rem;">
-            <span class="benefits-total-label">실질 연봉</span>
-            <span class="benefits-total-value" id="move-real-salary">7,680만</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="benefits-diff">
-        <div class="benefits-diff-label">복리후생 반영 실질 연봉 차이</div>
-        <div class="benefits-diff-value" id="benefits-diff">—</div>
-      </div>
-
-      <button class="benefits-apply-btn" onclick="applyBenefits()">
-        ✅ 실질 연봉을 시뮬레이션에 반영하기
-      </button>
-
-      <div class="preset-info" style="margin-top: 0.75rem;">
-        💡 <strong style="color:var(--text-secondary)">사용법:</strong> 각 항목을 체크하고 금액을 조정하세요. "반영하기" 버튼을 누르면 위의 연봉 입력값이 <strong>실질 연봉</strong>으로 교체됩니다.
-        복리후생 차이는 <strong>연간 생활비</strong>에도 자동 반영됩니다 (생활비 절감 항목 → 생활비 차감).
-      </div>
-    </div>
-  </section>
-
-  <!-- 전략 설정 -->
-  <section class="input-section">
-    <div class="input-section-title">⚙️ 시뮬레이션 설정</div>
-    <div class="input-grid">
-      <div class="input-group">
-        <label>현직 기업 유형</label>
-        <select id="currentType">
-          <option value="large">대기업</option>
-          <option value="mid" selected>중견기업</option>
-          <option value="public">공기업/공공기관</option>
-          <option value="startup">스타트업</option>
-          <option value="foreign">외국계</option>
-          <option value="freelance">프리랜서/계약직</option>
-        </select>
-      </div>
-      <div class="input-group">
-        <label>이직 기업 유형</label>
-        <select id="offerType">
-          <option value="large">대기업</option>
-          <option value="mid">중견기업</option>
-          <option value="public">공기업/공공기관</option>
-          <option value="startup" selected>스타트업</option>
-          <option value="foreign">외국계</option>
-          <option value="freelance">프리랜서/계약직</option>
-        </select>
-      </div>
-      <div class="input-group">
-        <label>나의 리스크 허용도</label>
-        <select id="riskTolerance">
-          <option value="low">보수적 — 안정이 최우선</option>
-          <option value="mid" selected>중립 — 적절한 위험 감수</option>
-          <option value="high">공격적 — 높은 성장 추구</option>
-        </select>
-      </div>
-      <div class="input-group">
-        <label>소비 성향 (라이프스타일)</label>
-        <select id="lifestyleType">
-          <option value="frugal">절제형 — 소득 올라도 소비 유지</option>
-          <option value="normal" selected>보통 — 소득에 비례해 소비 증가</option>
-          <option value="spender">소비형 — 소득 오르면 소비도 확 늘림</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="preset-info" id="presetInfo">
-      적용 파라미터: 
-      <span class="label-stay">현직</span> 연봉성장률 <span class="value" id="p-stay-growth">4.0%</span> · σ <span class="value" id="p-stay-vol">3.0%</span> · 실직확률 <span class="value" id="p-stay-fail">2%</span>
-      &nbsp;|&nbsp;
-      <span class="label-move">이직</span> 연봉성장률 <span class="value" id="p-move-growth">7.0%</span> · σ <span class="value" id="p-move-vol">8.0%</span> · 적응실패 <span class="value" id="p-move-fail">12%</span>
-      <br>
-      <span style="color:var(--accent-purple)">소비모델</span> 한계소비성향(MPC) <span class="value" id="p-mpc">0.47</span> · 물가상승 <span class="value">2.5%</span>/년 · 라이프스타일 계수 <span class="value" id="p-lifestyle">1.0x</span>
-    </div>
-    
-    <div class="preset-info" style="margin-top: 0.5rem; border-left: 2px solid var(--accent-purple); padding-left: 12px;">
-      <strong style="color:var(--text-secondary);">📐 소비 증가 공식</strong><br>
-      C(t+1) = C_고정 × (1 + 물가상승률) + MPC(Y) × (Y(t+1) − Y(t)) × λ<br>
-      <span style="font-size:0.72rem;">
-        • C_고정 = 초기소비의 60% (주거·보험·공과금 등 고정비)<br>
-        • MPC(Y) = 0.3 + 0.4 × e<sup>−Y/8000</sup> (소득↑ → 한계소비성향↓, 한국은행·KDI 연구 기반)<br>
-        • λ = 라이프스타일 계수 (절제 0.5 / 보통 1.0 / 소비형 1.5)<br>
-        • 소득 4천만: MPC≈0.54 | 6천만: MPC≈0.49 | 8천만: MPC≈0.45 | 1억: MPC≈0.41 | 1.5억: MPC≈0.35
-      </span>
-    </div>
-  </section>
-
-  <!-- Run -->
-  <button class="run-btn" onclick="runSimulation()">
-    시뮬레이션 실행
-    <span class="sub">5,000회 몬테카를로 시뮬레이션</span>
-  </button>
-
-  <!-- Loading -->
-  <div class="loading" id="loading">
-    <div class="loading-dots">
-      <span></span><span></span><span></span>
-    </div>
-    <div class="loading-text">5,000개의 미래를 계산하고 있습니다...</div>
-  </div>
-
-  <!-- Results -->
-  <div class="results" id="results">
-
-    <!-- Diff Banner -->
-    <div class="diff-banner" id="diffBanner">
-      <div class="diff-label">5년 후 자산 중앙값 차이</div>
-      <div class="diff-value" id="diffValue">—</div>
-      <div class="diff-sub" id="diffSub"></div>
-    </div>
-
-    <!-- Strategy Cards -->
-    <div class="strategy-cards">
-      <div class="strategy-card stay">
-        <div class="strategy-label">📊 현직 유지 전략</div>
-        <div class="stat-row">
-          <span class="stat-label">5년 후 자산 중앙값</span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-value large" id="stay-median" style="color:var(--accent-stay)">—</span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-label">상위 20% (낙관)</span>
-          <span class="stat-value mono" id="stay-top20">—</span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-label">하위 20% (비관)</span>
-          <span class="stat-value mono" id="stay-bot20">—</span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-label">자산 감소 확률</span>
-          <span class="stat-value mono" id="stay-loss" style="color:var(--accent-danger)">—</span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-label">5년 누적 소득</span>
-          <span class="stat-value mono" id="stay-income">—</span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-label">5년 누적 소비</span>
-          <span class="stat-value mono" id="stay-expense" style="color:var(--accent-purple)">—</span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-label">5년차 연간 소비</span>
-          <span class="stat-value mono" id="stay-final-expense">—</span>
-        </div>
-        <div class="risk-meter">
-          <div class="risk-label-row">
-            <span>리스크 점수</span>
-            <span class="mono" id="stay-risk-score">—</span>
-          </div>
-          <div class="risk-bar-bg">
-            <div class="risk-bar-fill" id="stay-risk-bar" style="width:0%; background: var(--accent-stay)"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="strategy-card move">
-        <div class="strategy-label">🚀 이직 전략</div>
-        <div class="stat-row">
-          <span class="stat-label">5년 후 자산 중앙값</span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-value large" id="move-median" style="color:var(--accent-move)">—</span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-label">상위 20% (낙관)</span>
-          <span class="stat-value mono" id="move-top20">—</span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-label">하위 20% (비관)</span>
-          <span class="stat-value mono" id="move-bot20">—</span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-label">자산 감소 확률</span>
-          <span class="stat-value mono" id="move-loss" style="color:var(--accent-danger)">—</span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-label">5년 누적 소득</span>
-          <span class="stat-value mono" id="move-income">—</span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-label">5년 누적 소비</span>
-          <span class="stat-value mono" id="move-expense" style="color:var(--accent-purple)">—</span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-label">5년차 연간 소비</span>
-          <span class="stat-value mono" id="move-final-expense">—</span>
-        </div>
-        <div class="risk-meter">
-          <div class="risk-label-row">
-            <span>리스크 점수</span>
-            <span class="mono" id="move-risk-score">—</span>
-          </div>
-          <div class="risk-bar-bg">
-            <div class="risk-bar-fill" id="move-risk-bar" style="width:0%; background: var(--accent-move)"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Distribution Chart -->
-    <div class="chart-section">
-      <div class="chart-title">📈 5년 후 자산 분포 (확률 밀도)</div>
-      <div class="chart-container">
-        <canvas id="distChart"></canvas>
-      </div>
-    </div>
-
-    <!-- Year-by-Year Chart -->
-    <div class="chart-section">
-      <div class="chart-title">📊 연도별 자산 추이 (중앙값 기준)</div>
-      <div class="year-chart-container">
-        <canvas id="yearChart"></canvas>
-      </div>
-    </div>
-
-    <!-- Insights -->
-    <div class="insight-box" id="insightBox">
-      <div class="insight-title">💡 핵심 인사이트</div>
-      <div id="insightContent"></div>
-    </div>
-
-    <!-- Disclaimer -->
-    <div class="disclaimer">
-      본 시뮬레이션은 통계적 추정에 기반한 참고 자료이며, 투자 권유나 이직 추천이 아닙니다.<br>
-      실제 결과는 개인 상황, 시장 환경, 기업 성과 등에 따라 크게 달라질 수 있습니다.<br>
-      입력값의 정확도에 따라 결과의 신뢰도가 결정됩니다.
+<!-- ━━ LANDING ━━ -->
+<div class="screen landing active" id="s-landing">
+  <nav class="l-nav"><div class="logo"><div class="logo-m">OS</div>직장선택OS</div><button class="l-login">로그인</button></nav>
+  <div class="l-center">
+    <h1 class="l-h1">이직할까, 말까.<br>고민 중이라면<br><em>이직 vs 잔류</em><br>비교해 보세요</h1>
+    <p class="l-sub">연봉 숫자만 보지 마세요.<br>복지, 워라밸, 성장성까지 — 나의 기준으로 비교합니다.</p>
+    <div class="l-btns">
+      <button class="l-cta" onclick="go('s-input')">비교 시작</button>
+      <button class="l-cta2" onclick="go('s-profiler')">🎯 나의 커리어 가치관 먼저 알아보기</button>
     </div>
   </div>
+  <div class="l-foot">나의 기준 맞춤 비교 리포트</div>
+</div>
 
-</main>
+<!-- ━━ PROFILER ━━ -->
+<div class="screen" id="s-profiler">
+  <div class="wrap" id="pfWrap"></div>
+</div>
+
+<!-- ━━ INPUT ━━ -->
+<div class="screen" id="s-input">
+<div class="wrap">
+  <button class="back" onclick="go('s-landing')">← 처음으로</button>
+  <div class="i-header">
+    <h2>이직 vs 잔류, 감이 아니라 숫자로 비교합니다.</h2>
+    <p>나의 기준을 선택하면 그에 맞는 비교 리포트를 만들어 드립니다.</p>
+  </div>
+
+  <div class="pri">
+    <div class="pri-l">🎯 이직에서 가장 중요한 기준</div>
+    <div class="pri-d">선택한 기준에 따라 비교 리포트의 내용이 달라집니다.</div>
+    <div class="pri-g" id="priGrid"></div>
+    <div class="pri-auto" id="priAuto"></div>
+  </div>
+
+  <!-- Company A -->
+  <div class="cc a">
+    <div class="cc-label"><span class="dot"></span> 현직</div>
+    <div class="fd"><div class="fl">회사명</div><div class="sw"><input class="fi" id="sA" placeholder="회사명 검색 (예: CJ, 토스)" autocomplete="off" oninput="doSearch('a')" onfocus="doSearch('a')"><div class="sr" id="rA"></div></div><div class="mb" id="mA"><span>✓ DB 매칭 — 복리후생 자동 입력</span><button class="xb" onclick="clearM('a')">✕</button></div></div>
+    <div class="fd"><div class="fl">기업 유형</div><select class="fs" id="tA"><option value="large">대기업</option><option value="mid">중견기업</option><option value="public">공기업/공공기관</option><option value="startup">스타트업</option><option value="foreign">외국계</option><option value="freelance">프리랜서/계약직</option></select></div>
+    <div class="fd"><div class="fl">현재 연봉 <span class="u">(만원)</span></div><input class="fi mono" type="number" id="salA" value="5000" min="1000" max="50000" step="100" oninput="calc()"></div>
+    <div class="fd"><div class="fl">통근 편도 <span class="u">(분)</span></div><input class="fi mono" type="number" id="comA" value="50" min="0" max="180" step="5" oninput="calc()"></div>
+    <div class="ba" id="baA"><div class="ba-title">🏢 복리후생 <span id="bcA"></span></div><div id="blA"></div></div>
+    <div class="tc"><span class="tc-b" id="tcbA">5,000</span><span class="tc-p">+</span><span class="tc-bn" id="tcnA">복지 0만</span><span class="tc-e">=</span><span class="tc-t" id="tctA">5,000만</span></div>
+  </div>
+
+  <!-- Company B -->
+  <div class="cc b">
+    <div class="cc-label"><span class="dot"></span> 이직처</div>
+    <div class="fd"><div class="fl">회사명</div><div class="sw"><input class="fi" id="sB" placeholder="회사명 검색 (예: CJ, 토스)" autocomplete="off" oninput="doSearch('b')" onfocus="doSearch('b')"><div class="sr" id="rB"></div></div><div class="mb" id="mB"><span>✓ DB 매칭 — 복리후생 자동 입력</span><button class="xb" onclick="clearM('b')">✕</button></div></div>
+    <div class="fd"><div class="fl">기업 유형</div><select class="fs" id="tB"><option value="large">대기업</option><option value="mid">중견기업</option><option value="public">공기업/공공기관</option><option value="startup" selected>스타트업</option><option value="foreign">외국계</option><option value="freelance">프리랜서/계약직</option></select></div>
+    <div class="fd"><div class="fl">이직 제안 연봉 <span class="u">(만원)</span></div><input class="fi mono" type="number" id="salB" value="7000" min="1000" max="50000" step="100" oninput="calc()"></div>
+    <div class="fd"><div class="fl">통근 편도 <span class="u">(분)</span></div><input class="fi mono" type="number" id="comB" value="40" min="0" max="180" step="5" oninput="calc()"></div>
+    <div class="ba" id="baB"><div class="ba-title">🏢 복리후생 <span id="bcB"></span></div><div id="blB"></div></div>
+    <div class="tc"><span class="tc-b" id="tcbB">7,000</span><span class="tc-p">+</span><span class="tc-bn" id="tcnB">복지 0만</span><span class="tc-e">=</span><span class="tc-t" id="tctB">7,000만</span></div>
+  </div>
+
+  <div class="diff"><span class="diff-l">실질 보상 차이</span><span class="diff-v" id="diffV">—</span></div>
+  <button class="cta" onclick="compare()">회사 비교<span class="sub">나의 기준 맞춤 비교 리포트</span></button>
+  <div class="report" id="report"></div>
+</div>
+</div>
 
 <script>
-// ── 복리후생 계산기 ──
-function toggleBenefits() {
-  const body = document.getElementById('benefitsBody');
-  const toggle = document.getElementById('benefitsToggle');
-  body.classList.toggle('open');
-  toggle.classList.toggle('open');
-}
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  PROFILER ENGINE (from React → vanilla JS)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-// 차감 항목 키 목록
-const DEDUCT_KEYS = ['commute', 'noRetire', 'insurance'];
-
-// 생활비 절감 항목 (이 항목들은 생활비에서 차감)
-const LIVING_COST_KEYS = ['health', 'loan', 'childEdu', 'edu', 'event'];
-
-function calcBenefits() {
-  const sides = ['stay', 'move'];
-  const results = {};
-
-  sides.forEach(side => {
-    let total = 0;
-    let livingCostSaving = 0;
-    
-    const rows = document.querySelectorAll(`.benefit-check[data-side="${side}"]`);
-    rows.forEach(chk => {
-      if (!chk.checked) return;
-      const key = chk.dataset.key;
-      const valInput = document.getElementById(`${side}-b-${key}`);
-      const val = Number(valInput.value) || 0;
-      
-      if (DEDUCT_KEYS.includes(key)) {
-        total -= val;
-      } else {
-        total += val;
-        if (LIVING_COST_KEYS.includes(key)) {
-          livingCostSaving += val;
-        }
-      }
-    });
-    
-    results[side] = { total, livingCostSaving };
-    
-    // 표시 업데이트
-    const sign = total >= 0 ? '+' : '';
-    document.getElementById(`${side}-benefits-total`).textContent = `${sign}${total.toLocaleString()}만`;
-    
-    const baseSalary = side === 'stay' 
-      ? Number(document.getElementById('currentSalary').value) || 0
-      : Number(document.getElementById('offerSalary').value) || 0;
-    
-    const realSalary = baseSalary + total;
-    document.getElementById(`${side}-real-salary`).textContent = `${realSalary.toLocaleString()}만`;
-  });
-
-  // 차이 표시
-  const stayBase = Number(document.getElementById('currentSalary').value) || 0;
-  const moveBase = Number(document.getElementById('offerSalary').value) || 0;
-  const stayReal = stayBase + results.stay.total;
-  const moveReal = moveBase + results.move.total;
-  const diff = moveReal - stayReal;
-  
-  const diffEl = document.getElementById('benefits-diff');
-  if (diff > 0) {
-    diffEl.textContent = `이직처가 +${diff.toLocaleString()}만원 유리`;
-    diffEl.style.color = 'var(--accent-success)';
-  } else if (diff < 0) {
-    diffEl.textContent = `현직이 +${Math.abs(diff).toLocaleString()}만원 유리`;
-    diffEl.style.color = 'var(--accent-danger)';
-  } else {
-    diffEl.textContent = '동일';
-    diffEl.style.color = 'var(--text-secondary)';
-  }
-  
-  return results;
-}
-
-function applyBenefits() {
-  const results = calcBenefits();
-  
-  const stayBase = Number(document.getElementById('currentSalary').value) || 0;
-  const moveBase = Number(document.getElementById('offerSalary').value) || 0;
-  
-  // 실질 연봉 반영
-  document.getElementById('currentSalary').value = stayBase + results.stay.total;
-  document.getElementById('offerSalary').value = moveBase + results.move.total;
-  
-  // 생활비 절감 반영 — 현직 기준 생활비에서 차감
-  const currentExpense = Number(document.getElementById('annualExpense').value) || 0;
-  const expenseReduction = results.stay.livingCostSaving;
-  if (expenseReduction > 0) {
-    document.getElementById('annualExpense').value = Math.max(1200, currentExpense - expenseReduction);
-  }
-  
-  // 프리셋 표시 업데이트
-  updatePresetDisplay();
-  
-  // 시각적 피드백
-  const btn = document.querySelector('.benefits-apply-btn');
-  btn.textContent = '✅ 반영 완료! 위 입력값이 변경되었습니다';
-  btn.style.background = 'var(--accent-success)';
-  setTimeout(() => {
-    btn.textContent = '✅ 실질 연봉을 시뮬레이션에 반영하기';
-    btn.style.background = '';
-  }, 2500);
-  
-  // 입력값 하이라이트 효과
-  ['currentSalary', 'offerSalary', 'annualExpense'].forEach(id => {
-    const el = document.getElementById(id);
-    el.style.borderColor = 'var(--accent-purple)';
-    el.style.boxShadow = '0 0 8px rgba(139,92,246,0.3)';
-    setTimeout(() => {
-      el.style.borderColor = '';
-      el.style.boxShadow = '';
-    }, 2000);
-  });
-}
-
-// 기본 연봉 변경 시 복리후생도 재계산
-document.getElementById('currentSalary').addEventListener('input', calcBenefits);
-document.getElementById('offerSalary').addEventListener('input', calcBenefits);
-
-// 기업 유형별 복리후생 프리셋
-const BENEFIT_PRESETS = {
-  large:     { meal: [true,180], transport: [true,120], welfare: [true,200], bonus: [true,300], stock: [false,0], health: [true,100], loan: [true,200], childEdu: [false,300], edu: [true,100], event: [true,50], commute: [false,0], noRetire: [false,0], insurance: [false,0] },
-  mid:       { meal: [true,150], transport: [true,60],  welfare: [false,100], bonus: [false,150], stock: [false,0], health: [true,50],  loan: [false,0],   childEdu: [false,0],   edu: [false,50],  event: [true,30],  commute: [false,0], noRetire: [false,0], insurance: [false,0] },
-  public:    { meal: [true,180], transport: [true,120], welfare: [true,250], bonus: [false,100], stock: [false,0], health: [true,80],  loan: [true,250],  childEdu: [true,400],  edu: [true,100], event: [true,50],  commute: [false,0], noRetire: [false,0], insurance: [false,0] },
-  startup:   { meal: [true,180], transport: [false,0],  welfare: [false,0],  bonus: [false,0],   stock: [true,500], health: [false,0],  loan: [false,0],   childEdu: [false,0],   edu: [false,0],  event: [false,0],  commute: [false,0], noRetire: [false,0], insurance: [false,0] },
-  foreign:   { meal: [true,180], transport: [true,100], welfare: [true,150], bonus: [true,500], stock: [true,300], health: [true,150], loan: [false,0],   childEdu: [false,0],   edu: [true,200], event: [false,30], commute: [false,0], noRetire: [false,0], insurance: [false,0] },
-  freelance: { meal: [false,0],  transport: [false,0],  welfare: [false,0],  bonus: [false,0],   stock: [false,0], health: [false,0],  loan: [false,0],   childEdu: [false,0],   edu: [false,0],  event: [false,0],  commute: [false,0], noRetire: [true,0],  insurance: [true,0] },
+const DIMS=["compensation","security","growth","autonomy","impact","flexibility"];
+const DIM_META={
+  compensation:{label:"보상",color:"#E8B931",icon:"◈"},security:{label:"안정성",color:"#4A9B8E",icon:"◉"},
+  growth:{label:"성장",color:"#D4644E",icon:"△"},autonomy:{label:"자율성",color:"#7B68C8",icon:"◎"},
+  impact:{label:"영향력",color:"#C75B8E",icon:"⬡"},flexibility:{label:"유연성",color:"#5B95D4",icon:"◇"},
 };
 
-function applyBenefitPreset(side, companyType) {
-  const preset = BENEFIT_PRESETS[companyType];
-  if (!preset) return;
-  
-  Object.entries(preset).forEach(([key, [checked, value]]) => {
-    const chk = document.querySelector(`.benefit-check[data-side="${side}"][data-key="${key}"]`);
-    const valInput = document.getElementById(`${side}-b-${key}`);
-    if (chk) chk.checked = checked;
-    if (valInput) {
-      // 프리랜서의 퇴직금/보험은 연봉 기반으로 자동 계산
-      if (key === 'noRetire' && companyType === 'freelance') {
-        const salary = Number(document.getElementById(side === 'stay' ? 'currentSalary' : 'offerSalary').value) || 0;
-        valInput.value = Math.round(salary * 0.083); // 연봉의 8.3%
-      } else if (key === 'insurance' && companyType === 'freelance') {
-        const salary = Number(document.getElementById(side === 'stay' ? 'currentSalary' : 'offerSalary').value) || 0;
-        valInput.value = Math.round(salary * 0.09); // 연봉의 ~9%
-      } else {
-        valInput.value = value;
-      }
+const PF_QUESTIONS=[
+  {id:1,label:"보상 vs 성장",a:{title:"연봉 40% 인상",desc:"기존과 거의 동일한 업무",fx:{compensation:.9,security:.2,growth:-.5,autonomy:0,impact:-.1,flexibility:-.1}},b:{title:"연봉 동결",desc:"한 번도 다뤄보지 않은 기술 스택을 처음부터 구축",fx:{compensation:-.4,security:-.2,growth:.9,autonomy:.3,impact:.1,flexibility:.2}}},
+  {id:2,label:"안정성 vs 자율성",a:{title:"대기업 정규직",desc:"명확한 R&R, 매년 3~5% 인상. 출퇴근 고정, 재택 불가",fx:{compensation:.3,security:.9,growth:-.1,autonomy:-.7,impact:.1,flexibility:-.3}},b:{title:"계약직 1년 갱신",desc:"완전 원격, 업무 시간 자율, 프로젝트 선택권",fx:{compensation:-.1,security:-.7,growth:.1,autonomy:.9,impact:-.1,flexibility:.4}}},
+  {id:3,label:"영향력 vs 보상",a:{title:"연봉 30% 인상",desc:"실무 전문가 포지션. 의사결정 참여 없음",fx:{compensation:.8,security:.2,growth:.1,autonomy:-.1,impact:-.6,flexibility:0}},b:{title:"연봉 10% 삭감",desc:"5인 팀 리드. 기술 선택, 채용, 아키텍처 직접 결정",fx:{compensation:-.5,security:-.1,growth:.3,autonomy:.2,impact:.9,flexibility:0}}},
+  {id:4,label:"유연성 vs 안정성",a:{title:"업계 1위 대기업",desc:"10년 안정적. 독자 플랫폼이라 이직 시 경력 전환 어려움",fx:{compensation:.3,security:.9,growth:-.2,autonomy:-.2,impact:.2,flexibility:-.8}},b:{title:"중견 회사",desc:"3년 후 존속 불확실. 시장 범용 기술로 어디든 이직 가능",fx:{compensation:-.1,security:-.5,growth:.3,autonomy:.1,impact:-.1,flexibility:.9}}},
+  {id:5,label:"성장 vs 자율성",a:{title:"업계 최고 시니어에게 직접 배움",desc:"그 사람의 방식을 따라야 하고, 자기 재량 없음",fx:{compensation:0,security:.1,growth:.9,autonomy:-.7,impact:0,flexibility:-.1}},b:{title:"혼자 맡아서 자유롭게 설계",desc:"사내에 배울 사람 없음. 독학으로 해결",fx:{compensation:0,security:-.2,growth:.2,autonomy:.9,impact:.2,flexibility:.3}}},
+  {id:6,label:"보상 vs 유연성",a:{title:"연봉 50% 인상",desc:"3년 의무 근속. 중도 퇴사 시 위약금",fx:{compensation:1,security:.3,growth:-.1,autonomy:-.5,impact:.1,flexibility:-.9}},b:{title:"연봉 동결",desc:"아무 구속 없음. 6개월마다 커리어 방향 재조정 가능",fx:{compensation:-.3,security:-.1,growth:.1,autonomy:.4,impact:0,flexibility:.9}}},
+  {id:7,label:"영향력 vs 성장",a:{title:"CTO 타이틀",desc:"경영진 회의, 컨퍼런스 발표. 업무의 70%가 매니지먼트",fx:{compensation:.3,security:.1,growth:-.4,autonomy:.1,impact:.9,flexibility:-.2}},b:{title:"시니어 엔지니어",desc:"타이틀은 평범. 최신 기술을 매일 직접 다루고 깊이가 쌓임",fx:{compensation:-.1,security:.1,growth:.9,autonomy:.2,impact:-.4,flexibility:.2}}},
+  {id:8,label:"안정성 vs 보상",a:{title:"공공기관급 안정성",desc:"구조조정 가능성 제로. 연봉은 업계 평균의 80%",fx:{compensation:-.5,security:1,growth:-.3,autonomy:-.2,impact:-.1,flexibility:-.3}},b:{title:"초기 스타트업",desc:"2년 내 인수 또는 폐업 반반. 성공 시 스톡옵션으로 연봉 5배",fx:{compensation:.8,security:-.9,growth:.5,autonomy:.2,impact:.3,flexibility:-.1}}},
+  {id:9,label:"자율성 vs 영향력",a:{title:"완전 자율 근무",desc:"재택, 자기 일정, 프로젝트 선택. 조직 의사결정에 영향력 없음",fx:{compensation:0,security:0,growth:.1,autonomy:.9,impact:-.6,flexibility:.3}},b:{title:"출근 필수, 회의 빡빡",desc:"일정 자율 없음. 대신 팀 리드로서 조직 방향에 직접 영향",fx:{compensation:.1,security:.2,growth:.2,autonomy:-.7,impact:.9,flexibility:-.2}}},
+  {id:10,label:"성장 vs 안정성",a:{title:"검증된 기술, 안정 운영",desc:"새로 배울 건 적지만 실수할 일도 없음. 5년 후 같은 자리 보장",fx:{compensation:.2,security:.9,growth:-.6,autonomy:-.1,impact:0,flexibility:-.3}},b:{title:"PMF도 못 찾은 초기 스타트업",desc:"3개월마다 기술 스택 변경. 성장은 폭발적, 회사가 망하면 처음부터",fx:{compensation:-.2,security:-.8,growth:.9,autonomy:.3,impact:.2,flexibility:.1}}},
+  {id:11,label:"유연성 vs 영향력",a:{title:"업계 인정받는 포지션",desc:"컨퍼런스 초청, 네임밸류 높음. 다른 방향 전환은 어려움",fx:{compensation:.2,security:.3,growth:.1,autonomy:-.1,impact:.9,flexibility:-.7}},b:{title:"무명이지만 범용적 역할",desc:"시장 인지도 없음. 경험이 3~4개 다른 직군으로 전환 가능",fx:{compensation:-.1,security:-.1,growth:.3,autonomy:.2,impact:-.5,flexibility:.9}}},
+  {id:12,label:"보상 vs 자율성",a:{title:"연봉 35% 인상",desc:"주 5일 출근, 야근 빈번, 휴가 사용 자유롭지 않음",fx:{compensation:.85,security:.2,growth:0,autonomy:-.8,impact:.1,flexibility:-.3}},b:{title:"현재 연봉 유지",desc:"주 4일 근무, 완전 원격, 업무 시간 자율 선택",fx:{compensation:-.2,security:0,growth:.1,autonomy:.9,impact:-.1,flexibility:.4}}},
+];
+
+const PROFILES=[
+  {id:"explorer",type:"탐험가형",vec:{compensation:-.3,security:-.6,growth:.9,autonomy:.8,impact:0,flexibility:.4},desc:"돈과 안정성을 기꺼이 포기하더라도 배움과 자유를 택합니다.",fit:"스타트업 초기 멤버, 프리랜서, 1인 기술 컨설턴트",caution:"안정성을 지나치게 경시하면 생애 주기 변화에서 스트레스를 받을 수 있습니다.",mapPri:"growth"},
+  {id:"architect",type:"건축가형",vec:{compensation:0,security:-.1,growth:.8,autonomy:.2,impact:.8,flexibility:0},desc:"기술적 깊이와 조직적 영향력을 동시에 추구합니다.",fit:"기술 리드, CTO, 플랫폼 아키텍트",caution:"두 축을 동시에 추구하면 중간에 빠질 위험이 있습니다.",mapPri:"expertise"},
+  {id:"fortress",type:"요새형",vec:{compensation:.7,security:.9,growth:-.3,autonomy:-.3,impact:0,flexibility:-.5},desc:"예측 가능한 보상과 안정성을 최우선으로 합니다.",fit:"대기업 전문가 트랙, 공공기관, 금융권",caution:"안정성에 과도하게 최적화하면 시장 변화 적응력이 약해집니다.",mapPri:"stability"},
+  {id:"conqueror",type:"정복자형",vec:{compensation:.9,security:-.2,growth:.1,autonomy:0,impact:.8,flexibility:-.2},desc:"높은 보상과 강한 영향력을 함께 추구합니다.",fit:"빅테크 시니어, 경영 컨설팅, 세일즈 리더십",caution:"보상과 영향력에 집중하면 기술적 깊이가 약해질 수 있습니다.",mapPri:"salary"},
+  {id:"nomad",type:"유목민형",vec:{compensation:-.4,security:-.5,growth:.2,autonomy:.8,impact:-.3,flexibility:.9},desc:"어떤 것에도 묶이지 않는 것을 최고의 가치로 봅니다.",fit:"디지털 노마드, 포트폴리오 커리어, 컨설턴트",caution:"유연성 자체가 목적이 되면 깊이도 영향력도 쌓이지 않습니다.",mapPri:"remote"},
+  {id:"gardener",type:"정원사형",vec:{compensation:.1,security:.7,growth:.7,autonomy:-.1,impact:0,flexibility:-.2},desc:"안전한 환경 안에서 꾸준히 성장하는 것을 선호합니다.",fit:"대기업 내 기술 전문가 트랙, R&D, 사내 기술 리더",caution:"외부 시장 가치를 점검하지 않으면 사내에서만 통하는 전문가가 됩니다.",mapPri:"benefits"},
+  {id:"sovereign",type:"주권자형",vec:{compensation:.2,security:-.3,growth:.1,autonomy:.9,impact:.5,flexibility:.3},desc:"자기 방식대로 일하면서 의미 있는 결정을 내리고 싶어합니다.",fit:"창업, 소규모 팀 리더, 독립 컨설턴트",caution:"모든 것을 직접 통제하려는 성향이 번아웃으로 이어질 수 있습니다.",mapPri:"wlb"},
+  {id:"strategist",type:"전략가형",vec:{compensation:.5,security:.2,growth:.3,autonomy:0,impact:.6,flexibility:.5},desc:"어떤 한 축에 올인하지 않고 최적의 포지션을 계산합니다.",fit:"PM, 전략 기획, 매니지먼트 트랙",caution:"균형 추구가 어느 것도 강하지 않은 상태로 이어질 수 있습니다.",mapPri:"growth"},
+];
+
+function pfDot(a,b){return DIMS.reduce((s,d)=>s+(a[d]||0)*(b[d]||0),0)}
+function pfMag(v){return Math.sqrt(DIMS.reduce((s,d)=>s+(v[d]||0)**2,0))}
+function pfCos(a,b){const ma=pfMag(a),mb=pfMag(b);return(ma&&mb)?pfDot(a,b)/(ma*mb):0}
+
+let pfShuffled=[],pfCur=0,pfAnswers=[],pfResult=null;
+
+function shuffle(a){const r=[...a];for(let i=r.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[r[i],r[j]]=[r[j],r[i]]}return r}
+
+function pfInit(){
+  pfShuffled=shuffle(PF_QUESTIONS);pfCur=0;pfAnswers=[];pfResult=null;
+  renderPfIntro();
+}
+
+function renderPfIntro(){
+  const w=document.getElementById('pfWrap');
+  w.innerHTML=`
+    <button class="back" onclick="go('s-landing')">← 처음으로</button>
+    <div class="pf-intro fadein">
+      <div class="mono pf-badge">Career Values Profiler <span style="opacity:.4">v2</span></div>
+      <h1 class="pf-h">당신의 커리어 가치관을<br><span>발견</span>합니다</h1>
+      <p class="pf-p">12개의 구체적 시나리오에서 트레이드오프를 선택하세요.<br>각 선택이 6개 가치 차원에 미치는 복합 효과를 분석하여<br>당신의 숨겨진 가치 체계를 드러냅니다.</p>
+      <div class="pf-dims">${DIMS.map(d=>`<span class="pf-dim" style="border-color:${DIM_META[d].color}30;color:${DIM_META[d].color}">${DIM_META[d].icon} ${DIM_META[d].label}</span>`).join('')}</div>
+      <button class="pf-start" onclick="pfStart()">시작하기</button>
+      <p class="mono" style="margin-top:20px;font-size:11px;color:rgba(255,255,255,.18)">약 3~5분 · 12문항</p>
+    </div>`;
+}
+
+function pfStart(){pfCur=0;pfAnswers=[];renderPfQ()}
+
+function renderPfQ(){
+  if(pfCur>=pfShuffled.length){pfFinish();return}
+  const q=pfShuffled[pfCur];
+  const w=document.getElementById('pfWrap');
+  const bars=pfShuffled.map((_,i)=>`<div class="pf-bar" style="background:${i<pfCur?'#E8B931':i===pfCur?'rgba(232,185,49,.4)':'rgba(255,255,255,.05)'}"></div>`).join('');
+
+  function fxTags(fx){
+    return DIMS.filter(d=>Math.abs(fx[d])>=.3).sort((a,b)=>Math.abs(fx[b])-Math.abs(fx[a])).map(d=>{
+      const v=fx[d],pos=v>0;
+      return `<span class="opt-fx-tag" style="background:${pos?DIM_META[d].color+'15':'rgba(255,255,255,.03)'};color:${pos?DIM_META[d].color:'rgba(255,255,255,.25)'};border-color:${pos?DIM_META[d].color+'30':'rgba(255,255,255,.06)'}">${pos?'↑':'↓'} ${DIM_META[d].label}</span>`;
+    }).join('');
+  }
+
+  w.innerHTML=`
+    <div class="pf-q fadein" key="${pfCur}">
+      <div style="display:flex;justify-content:space-between;margin-bottom:12px">
+        <span class="mono" style="font-size:12px;color:rgba(255,255,255,.3)">${String(pfCur+1).padStart(2,'0')} / ${pfShuffled.length}</span>
+        <span class="mono" style="font-size:12px;color:rgba(255,255,255,.18)">${q.label}</span>
+      </div>
+      <div class="pf-progress">${bars}</div>
+      <p class="pf-prompt">두 회사에서 동시에 오퍼를 받았습니다. 어디를 선택하시겠습니까?</p>
+      <div id="pfOpts">
+        <div class="opt-card" id="pfOptA" onclick="pfSelect('a')">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+            <span class="mono opt-tag" style="color:#E8B931;background:rgba(232,185,49,.15)">A</span>
+            <span class="opt-title">${q.a.title}</span>
+          </div>
+          <p class="opt-desc">${q.a.desc}</p>
+          <div class="opt-fx">${fxTags(q.a.fx)}</div>
+        </div>
+        <div class="opt-card" id="pfOptB" onclick="pfSelect('b')">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+            <span class="mono opt-tag" style="color:#7B68C8;background:rgba(123,104,200,.15)">B</span>
+            <span class="opt-title">${q.b.title}</span>
+          </div>
+          <p class="opt-desc">${q.b.desc}</p>
+          <div class="opt-fx">${fxTags(q.b.fx)}</div>
+        </div>
+      </div>
+    </div>`;
+}
+
+let pfLock=false;
+function pfSelect(side){
+  if(pfLock)return;pfLock=true;
+  const q=pfShuffled[pfCur];
+  document.getElementById(side==='a'?'pfOptA':'pfOptB').classList.add('sel-'+side);
+  document.getElementById(side==='a'?'pfOptB':'pfOptA').classList.add('dim');
+
+  setTimeout(()=>{
+    pfAnswers.push({fx:side==='a'?q.a.fx:q.b.fx});
+    pfCur++;pfLock=false;renderPfQ();
+  },500);
+}
+
+function pfFinish(){
+  // Compute scores
+  const scores={};DIMS.forEach(d=>scores[d]=0);
+  pfAnswers.forEach(a=>DIMS.forEach(d=>scores[d]+=(a.fx[d]||0)));
+
+  // Match profile
+  let best=null,bestSim=-Infinity;
+  PROFILES.forEach(p=>{const s=pfCos(scores,p.vec);if(s>bestSim){bestSim=s;best=p}});
+
+  pfResult={scores,profile:best,similarity:bestSim};
+
+  // All similarities
+  const allSim=PROFILES.map(p=>({p,s:pfCos(scores,p.vec)})).sort((a,b)=>b.s-a.s);
+
+  // Normalize for display
+  const vals=DIMS.map(d=>scores[d]);const mn=Math.min(...vals);
+  const shifted={};DIMS.forEach(d=>shifted[d]=scores[d]-mn);
+  const mx=Math.max(...DIMS.map(d=>shifted[d]),.01);
+  const norm={};DIMS.forEach(d=>norm[d]=shifted[d]/mx);
+
+  // Radar SVG
+  const size=280,cx=size/2,cy=size/2,r=size*.34,n=DIMS.length,as=Math.PI*2/n;
+  const pt=(i,v)=>({x:cx+r*v*Math.cos(as*i-Math.PI/2),y:cy+r*v*Math.sin(as*i-Math.PI/2)});
+  const levels=[.2,.4,.6,.8,1];
+
+  let svg=`<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">`;
+  svg+=`<defs><linearGradient id="rg2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#E8B931" stop-opacity=".3"/><stop offset="50%" stop-color="#7B68C8" stop-opacity=".2"/><stop offset="100%" stop-color="#4A9B8E" stop-opacity=".3"/></linearGradient></defs>`;
+  levels.forEach(lv=>{const p=DIMS.map((_,i)=>{const pp=pt(i,lv);return`${i===0?'M':'L'} ${pp.x} ${pp.y}`}).join(' ')+' Z';svg+=`<path d="${p}" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="1"/>`});
+  DIMS.forEach((_,i)=>{const p=pt(i,1);svg+=`<line x1="${cx}" y1="${cy}" x2="${p.x}" y2="${p.y}" stroke="rgba(255,255,255,.06)" stroke-width="1"/>`});
+  const dp=DIMS.map((d,i)=>{const p=pt(i,norm[d]);return`${i===0?'M':'L'} ${p.x} ${p.y}`}).join(' ')+' Z';
+  svg+=`<path d="${dp}" fill="url(#rg2)" stroke="rgba(232,185,49,.7)" stroke-width="2"/>`;
+  DIMS.forEach((d,i)=>{const p=pt(i,norm[d]);svg+=`<circle cx="${p.x}" cy="${p.y}" r="5" fill="${DIM_META[d].color}" stroke="#0d0d1a" stroke-width="2"/>`});
+  DIMS.forEach((d,i)=>{const p=pt(i,1.22);svg+=`<text x="${p.x}" y="${p.y}" text-anchor="middle" dominant-baseline="middle" fill="${DIM_META[d].color}" font-size="11" font-weight="600" font-family="Pretendard">${DIM_META[d].icon} ${DIM_META[d].label}</text>`});
+  svg+=`</svg>`;
+
+  // Bars
+  const sorted=[...DIMS].sort((a,b)=>scores[b]-scores[a]);
+  const barsHtml=sorted.map(d=>{
+    const pct=norm[d]*100,raw=scores[d];
+    return`<div style="display:flex;align-items:center;gap:12px"><span style="width:72px;font-size:13px;color:${DIM_META[d].color};font-weight:600;text-align:right">${DIM_META[d].icon} ${DIM_META[d].label}</span><div style="flex:1;height:26px;background:rgba(255,255,255,.03);border-radius:4px;overflow:hidden;position:relative"><div style="height:100%;width:${pct}%;background:linear-gradient(90deg,${DIM_META[d].color}33,${DIM_META[d].color}99);border-radius:4px;transition:width 1s"></div><span class="mono" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:11px;color:rgba(255,255,255,.45)">${raw>=0?'+':''}${raw.toFixed(2)}</span></div></div>`;
+  }).join('');
+
+  // Similarity bars
+  const simHtml=allSim.map(({p,s})=>{
+    const pct=Math.max(0,Math.min(100,((s+1)/2)*100));
+    return`<div style="display:flex;align-items:center;gap:10px;font-size:12px;color:rgba(255,255,255,.4)"><span class="mono" style="width:90px;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.type}</span><div style="flex:1;height:6px;background:rgba(255,255,255,.04);border-radius:3px;overflow:hidden"><div style="height:100%;width:${pct}%;background:linear-gradient(90deg,rgba(232,185,49,.3),rgba(232,185,49,.8));border-radius:3px"></div></div><span class="mono" style="width:40px">${(s*100).toFixed(0)}%</span></div>`;
+  }).join('');
+
+  const w=document.getElementById('pfWrap');
+  w.innerHTML=`
+    <div class="pf-result">
+      <div class="slideup" style="text-align:center;margin-bottom:36px">
+        <div class="mono" style="font-size:11px;letter-spacing:4px;color:rgba(232,185,49,.6);text-transform:uppercase;margin-bottom:16px">Your Career DNA</div>
+        <h2 style="font-size:28px;font-weight:700;color:#f0ede6;margin-bottom:6px">${best.type}</h2>
+        <span class="mono" style="font-size:11px;color:rgba(255,255,255,.25)">cosine similarity: ${(bestSim*100).toFixed(1)}%</span>
+      </div>
+      <div class="slideup" style="display:flex;justify-content:center;margin-bottom:28px">${svg}</div>
+      <div class="slideup" style="display:flex;flex-direction:column;gap:10px;margin-bottom:28px">${barsHtml}</div>
+      <div class="pf-res-box slideup"><h3 class="mono pf-res-label" style="color:rgba(232,185,49,.7)">분석</h3><p style="font-size:14px;line-height:1.8;color:rgba(255,255,255,.55)">${best.desc}</p></div>
+      <div class="pf-res-box slideup"><h3 class="mono pf-res-label" style="color:rgba(123,104,200,.7)">적합 경로</h3><p style="font-size:14px;line-height:1.8;color:rgba(255,255,255,.55)">${best.fit}</p></div>
+      <div class="pf-res-box slideup"><h3 class="mono pf-res-label" style="color:rgba(212,100,78,.7)">주의점</h3><p style="font-size:14px;line-height:1.8;color:rgba(255,255,255,.55)">${best.caution}</p></div>
+      <div class="pf-res-box slideup"><h3 class="mono pf-res-label" style="color:rgba(255,255,255,.35)">전체 프로필 유사도</h3><div style="display:flex;flex-direction:column;gap:8px">${simHtml}</div></div>
+      <button class="pf-to-compare" onclick="pfToCompare()">이 가치관으로 회사 비교하기<span class="sub">${best.type} → 추천 기준: ${PRIORITIES.find(p=>p.key===best.mapPri)?.label||''}</span></button>
+      <div style="text-align:center;margin-top:1rem"><button class="back" onclick="pfInit()" style="margin:0">다시 측정하기</button></div>
+    </div>`;
+}
+
+function pfToCompare(){
+  if(pfResult?.profile?.mapPri){
+    curPri=pfResult.profile.mapPri;
+  }
+  go('s-input');
+  initPri();
+  const autoEl=document.getElementById('priAuto');
+  if(pfResult){
+    autoEl.innerHTML=`🎯 <strong>${pfResult.profile.type}</strong> 가치관 분석 결과, <strong>${PRIORITIES.find(p=>p.key===curPri)?.label}</strong>이 자동 선택되었습니다. 다른 기준을 선택해도 됩니다.`;
+    autoEl.classList.add('show');
+  }
+  calc();
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  COMPARE ENGINE (from v3)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+const PRIORITIES=[
+  {key:'salary',icon:'💰',label:'연봉 인상',desc:'연봉과 금전적 보상을 중심으로 비교합니다.'},
+  {key:'wlb',icon:'⚖️',label:'워라밸',desc:'근무시간, 통근, 유연근무를 중심으로 비교합니다.'},
+  {key:'stability',icon:'🛡️',label:'고용 안정성',desc:'기업 유형, 산업 안정성, 고용 리스크를 비교합니다.'},
+  {key:'growth',icon:'🚀',label:'커리어 성장',desc:'교육 지원, 성장 가능성을 비교합니다.'},
+  {key:'brand',icon:'🏢',label:'회사 브랜드',desc:'이력서 가치, 브랜드 인지도를 비교합니다.'},
+  {key:'expertise',icon:'🔬',label:'직무 전문성',desc:'교육비, 전문성 심화 기회를 비교합니다.'},
+  {key:'benefits',icon:'🎁',label:'복지',desc:'복리후생 항목을 하나하나 비교합니다.'},
+  {key:'remote',icon:'🏠',label:'원격/유연근무',desc:'재택근무, 유연출퇴근, 자율휴가를 비교합니다.'},
+];
+
+let curPri='wlb';
+
+const CAT_LABELS={money:'💰 금전 혜택',health:'🏥 건강·의료',housing:'🏠 주거·금융',edu:'📚 교육·성장',family:'👶 가족',life:'🎁 라이프스타일',leave:'🏖 휴가·근무'};
+
+const DB=[
+  {id:'cj',name:'CJ그룹',aliases:['CJ','cj','씨제이','CJ제일제당','CJ올리브영','CJ ENM'],type:'large',industry:'식품/유통/엔터',logo:'CJ',
+  benefits:[
+    {key:'meal',name:'구내식당 (아침·점심·저녁 100%)',val:432,cat:'money',badge:'auto',note:'일 18,000원 × 240일'},
+    {key:'cafe_point',name:'카페테리아 포인트',val:200,cat:'money',badge:'auto'},
+    {key:'commute_sup',name:'출퇴근 셔틀 + 야근택시',val:120,cat:'money',badge:'est'},
+    {key:'event',name:'경조사 지원',val:50,cat:'money',badge:'est'},
+    {key:'health',name:'건강검진 (본인+가족)',val:100,cat:'health',badge:'auto'},
+    {key:'medical',name:'의료비 지원',val:100,cat:'health',badge:'est'},
+    {key:'fitness',name:'피트니스 지원',val:60,cat:'health',badge:'est'},
+    {key:'housing',name:'주택대부 이자절감',val:200,cat:'housing',badge:'est'},
+    {key:'resort',name:'프리미엄 숙소 할인',val:50,cat:'housing',badge:'est'},
+    {key:'lang',name:'어학시험 응시료',val:15,cat:'edu',badge:'auto'},
+    {key:'child_edu',name:'자녀 학자금',val:300,cat:'family',badge:'auto',note:'초·중·고·대학'},
+    {key:'parenting',name:'임신·출산·육아 지원',val:0,cat:'family',badge:'auto',qual:true,qualText:'키즈빌 운영, 배우자 출산휴가, 최대 2년 육아휴직'},
+    {key:'wedding',name:'결혼 혜택',val:0,cat:'family',badge:'auto',qual:true,qualText:'웨딩카 제공, 사내 인재원 웨딩홀 대관'},
+    {key:'discount',name:'계열사 40% 할인',val:100,cat:'life',badge:'est',note:'올리브영, CGV 등'},
+    {key:'tving',name:'티빙 이용권',val:17,cat:'life',badge:'auto'},
+    {key:'travel',name:'여행 지원',val:80,cat:'life',badge:'est'},
+    {key:'club',name:'사내 동호회',val:30,cat:'life',badge:'est'},
+    {key:'creative_leave',name:'창의휴가 (근속 시 2주 유급)',val:0,cat:'leave',badge:'auto',qual:true,qualText:'3·5·7·10년 근속 시 2주간 유급 휴가'},
+  ],workStyle:{remote:false,flex:false,unlimitedPTO:false,refreshLeave:'3·5·7·10년 근속 시 2주 유급',overtime:'일반적 대기업 수준'}},
+  {id:'toss',name:'토스 (비바리퍼블리카)',aliases:['토스','toss','Toss','비바리퍼블리카','비바'],type:'startup',industry:'핀테크',logo:'T',
+  benefits:[
+    {key:'meal',name:'법인카드 식사 (점심+저녁 100%)',val:432,cat:'money',badge:'auto',note:'일 18,000원 × 240일'},
+    {key:'fitness_comm',name:'체력단련비+통신비 (매월)',val:120,cat:'money',badge:'auto'},
+    {key:'insurance',name:'직장 단체보험 (가족 포함)',val:150,cat:'health',badge:'auto'},
+    {key:'salon',name:'사내 헤어살롱',val:30,cat:'health',badge:'est'},
+    {key:'cafe',name:'사내 카페 무료',val:60,cat:'health',badge:'est'},
+    {key:'housing',name:'주택자금 무이자 1억',val:350,cat:'housing',badge:'auto',note:'시중 3.5% 기준 이자절감'},
+    {key:'edu',name:'업무 교육비 100%',val:100,cat:'edu',badge:'auto',note:'도서, 세미나 무제한'},
+    {key:'hardware',name:'최고급 장비 제공',val:100,cat:'edu',badge:'est'},
+    {key:'flex',name:'유연 출퇴근+원격근무',val:0,cat:'leave',badge:'auto',qual:true,qualText:'유연한 출퇴근 시간, 원격 근무 가능'},
+    {key:'unlimited_pto',name:'자율 휴가 (승인 불필요)',val:0,cat:'leave',badge:'auto',qual:true,qualText:'별도 승인 없는 자율 휴가'},
+    {key:'refresh',name:'리프레시 휴가 (3년마다 1개월)',val:0,cat:'leave',badge:'auto',qual:true,qualText:'근속 3년마다 1개월 유급 휴가'},
+  ],workStyle:{remote:true,flex:true,unlimitedPTO:true,refreshLeave:'3년마다 1개월 유급',overtime:'자율 (성과 중심)'}}
+];
+
+let matched={a:null,b:null},benS={a:[],b:[]};
+
+// ━━ NAV ━━
+function go(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');if(id==='s-profiler')pfInit();if(id==='s-input'){initPri();calc()}}
+
+// ━━ PRIORITY ━━
+function initPri(){
+  const g=document.getElementById('priGrid');
+  g.innerHTML=PRIORITIES.map(p=>`<button class="pri-c${p.key===curPri?' on':''}" data-k="${p.key}" onclick="setPri('${p.key}')"><span class="pri-c-i">${p.icon}</span><span class="pri-c-t">${p.label}</span></button>`).join('');
+}
+function setPri(k){curPri=k;document.querySelectorAll('.pri-c').forEach(c=>c.classList.toggle('on',c.dataset.k===k))}
+
+// ━━ SEARCH ━━
+function doSearch(s){
+  const q=document.getElementById(s==='a'?'sA':'sB').value.trim().toLowerCase();
+  const el=document.getElementById(s==='a'?'rA':'rB');
+  if(q.length<1){el.classList.remove('open');return}
+  const m=DB.filter(c=>c.name.toLowerCase().includes(q)||c.aliases.some(a=>a.toLowerCase().includes(q)));
+  el.innerHTML=m.length?m.map(c=>`<div class="si" onclick="selComp('${s}','${c.id}')"><div class="si-logo">${c.logo}</div><div class="si-info"><div class="si-name">${c.name}</div><div class="si-meta">${c.industry}</div></div><span class="si-badge">DB</span></div>`).join(''):`<div class="sr-empty">검색 결과 없음</div>`;
+  el.classList.add('open');
+}
+function selComp(s,id){
+  const c=DB.find(x=>x.id===id);if(!c)return;
+  matched[s]=c;
+  document.getElementById(s==='a'?'sA':'sB').value=c.name;
+  document.getElementById(s==='a'?'rA':'rB').classList.remove('open');
+  document.getElementById(s==='a'?'tA':'tB').value=c.type;
+  document.getElementById(s==='a'?'mA':'mB').classList.add('show');
+  benS[s]=c.benefits.map(b=>({...b,checked:b.val>0}));
+  renderBen(s);calc();
+}
+function clearM(s){matched[s]=null;document.getElementById(s==='a'?'mA':'mB').classList.remove('show');document.getElementById(s==='a'?'sA':'sB').value='';benS[s]=[];document.getElementById(s==='a'?'baA':'baB').classList.remove('show');calc()}
+document.addEventListener('click',e=>{['a','b'].forEach(s=>{const w=document.getElementById(s==='a'?'sA':'sB').parentElement;if(!w.contains(e.target))document.getElementById(s==='a'?'rA':'rB').classList.remove('open')})});
+
+// ━━ BENEFITS ━━
+function renderBen(s){
+  const list=benS[s];if(!list?.length){document.getElementById(s==='a'?'baA':'baB').classList.remove('show');return}
+  document.getElementById(s==='a'?'baA':'baB').classList.add('show');
+  const grouped={};list.forEach((b,i)=>{if(!grouped[b.cat])grouped[b.cat]=[];grouped[b.cat].push({...b,idx:i})});
+  let h='';
+  for(const[cat,items]of Object.entries(grouped)){
+    h+=`<div class="bg"><div class="bg-label">${CAT_LABELS[cat]||cat}</div>`;
+    items.forEach(b=>{h+=`<div class="bi"><input type="checkbox" class="bi-ck" ${b.checked?'checked':''} onchange="togBen('${s}',${b.idx},this.checked)"><span class="bi-n">${b.name}${b.note?`<span class="bi-note">${b.note}</span>`:''}</span><span class="bi-badge ${b.badge==='auto'?'b-auto':'b-est'}">${b.badge==='auto'?'DB':'추정'}</span><input type="number" class="bi-v" value="${b.val}" onchange="setBenV('${s}',${b.idx},this.value)"><span class="bi-u">만</span></div>`});
+    h+='</div>';
+  }
+  document.getElementById(s==='a'?'blA':'blB').innerHTML=h;
+  document.getElementById(s==='a'?'bcA':'bcB').textContent=`(${list.filter(b=>b.checked&&b.val>0).length}개 항목)`;
+}
+function togBen(s,i,c){benS[s][i].checked=c;calc()}
+function setBenV(s,i,v){benS[s][i].val=Number(v)||0;calc()}
+
+function getBenTotal(s){
+  let t=0;(benS[s]||[]).forEach(b=>{if(b.checked)t+=b.val});
+  const cm=Number(document.getElementById(s==='a'?'comA':'comB').value)||0;
+  const sal=Number(document.getElementById(s==='a'?'salA':'salB').value)||0;
+  const cc=Math.round((sal/2080)*(cm*2/60)*240);
+  return{ben:t,com:cc,net:t-cc};
+}
+
+function calc(){
+  const sA=Number(document.getElementById('salA').value)||0,sB=Number(document.getElementById('salB').value)||0;
+  const bA=getBenTotal('a'),bB=getBenTotal('b');
+  const tA=sA+bA.net,tB=sB+bB.net;
+  document.getElementById('tcbA').textContent=sA.toLocaleString();
+  document.getElementById('tcnA').textContent=`복지 ${bA.net>=0?'+':''}${bA.net.toLocaleString()}만`;
+  document.getElementById('tctA').textContent=`${tA.toLocaleString()}만`;
+  document.getElementById('tcbB').textContent=sB.toLocaleString();
+  document.getElementById('tcnB').textContent=`복지 ${bB.net>=0?'+':''}${bB.net.toLocaleString()}만`;
+  document.getElementById('tctB').textContent=`${tB.toLocaleString()}만`;
+  const d=tB-tA,el=document.getElementById('diffV');
+  if(d>0){el.textContent=`이직처 +${d.toLocaleString()}만원`;el.style.color='var(--green)'}
+  else if(d<0){el.textContent=`현직 +${Math.abs(d).toLocaleString()}만원`;el.style.color='var(--red)'}
+  else{el.textContent='동일';el.style.color='var(--t2)'}
+}
+
+// ━━ COMPARE ━━
+function fW(v){return Math.abs(v)>=10000?(v/10000).toFixed(1)+'억원':Math.round(v).toLocaleString()+'만원'}
+function getBenByCat(s,cat){let t=0;(benS[s]||[]).forEach(b=>{if(b.checked&&b.cat===cat)t+=b.val});return t}
+
+function compare(){
+  const salA=Number(document.getElementById('salA').value),salB=Number(document.getElementById('salB').value);
+  const bA=getBenTotal('a'),bB=getBenTotal('b');
+  const effA=salA+bA.net,effB=salB+bB.net;
+  const comA=Number(document.getElementById('comA').value)||0,comB=Number(document.getElementById('comB').value)||0;
+  const nA=matched.a?matched.a.name:'현직',nB=matched.b?matched.b.name:'이직처';
+  const wsA=matched.a?.workStyle||{},wsB=matched.b?.workStyle||{};
+  const pri=PRIORITIES.find(p=>p.key===curPri);
+  const effDiff=effB-effA,salDiff=salB-salA;
+
+  let html=`<div class="rp-div"><span>${pri.icon} ${pri.label} 기준 비교 리포트</span></div>`;
+
+  // Profiler-enhanced verdict
+  if(pfResult){
+    html+=`<div class="callout gold" style="margin-bottom:1rem"><span class="callout-icon">🎯</span><span><strong>${pfResult.profile.type}</strong> 가치관이 반영된 리포트입니다. 당신의 상위 가치: ${DIMS.filter(d=>pfResult.scores[d]>0).sort((a,b)=>pfResult.scores[b]-pfResult.scores[a]).slice(0,3).map(d=>`<strong style="color:${DIM_META[d].color}">${DIM_META[d].label}</strong>`).join(', ')}</span></div>`;
+  }
+
+  // Verdict
+  let winner='',reason='',note='';
+  if(curPri==='salary'){winner=effDiff>0?nB:nA;reason=`실질 보상(연봉+복지)이 연 ${fW(Math.abs(effDiff))} 더 높습니다.`;if(salDiff>0&&effDiff<salDiff)note=`⚠️ 명목 연봉 차이 ${fW(salDiff)} → 복지 반영 실질 차이 ${fW(effDiff)}`}
+  else if(curPri==='wlb'||curPri==='remote'){const hB=wsB.remote||wsB.flex,hA=wsA.remote||wsA.flex;if(hB&&!hA){winner=nB;reason=`원격근무 + 유연출퇴근이 가능합니다.`}else if(hA&&!hB){winner=nA;reason=`원격근무가 가능합니다.`}else{winner=comA<comB?nA:nB;reason=`통근 시간이 더 짧습니다 (편도 ${Math.min(comA,comB)}분 vs ${Math.max(comA,comB)}분).`}if(wsB.unlimitedPTO)note=`✅ ${nB}은 자율 휴가제 운영 (승인 불필요)`}
+  else if(curPri==='stability'){const stab={large:85,public:90,mid:70,foreign:60,startup:35,freelance:20};const sA=stab[document.getElementById('tA').value]||50,sB_=stab[document.getElementById('tB').value]||50;winner=sA>=sB_?nA:nB;reason=`기업 유형 기준 고용 안정성이 더 높습니다.`;if(document.getElementById('tB').value==='startup')note=`⚠️ 스타트업은 성장 가능성이 높지만 구조조정/피봇 리스크 존재`}
+  else if(curPri==='growth'||curPri==='expertise'){const eA=getBenByCat('a','edu'),eB=getBenByCat('b','edu');winner=eB>eA?nB:nA;reason=`교육·성장 지원이 연 ${fW(Math.max(eA,eB))}으로 더 많습니다.`}
+  else if(curPri==='benefits'){winner=bA.ben>bB.ben?nA:nB;reason=`복리후생 총 가치가 연 ${fW(Math.abs(bA.ben-bB.ben))} 더 많습니다.`;if(Math.abs(effDiff)<1200)note=`💡 연봉+복지 합산 차이가 ${fW(Math.abs(effDiff))}으로 크지 않아 복지가 풍부한 쪽이 체감 만족도에서 유리합니다.`}
+  else if(curPri==='brand'){winner='—';reason='브랜드 가치는 정량 비교가 어렵습니다. 아래에서 정성적으로 비교합니다.'}
+
+  html+=`<div class="vd"><div class="vd-icon">${pri.icon}</div><div class="vd-pri">${pri.label} 기준</div><div class="vd-val" style="color:${winner===nA?'var(--blue)':winner===nB?'var(--amber)':'var(--t2)'}">${winner} 유리</div><div class="vd-sub">${reason}</div>${note?`<div class="vd-note">${note}</div>`:''}</div>`;
+
+  // Salary section
+  const effWin=effDiff>0?'b':'a';
+  html+=`<div class="cmp"><div class="cmp-head">💰 보상 비교</div><div class="cmp-body"><div class="vs-row"><div class="vs-card a-s${effWin==='a'?' win':''}"><div class="vs-side">${nA}</div><div class="vs-big">${effA.toLocaleString()}만</div><div class="vs-detail">연봉 <strong>${salA.toLocaleString()}만</strong> + 복지 <strong>${bA.net>=0?'+':''}${bA.net.toLocaleString()}만</strong></div></div><div class="vs-card b-s${effWin==='b'?' win':''}"><div class="vs-side">${nB}</div><div class="vs-big">${effB.toLocaleString()}만</div><div class="vs-detail">연봉 <strong>${salB.toLocaleString()}만</strong> + 복지 <strong>${bB.net>=0?'+':''}${bB.net.toLocaleString()}만</strong></div></div></div>`;
+  if(salDiff>0&&effDiff<salDiff&&bA.ben>bB.ben)html+=`<div class="callout warn"><span class="callout-icon">⚠️</span><span>명목 연봉은 ${nB}이 <strong>${fW(salDiff)}</strong> 높지만, ${nA}의 복지가 <strong>${fW(bA.ben-bB.ben)}</strong> 더 많아 실질 차이는 <strong>${fW(effDiff)}</strong>으로 줄어듭니다.${Math.abs(effDiff)<1200?' 이 정도 차이라면 복지 만족도가 더 중요할 수 있습니다.':''}</span></div>`;
+  html+=`</div></div>`;
+
+  // Priority-specific
+  if(curPri==='wlb'||curPri==='remote'){
+    const tA=Math.round(comA*2*240/60),tB_=Math.round(comB*2*240/60),tw=tA<tB_?'a':'b';
+    html+=`<div class="cmp"><div class="cmp-head">⚖️ 워라밸 비교</div><div class="cmp-body"><div class="vs-row"><div class="vs-card a-s${tw==='a'?' win':''}"><div class="vs-side">${nA} 통근</div><div class="vs-big">편도 ${comA}분</div><div class="vs-detail">연간 <strong>${tA}시간</strong></div></div><div class="vs-card b-s${tw==='b'?' win':''}"><div class="vs-side">${nB} 통근</div><div class="vs-big">편도 ${comB}분</div><div class="vs-detail">연간 <strong>${tB_}시간</strong></div></div></div>`;
+    if(wsB.remote||wsB.flex)html+=`<div class="callout good"><span class="callout-icon">✅</span><span><strong>${nB}</strong>은 ${wsB.remote?'원격근무':''}${wsB.flex?' 유연출퇴근':''} 가능.${wsB.unlimitedPTO?' <strong>자율 휴가제</strong> 운영.':''}</span></div>`;
+    if(wsA.remote||wsA.flex)html+=`<div class="callout good"><span class="callout-icon">✅</span><span><strong>${nA}</strong>은 ${wsA.remote?'원격근무':''}${wsA.flex?' 유연출퇴근':''} 가능.</span></div>`;
+    if(!wsA.remote&&!wsA.flex&&!wsB.remote&&!wsB.flex)html+=`<div class="callout info"><span class="callout-icon">ℹ️</span><span>두 회사 모두 출근 중심입니다.</span></div>`;
+    const rlA=wsA.refreshLeave,rlB=wsB.refreshLeave;
+    if(rlA||rlB)html+=`<div class="callout info"><span class="callout-icon">🏖️</span><span><strong>리프레시 휴가:</strong> ${nA} — ${rlA||'없음'} | ${nB} — ${rlB||'없음'}</span></div>`;
+    html+=`</div></div>`;
+  }
+
+  if(curPri==='benefits'){
+    const listA=benS.a||[],listB=benS.b||[];
+    if(listA.length||listB.length){
+      const allKeys=new Set();listA.forEach(b=>allKeys.add(b.key));listB.forEach(b=>allKeys.add(b.key));
+      let rows='';allKeys.forEach(k=>{const a=listA.find(b=>b.key===k),b_=listB.find(b=>b.key===k);const vA=a?.checked?a.val:0,vB=b_?.checked?b_.val:0;const nm=a?.name||b_?.name||k;const df=vB-vA;rows+=`<tr><td class="td-name">${nm}</td><td class="td-a">${vA?vA.toLocaleString()+'만':'—'}</td><td class="td-b">${vB?vB.toLocaleString()+'만':'—'}</td><td class="td-diff ${df>0?'pos':df<0?'neg':'eq'}">${df!==0?(df>0?'+':'')+df.toLocaleString()+'만':'—'}</td></tr>`});
+      const totA=listA.reduce((s,b)=>s+(b.checked?b.val:0),0),totB=listB.reduce((s,b)=>s+(b.checked?b.val:0),0),totD=totB-totA;
+      html+=`<div class="cmp"><div class="cmp-head">🎁 복리후생 항목별 비교</div><div class="cmp-body"><table class="ben-compare"><thead><tr><th>항목</th><th>${nA}</th><th>${nB}</th><th>차이</th></tr></thead><tbody>${rows}<tr style="border-top:2px solid var(--border)"><td style="font-weight:700;color:var(--t1)">합계</td><td class="td-a" style="font-weight:700">${totA.toLocaleString()}만</td><td class="td-b" style="font-weight:700">${totB.toLocaleString()}만</td><td class="td-diff ${totD>0?'pos':'neg'}" style="font-weight:700">${totD>0?'+':''}${totD.toLocaleString()}만</td></tr></tbody></table></div></div>`;
     }
-  });
-  
-  calcBenefits();
-}
-
-// 기업유형 변경 시 복리후생 프리셋 자동 적용
-document.getElementById('currentType').addEventListener('change', function() {
-  applyBenefitPreset('stay', this.value);
-});
-document.getElementById('offerType').addEventListener('change', function() {
-  applyBenefitPreset('move', this.value);
-});
-
-// 초기 계산
-setTimeout(calcBenefits, 100);
-
-// ── 기업 유형별 프리셋 파라미터 ──
-const PRESETS = {
-  large:     { growth: 0.04,  vol: 0.025, failRate: 0.02, adaptFail: 0.08,  label: '대기업' },
-  mid:       { growth: 0.045, vol: 0.035, failRate: 0.03, adaptFail: 0.12,  label: '중견기업' },
-  public:    { growth: 0.03,  vol: 0.015, failRate: 0.01, adaptFail: 0.05,  label: '공기업' },
-  startup:   { growth: 0.08,  vol: 0.10,  failRate: 0.06, adaptFail: 0.18,  label: '스타트업' },
-  foreign:   { growth: 0.055, vol: 0.05,  failRate: 0.04, adaptFail: 0.10,  label: '외국계' },
-  freelance: { growth: 0.06,  vol: 0.15,  failRate: 0.08, adaptFail: 0.15,  label: '프리랜서' },
-};
-
-const SIM_COUNT = 5000;
-const YEARS = 5;
-const INFLATION = 0.025; // 연 물가상승률 2.5%
-
-let distChartInstance = null;
-let yearChartInstance = null;
-
-// ── 한계소비성향 함수 (한국은행/KDI 연구 기반) ──
-// 소득이 높을수록 MPC 감소 (체감)
-// Y: 연소득 (만원 단위)
-function getMPC(Y) {
-  return 0.3 + 0.4 * Math.exp(-Y / 8000);
-}
-
-// ── 라이프스타일 계수 ──
-const LIFESTYLE = {
-  frugal: 0.5,   // 절제형: 소득 증가분의 절반만 소비 증가
-  normal: 1.0,   // 보통: MPC 그대로 적용
-  spender: 1.5,  // 소비형: MPC의 1.5배 소비 증가
-};
-
-// ── 동적 소비 계산 함수 ──
-// C(t+1) = C_fixed * (1 + inflation) + C_variable + MPC(Y) * deltaY * lambda
-function calcExpense(prevExpense, prevSalary, newSalary, initialExpense, lifestyleLambda) {
-  const fixedRatio = 0.6;
-  const fixedExpense = initialExpense * fixedRatio;
-  const variableExpense = prevExpense - fixedExpense;
-  
-  const deltaSalary = Math.max(0, newSalary - prevSalary);
-  const mpc = getMPC(newSalary);
-  
-  // 고정비: 물가상승만 반영
-  const newFixed = fixedExpense * (1 + INFLATION);
-  // 변동비: 기존 변동비 + 소득증가분 × MPC × 라이프스타일 계수
-  const newVariable = variableExpense * (1 + INFLATION) + deltaSalary * mpc * lifestyleLambda;
-  
-  // 소비가 소득의 95%를 넘지 않도록 캡
-  const totalExpense = newFixed + Math.max(0, newVariable);
-  return Math.min(totalExpense, newSalary * 0.95);
-}
-
-// ── 정규분포 난수 (Box-Muller) ──
-function randn() {
-  let u = 0, v = 0;
-  while (u === 0) u = Math.random();
-  while (v === 0) v = Math.random();
-  return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
-}
-
-// ── 프리셋 표시 업데이트 ──
-function updatePresetDisplay() {
-  const ct = document.getElementById('currentType').value;
-  const ot = document.getElementById('offerType').value;
-  const lt = document.getElementById('lifestyleType').value;
-  const sp = PRESETS[ct];
-  const mp = PRESETS[ot];
-  const salary = Number(document.getElementById('currentSalary').value) || 6000;
-
-  document.getElementById('p-stay-growth').textContent = (sp.growth * 100).toFixed(1) + '%';
-  document.getElementById('p-stay-vol').textContent = (sp.vol * 100).toFixed(1) + '%';
-  document.getElementById('p-stay-fail').textContent = (sp.failRate * 100).toFixed(0) + '%';
-  document.getElementById('p-move-growth').textContent = (mp.growth * 100).toFixed(1) + '%';
-  document.getElementById('p-move-vol').textContent = (mp.vol * 100).toFixed(1) + '%';
-  document.getElementById('p-move-fail').textContent = (mp.adaptFail * 100).toFixed(0) + '%';
-  document.getElementById('p-mpc').textContent = getMPC(salary).toFixed(2);
-  document.getElementById('p-lifestyle').textContent = LIFESTYLE[lt] + 'x';
-}
-
-document.getElementById('currentType').addEventListener('change', updatePresetDisplay);
-document.getElementById('offerType').addEventListener('change', updatePresetDisplay);
-document.getElementById('lifestyleType').addEventListener('change', updatePresetDisplay);
-document.getElementById('currentSalary').addEventListener('input', updatePresetDisplay);
-updatePresetDisplay();
-
-// ── 시뮬레이션 메인 ──
-function runSimulation() {
-  const currentSalary = Number(document.getElementById('currentSalary').value);
-  const currentAsset = Number(document.getElementById('currentAsset').value);
-  const annualExpense = Number(document.getElementById('annualExpense').value);
-  const offerSalary = Number(document.getElementById('offerSalary').value);
-  const currentType = document.getElementById('currentType').value;
-  const offerType = document.getElementById('offerType').value;
-  const riskTol = document.getElementById('riskTolerance').value;
-
-  const stayP = PRESETS[currentType];
-  const moveP = PRESETS[offerType];
-  const lifestyleLambda = LIFESTYLE[document.getElementById('lifestyleType').value];
-
-  // 리스크 허용도에 따른 투자 수익률 보정
-  const investReturn = { low: 0.03, mid: 0.05, high: 0.08 }[riskTol];
-  const investVol = { low: 0.04, mid: 0.08, high: 0.15 }[riskTol];
-
-  // Show loading
-  document.getElementById('loading').classList.add('visible');
-  document.getElementById('results').classList.remove('visible');
-
-  setTimeout(() => {
-    const stayResults = [];
-    const moveResults = [];
-    const stayYearlyMedians = Array.from({length: YEARS + 1}, () => []);
-    const moveYearlyMedians = Array.from({length: YEARS + 1}, () => []);
-    const stayIncomes = [];
-    const moveIncomes = [];
-    const stayExpenses = [];
-    const moveExpenses = [];
-    const stayFinalExpenses = [];
-    const moveFinalExpenses = [];
-
-    for (let i = 0; i < SIM_COUNT; i++) {
-      // ── 현직 유지 시뮬레이션 ──
-      let asset = currentAsset;
-      let salary = currentSalary;
-      let expense = annualExpense;
-      let totalIncome = 0;
-      let totalExpense = 0;
-      stayYearlyMedians[0].push(asset);
-
-      for (let y = 0; y < YEARS; y++) {
-        const prevSalary = salary;
-        
-        // 연봉 성장
-        const growthRate = stayP.growth + stayP.vol * randn();
-        salary = salary * (1 + Math.max(growthRate, -0.1));
-
-        // 소비 동적 계산 (소득 증가에 따른 소비 증가)
-        expense = calcExpense(expense, prevSalary, salary, annualExpense, lifestyleLambda);
-
-        // 실직 이벤트
-        if (Math.random() < stayP.failRate) {
-          const income = salary * 0.75;
-          asset += income - expense;
-          totalIncome += income;
-        } else {
-          asset += salary - expense;
-          totalIncome += salary;
-        }
-        totalExpense += expense;
-
-        // 자산 투자 수익
-        const assetReturn = investReturn + investVol * randn();
-        if (asset > 0) {
-          asset = asset * (1 + assetReturn);
-        }
-
-        stayYearlyMedians[y + 1].push(asset);
-      }
-      stayResults.push(asset);
-      stayIncomes.push(totalIncome);
-      stayExpenses.push(totalExpense);
-      stayFinalExpenses.push(expense);
-
-      // ── 이직 시뮬레이션 ──
-      asset = currentAsset;
-      salary = offerSalary;
-      expense = annualExpense; // 이직 초기에는 기존 소비 수준 유지
-      totalIncome = 0;
-      totalExpense = 0;
-      moveYearlyMedians[0].push(asset);
-
-      for (let y = 0; y < YEARS; y++) {
-        const prevSalary = salary;
-        
-        // 1년차: 적응 실패 리스크
-        if (y === 0 && Math.random() < moveP.adaptFail) {
-          const income = salary * 0.5;
-          salary = salary * 0.8;
-          // 적응 실패 시 소비는 줄이지 못함 (고정비 존재)
-          expense = calcExpense(expense, prevSalary, salary, annualExpense, lifestyleLambda * 0.5);
-          asset += income - expense;
-          totalIncome += income;
-        } else {
-          const growthRate = moveP.growth + moveP.vol * randn();
-          salary = salary * (1 + Math.max(growthRate, -0.15));
-          
-          // 이직 후 소비 증가 (연봉 점프에 따른 라이프스타일 인플레이션)
-          expense = calcExpense(expense, prevSalary, salary, annualExpense, lifestyleLambda);
-
-          if (Math.random() < moveP.failRate && y > 0) {
-            const income = salary * 0.75;
-            asset += income - expense;
-            totalIncome += income;
-          } else {
-            asset += salary - expense;
-            totalIncome += salary;
-          }
-        }
-        totalExpense += expense;
-
-        const assetReturn = investReturn + investVol * randn();
-        if (asset > 0) {
-          asset = asset * (1 + assetReturn);
-        }
-
-        moveYearlyMedians[y + 1].push(asset);
-      }
-      moveResults.push(asset);
-      moveIncomes.push(totalIncome);
-      moveExpenses.push(totalExpense);
-      moveFinalExpenses.push(expense);
-    }
-
-    // ── 통계 계산 ──
-    stayResults.sort((a, b) => a - b);
-    moveResults.sort((a, b) => a - b);
-    stayIncomes.sort((a, b) => a - b);
-    moveIncomes.sort((a, b) => a - b);
-    stayExpenses.sort((a, b) => a - b);
-    moveExpenses.sort((a, b) => a - b);
-    stayFinalExpenses.sort((a, b) => a - b);
-    moveFinalExpenses.sort((a, b) => a - b);
-
-    const percentile = (arr, p) => arr[Math.floor(arr.length * p)];
-    const median = (arr) => percentile(arr, 0.5);
-
-    const stats = {
-      stay: {
-        median: median(stayResults),
-        top20: percentile(stayResults, 0.8),
-        bot20: percentile(stayResults, 0.2),
-        loss: stayResults.filter(v => v < currentAsset).length / SIM_COUNT,
-        income: median(stayIncomes),
-        expense: median(stayExpenses),
-        finalExpense: median(stayFinalExpenses),
-      },
-      move: {
-        median: median(moveResults),
-        top20: percentile(moveResults, 0.8),
-        bot20: percentile(moveResults, 0.2),
-        loss: moveResults.filter(v => v < currentAsset).length / SIM_COUNT,
-        income: median(moveIncomes),
-        expense: median(moveExpenses),
-        finalExpense: median(moveFinalExpenses),
-      }
-    };
-
-    // 연도별 중앙값
-    const stayYearMedian = stayYearlyMedians.map(arr => {
-      arr.sort((a, b) => a - b);
-      return median(arr);
-    });
-    const moveYearMedian = moveYearlyMedians.map(arr => {
-      arr.sort((a, b) => a - b);
-      return median(arr);
-    });
-
-    // 리스크 점수 (0~100) - 변동성 + 손실확률 기반
-    const stayRisk = Math.min(100, Math.round(stats.stay.loss * 100 * 1.5 + stayP.vol * 200));
-    const moveRisk = Math.min(100, Math.round(stats.move.loss * 100 * 1.5 + moveP.vol * 200));
-
-    renderResults(stats, stayResults, moveResults, stayYearMedian, moveYearMedian, stayRisk, moveRisk, currentAsset);
-
-    document.getElementById('loading').classList.remove('visible');
-    document.getElementById('results').classList.add('visible');
-    document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 600);
-}
-
-// ── 결과 렌더링 ──
-function renderResults(stats, stayArr, moveArr, stayYearMedian, moveYearMedian, stayRisk, moveRisk, initialAsset) {
-  const fmt = (v) => {
-    if (Math.abs(v) >= 10000) return (v / 10000).toFixed(1) + '억';
-    return Math.round(v).toLocaleString() + '만';
-  };
-
-  // Cards
-  document.getElementById('stay-median').textContent = fmt(stats.stay.median);
-  document.getElementById('stay-top20').textContent = fmt(stats.stay.top20);
-  document.getElementById('stay-bot20').textContent = fmt(stats.stay.bot20);
-  document.getElementById('stay-loss').textContent = (stats.stay.loss * 100).toFixed(1) + '%';
-  document.getElementById('stay-income').textContent = fmt(stats.stay.income);
-  document.getElementById('stay-expense').textContent = fmt(stats.stay.expense);
-  document.getElementById('stay-final-expense').textContent = fmt(stats.stay.finalExpense) + '/년';
-  document.getElementById('stay-risk-score').textContent = stayRisk + '/100';
-  document.getElementById('stay-risk-bar').style.width = stayRisk + '%';
-  document.getElementById('stay-risk-bar').style.background =
-    stayRisk < 30 ? 'var(--accent-success)' : stayRisk < 60 ? 'var(--accent-move)' : 'var(--accent-danger)';
-
-  document.getElementById('move-median').textContent = fmt(stats.move.median);
-  document.getElementById('move-top20').textContent = fmt(stats.move.top20);
-  document.getElementById('move-bot20').textContent = fmt(stats.move.bot20);
-  document.getElementById('move-loss').textContent = (stats.move.loss * 100).toFixed(1) + '%';
-  document.getElementById('move-income').textContent = fmt(stats.move.income);
-  document.getElementById('move-expense').textContent = fmt(stats.move.expense);
-  document.getElementById('move-final-expense').textContent = fmt(stats.move.finalExpense) + '/년';
-  document.getElementById('move-risk-score').textContent = moveRisk + '/100';
-  document.getElementById('move-risk-bar').style.width = moveRisk + '%';
-  document.getElementById('move-risk-bar').style.background =
-    moveRisk < 30 ? 'var(--accent-success)' : moveRisk < 60 ? 'var(--accent-move)' : 'var(--accent-danger)';
-
-  // Diff Banner
-  const diff = stats.move.median - stats.stay.median;
-  const diffEl = document.getElementById('diffValue');
-  const diffSubEl = document.getElementById('diffSub');
-  if (diff > 0) {
-    diffEl.textContent = '+' + fmt(diff);
-    diffEl.style.color = 'var(--accent-success)';
-    diffSubEl.textContent = '이직 전략이 중앙값 기준 ' + fmt(Math.abs(diff)) + ' 유리합니다';
-  } else {
-    diffEl.textContent = fmt(diff);
-    diffEl.style.color = 'var(--accent-danger)';
-    diffSubEl.textContent = '현직 유지가 중앙값 기준 ' + fmt(Math.abs(diff)) + ' 유리합니다';
   }
 
-  // Distribution Chart
-  renderDistChart(stayArr, moveArr);
+  if(curPri==='stability'){
+    const labels={large:'대기업',mid:'중견기업',public:'공기업',startup:'스타트업',foreign:'외국계',freelance:'프리랜서'};
+    const scores={large:85,public:90,mid:70,foreign:60,startup:35,freelance:20};
+    const tAv=document.getElementById('tA').value,tBv=document.getElementById('tB').value;
+    const sA_=scores[tAv]||50,sB_=scores[tBv]||50,sw=sA_>=sB_?'a':'b';
+    html+=`<div class="cmp"><div class="cmp-head">🛡️ 고용 안정성</div><div class="cmp-body"><div class="vs-row"><div class="vs-card a-s${sw==='a'?' win':''}"><div class="vs-side">${nA}</div><div class="vs-big">${labels[tAv]}</div><div class="vs-detail">안정성 <strong>${sA_}/100</strong></div></div><div class="vs-card b-s${sw==='b'?' win':''}"><div class="vs-side">${nB}</div><div class="vs-big">${labels[tBv]}</div><div class="vs-detail">안정성 <strong>${sB_}/100</strong></div></div></div></div></div>`;
+  }
 
-  // Year Chart
-  renderYearChart(stayYearMedian, moveYearMedian);
+  if(curPri==='growth'||curPri==='expertise'){
+    const eA=getBenByCat('a','edu'),eB=getBenByCat('b','edu'),ew=eB>=eA?'b':'a';
+    html+=`<div class="cmp"><div class="cmp-head">🚀 성장 기회</div><div class="cmp-body"><div class="vs-row"><div class="vs-card a-s${ew==='a'?' win':''}"><div class="vs-side">${nA}</div><div class="vs-big">연 ${eA.toLocaleString()}만</div></div><div class="vs-card b-s${ew==='b'?' win':''}"><div class="vs-side">${nB}</div><div class="vs-big">연 ${eB.toLocaleString()}만</div></div></div><div class="callout info"><span class="callout-icon">💡</span><span>교육비 외에 <strong>프로젝트 규모, 동료 수준</strong>이 성장에 더 큰 영향을 미칩니다.</span></div></div></div>`;
+  }
 
-  // Insights
-  renderInsights(stats, stayRisk, moveRisk, diff, initialAsset);
+  // Qualitative
+  const qualA=(benS.a||[]).filter(b=>b.qual),qualB=(benS.b||[]).filter(b=>b.qual);
+  if(qualA.length||qualB.length){
+    html+=`<div class="cmp"><div class="cmp-head">📋 금전 환산 어려운 혜택</div><div class="cmp-body">`;
+    qualA.forEach(b=>{html+=`<div class="qual-item"><span class="qual-side qs-a">${nA}</span><span>${b.qualText||b.name}</span></div>`});
+    qualB.forEach(b=>{html+=`<div class="qual-item"><span class="qual-side qs-b">${nB}</span><span>${b.qualText||b.name}</span></div>`});
+    html+=`</div></div>`;
+  }
+
+  // Bottom line
+  let blText='';
+  if(curPri==='salary')blText=effDiff>0?`연봉+복지 기준 <span class="hl-b">${nB}</span>이 연 ${fW(effDiff)} 유리합니다.`:`<span class="hl-a">${nA}</span>이 실질 보상 기준 연 ${fW(Math.abs(effDiff))} 유리합니다.`;
+  else if(curPri==='wlb'||curPri==='remote'){const hB=wsB.remote||wsB.flex||wsB.unlimitedPTO;blText=hB?`워라밸 기준 <span class="hl-b">${nB}</span>이 유리합니다 (유연근무+자율휴가). 실질 보상 차이(${fW(effDiff)})도 함께 고려하세요.`:`두 회사 모두 출근 중심이라 통근 시간(${comA}분 vs ${comB}분)이 핵심 변수입니다.`}
+  else if(curPri==='stability')blText=`고용 안정성은 <span class="hl-a">${nA}</span>이 유리합니다. 안정성을 포기할 만큼의 보상 차이(${fW(effDiff)})인지 판단하세요.`;
+  else if(curPri==='growth'||curPri==='expertise')blText=`교육비 외에도 <strong>프로젝트 규모, 동료 수준, 의사결정 참여 범위</strong>를 면접에서 확인하세요.`;
+  else if(curPri==='benefits'){const bw=bA.ben>bB.ben?nA:nB;blText=Math.abs(effDiff)<1200?`연봉+복지 합산 차이가 ${fW(Math.abs(effDiff))}로 크지 않아, 복지가 풍부한 <span class="${bA.ben>bB.ben?'hl-a':'hl-b'}">${bw}</span>이 일상 만족도에서 유리합니다.`:`복지는 <span class="${bA.ben>bB.ben?'hl-a':'hl-b'}">${bw}</span>이 연 ${fW(Math.abs(bA.ben-bB.ben))} 더 많습니다.`}
+  else if(curPri==='brand')blText=`브랜드 가치는 "다음 커리어"에서 빛을 발합니다. 3년 후 이력서에 더 빛날 이름을 선택하세요.`;
+  html+=`<div class="bottom-line"><div class="bl-label">결론</div><div class="bl-text">${blText}</div></div>`;
+
+  // Profiler CTA (only if not yet taken)
+  if(!pfResult){
+    html+=`<div class="rp-profiler-cta"><p>내가 선택한 기준이 정말 맞을까?<br><strong>커리어 가치관 테스트</strong>로 검증해보세요.</p><button class="rp-profiler-btn" onclick="go('s-profiler')">🎯 가치관 테스트 하기</button></div>`;
+  }
+
+  html+=`<div class="disclaimer">복리후생 금액은 공개 채용 정보 기반 추정치이며 실제와 다를 수 있습니다.</div>`;
+
+  document.getElementById('report').innerHTML=html;
+  document.getElementById('report').classList.add('visible');
+  document.getElementById('report').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
-// ── 분포 차트 ──
-function renderDistChart(stayArr, moveArr) {
-  const canvas = document.getElementById('distChart');
-  if (distChartInstance) distChartInstance.destroy();
-
-  const allValues = [...stayArr, ...moveArr];
-  const minVal = Math.min(...allValues);
-  const maxVal = Math.max(...allValues);
-  const buckets = 40;
-  const step = (maxVal - minVal) / buckets;
-
-  const stayHist = new Array(buckets).fill(0);
-  const moveHist = new Array(buckets).fill(0);
-  const labels = [];
-
-  for (let i = 0; i < buckets; i++) {
-    const lo = minVal + i * step;
-    labels.push(lo >= 10000 ? (lo / 10000).toFixed(1) + '억' : Math.round(lo / 100) * 100 + '');
-  }
-
-  stayArr.forEach(v => {
-    const idx = Math.min(Math.floor((v - minVal) / step), buckets - 1);
-    stayHist[idx]++;
-  });
-  moveArr.forEach(v => {
-    const idx = Math.min(Math.floor((v - minVal) / step), buckets - 1);
-    moveHist[idx]++;
-  });
-
-  // Normalize
-  const stayMax = Math.max(...stayHist);
-  const moveMax = Math.max(...moveHist);
-  const norm = Math.max(stayMax, moveMax);
-
-  distChartInstance = new Chart(canvas, {
-    type: 'bar',
-    data: {
-      labels,
-      datasets: [
-        {
-          label: '현직 유지',
-          data: stayHist.map(v => v / norm * 100),
-          backgroundColor: 'rgba(59,130,246,0.4)',
-          borderColor: 'rgba(59,130,246,0.8)',
-          borderWidth: 1,
-          barPercentage: 1,
-          categoryPercentage: 1,
-        },
-        {
-          label: '이직',
-          data: moveHist.map(v => v / norm * 100),
-          backgroundColor: 'rgba(245,158,11,0.4)',
-          borderColor: 'rgba(245,158,11,0.8)',
-          borderWidth: 1,
-          barPercentage: 1,
-          categoryPercentage: 1,
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      interaction: { mode: 'index', intersect: false },
-      plugins: {
-        legend: {
-          labels: { color: '#8899b0', font: { family: 'Noto Sans KR', size: 11 } }
-        },
-        tooltip: {
-          backgroundColor: '#1a2235',
-          titleColor: '#e8ecf4',
-          bodyColor: '#8899b0',
-          borderColor: '#2a3548',
-          borderWidth: 1,
-        }
-      },
-      scales: {
-        x: {
-          ticks: {
-            color: '#556680',
-            font: { family: 'JetBrains Mono', size: 9 },
-            maxTicksLimit: 8,
-          },
-          grid: { display: false },
-          title: {
-            display: true,
-            text: '5년 후 순자산 (만원)',
-            color: '#556680',
-            font: { family: 'Noto Sans KR', size: 11 },
-          }
-        },
-        y: {
-          ticks: { display: false },
-          grid: { color: 'rgba(42,53,72,0.3)' },
-        }
-      }
-    }
-  });
-}
-
-// ── 연도별 차트 ──
-function renderYearChart(stayYM, moveYM) {
-  const canvas = document.getElementById('yearChart');
-  if (yearChartInstance) yearChartInstance.destroy();
-
-  const labels = ['현재', '1년', '2년', '3년', '4년', '5년'];
-
-  const fmt = (v) => v >= 10000 ? (v / 10000).toFixed(1) + '억' : Math.round(v).toLocaleString() + '만';
-
-  yearChartInstance = new Chart(canvas, {
-    type: 'line',
-    data: {
-      labels,
-      datasets: [
-        {
-          label: '현직 유지',
-          data: stayYM,
-          borderColor: 'rgba(59,130,246,0.9)',
-          backgroundColor: 'rgba(59,130,246,0.1)',
-          fill: true,
-          tension: 0.3,
-          pointRadius: 4,
-          pointBackgroundColor: '#3b82f6',
-        },
-        {
-          label: '이직',
-          data: moveYM,
-          borderColor: 'rgba(245,158,11,0.9)',
-          backgroundColor: 'rgba(245,158,11,0.1)',
-          fill: true,
-          tension: 0.3,
-          pointRadius: 4,
-          pointBackgroundColor: '#f59e0b',
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      interaction: { mode: 'index', intersect: false },
-      plugins: {
-        legend: {
-          labels: { color: '#8899b0', font: { family: 'Noto Sans KR', size: 11 } }
-        },
-        tooltip: {
-          backgroundColor: '#1a2235',
-          titleColor: '#e8ecf4',
-          bodyColor: '#8899b0',
-          borderColor: '#2a3548',
-          borderWidth: 1,
-          callbacks: {
-            label: function(ctx) {
-              return ctx.dataset.label + ': ' + fmt(ctx.parsed.y);
-            }
-          }
-        }
-      },
-      scales: {
-        x: {
-          ticks: { color: '#8899b0', font: { family: 'Noto Sans KR', size: 11 } },
-          grid: { color: 'rgba(42,53,72,0.3)' },
-        },
-        y: {
-          ticks: {
-            color: '#556680',
-            font: { family: 'JetBrains Mono', size: 10 },
-            callback: function(v) { return fmt(v); }
-          },
-          grid: { color: 'rgba(42,53,72,0.3)' },
-        }
-      }
-    }
-  });
-}
-
-// ── 인사이트 생성 ──
-function renderInsights(stats, stayRisk, moveRisk, diff, initialAsset) {
-  const insights = [];
-  const annualExpense = Number(document.getElementById('annualExpense').value);
-
-  // 1. 핵심 비교
-  if (diff > 0) {
-    insights.push({
-      icon: '📊',
-      text: `이직 시 5년 후 자산이 중앙값 기준 <strong>${formatWon(Math.abs(diff))}</strong> 더 많습니다. 하지만 이는 평균적 시나리오이며, 하위 20% 결과도 반드시 확인하세요.`
-    });
-  } else {
-    insights.push({
-      icon: '📊',
-      text: `현직 유지가 5년 후 자산 중앙값 기준 <strong>${formatWon(Math.abs(diff))}</strong> 유리합니다. 이직의 높은 변동성이 중앙값을 끌어내리고 있습니다.`
-    });
-  }
-
-  // 2. 소비 증가 경고 (핵심 신규 인사이트)
-  const stayExpenseGrowth = ((stats.stay.finalExpense / annualExpense - 1) * 100).toFixed(0);
-  const moveExpenseGrowth = ((stats.move.finalExpense / annualExpense - 1) * 100).toFixed(0);
-  const expenseDiff = stats.move.expense - stats.stay.expense;
-  
-  if (moveExpenseGrowth > stayExpenseGrowth) {
-    insights.push({
-      icon: '🛒',
-      text: `<strong>라이프스타일 인플레이션 경고:</strong> 이직 시 5년차 소비가 현재 대비 <strong>${moveExpenseGrowth}%</strong> 증가 (연 ${formatWon(stats.move.finalExpense)}). 현직은 ${stayExpenseGrowth}% 증가에 그칩니다. 연봉이 올라도 소비가 따라오면 <strong>실질 저축 효과가 반감</strong>됩니다.`
-    });
-  } else {
-    insights.push({
-      icon: '🛒',
-      text: `5년 후 연간 소비가 현직 기준 <strong>${stayExpenseGrowth}%</strong> 증가합니다 (연 ${formatWon(stats.stay.finalExpense)}). 물가상승과 소득 증가에 따른 자연스러운 소비 확대가 반영되었습니다.`
-    });
-  }
-
-  // 3. 리스크 비교
-  const riskDiff = moveRisk - stayRisk;
-  if (riskDiff > 20) {
-    insights.push({
-      icon: '⚠️',
-      text: `이직 전략의 리스크 점수가 <strong>${riskDiff}점</strong> 더 높습니다. 자산 감소 확률이 ${(stats.move.loss * 100).toFixed(1)}%로, 현직(${(stats.stay.loss * 100).toFixed(1)}%)보다 상당히 높습니다.`
-    });
-  }
-
-  // 4. 하위 시나리오 경고
-  if (stats.move.bot20 < initialAsset * 0.8) {
-    insights.push({
-      icon: '🔴',
-      text: `이직 비관 시나리오(하위 20%)에서 자산이 현재보다 <strong>${formatWon(initialAsset - stats.move.bot20)}</strong> 감소할 수 있습니다. 현금 버퍼를 충분히 확보한 후 이직을 권장합니다.`
-    });
-  }
-
-  // 5. 실질 저축력 비교 (소득 - 소비)
-  const stayNetSaving = stats.stay.income - stats.stay.expense;
-  const moveNetSaving = stats.move.income - stats.move.expense;
-  const savingDiff = moveNetSaving - stayNetSaving;
-  
-  insights.push({
-    icon: '💰',
-    text: `<strong>5년 실질 저축력:</strong> 현직 ${formatWon(stayNetSaving)} vs 이직 ${formatWon(moveNetSaving)}. ${savingDiff > 0 ? '이직이 소비 증가를 감안해도 <strong>' + formatWon(Math.abs(savingDiff)) + '</strong> 더 모을 수 있습니다.' : '소비 증가를 감안하면 현직이 <strong>' + formatWon(Math.abs(savingDiff)) + '</strong> 더 모을 수 있습니다. 연봉 인상분 상당수가 소비로 빠집니다.'}`
-  });
-
-  // 6. 상위 시나리오
-  if (stats.move.top20 > stats.stay.top20 * 1.3) {
-    insights.push({
-      icon: '🎯',
-      text: `이직의 상위 20% 시나리오는 <strong>${formatWon(stats.move.top20)}</strong>으로, 현직(<strong>${formatWon(stats.stay.top20)}</strong>)보다 크게 높습니다. 높은 리스크에 상응하는 보상이 존재합니다.`
-    });
-  }
-
-  const container = document.getElementById('insightContent');
-  container.innerHTML = insights.map(ins =>
-    `<div class="insight-item"><span class="insight-icon">${ins.icon}</span><span>${ins.text}</span></div>`
-  ).join('');
-}
-
-function formatWon(v) {
-  if (Math.abs(v) >= 10000) return (v / 10000).toFixed(1) + '억원';
-  return Math.round(v).toLocaleString() + '만원';
-}
+// ━━ INIT ━━
+initPri();calc();
 </script>
-
 </body>
 </html>
